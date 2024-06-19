@@ -1,0 +1,10 @@
+/target/
+.idea/
+*.iml
+hibtest/
+
+# Nix specifics
+shell.nix
+.envrc
+.nix-mvn-settings.xml
+.nix-mvn-toolchains.xml
