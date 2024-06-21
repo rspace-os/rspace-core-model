@@ -67,10 +67,10 @@
     <dependency>
       <groupId>com.github.rspace-os</groupId>
       <artifactId>rspace-audit</artifactId>
-      <version>0.12.0</version>
+      <version>0.13.0</version>
       <exclusions>
         <exclusion>
-          <groupId>com.researchspace</groupId>
+          <groupId>com.github.rspace-os</groupId>
           <artifactId>rspace-core-util</artifactId>
         </exclusion>
         <exclusion>
