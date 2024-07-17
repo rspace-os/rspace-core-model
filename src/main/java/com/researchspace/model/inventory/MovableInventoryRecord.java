@@ -1,19 +1,16 @@
 package com.researchspace.model.inventory;
 
 import java.time.Instant;
-
 import javax.persistence.CascadeType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
-
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Field;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.search.annotations.Field;
 
 @MappedSuperclass
 @Getter
@@ -47,7 +44,15 @@ public abstract class MovableInventoryRecord extends InventoryRecord {
 		}
 		return getParentLocation().getContainer();
 	}
-	
+
+	/**
+	 * @return true if the MovableInventoryRecord is currently
+	 * located into (linked to) a proper Container (so not in the workbench)
+	 */
+	@Transient
+	public boolean isStoredInContainer() {
+		return this.getParentContainer() != null && !this.getParentContainer().isWorkbench();
+	}
 	/**
 	 * @return id of parent container, or null if record is not stored anywhere
 	 */
