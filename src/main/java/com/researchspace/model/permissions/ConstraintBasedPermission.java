@@ -1,6 +1,7 @@
 package com.researchspace.model.permissions;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +11,6 @@ import java.util.Set;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.shiro.authz.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,17 +44,13 @@ public class ConstraintBasedPermission implements Serializable, Permission, Comp
 	public ConstraintBasedPermission(PermissionDomain domain, Set<PermissionType> actions) {
 		this.domain = domain;
 		if (actions != null) {
-			for (PermissionType action : actions) {
-				this.actions.add(action);
-			}
+      this.actions.addAll(actions);
 		}
 	}
 
 	public ConstraintBasedPermission(PermissionDomain domain, PermissionType... actions) {
 		this.domain = domain;
-		for (PermissionType pt : actions) {
-			this.actions.add(pt);
-		}
+    this.actions.addAll(Arrays.asList(actions));
 	}
 	
 	public ConstraintBasedPermission(PermissionDomain domain, PermissionType action) {
@@ -224,7 +220,7 @@ public class ConstraintBasedPermission implements Serializable, Permission, Comp
 		if (idConstraint != null && !idConstraint.satisfies(entityPermission.getId())) {
 			return exitFalse();
 		}
-		if (locationConstraints.size() > 0) {
+		if (!locationConstraints.isEmpty()) {
 			boolean ok = false;
 			for (LocationConstraint lc : locationConstraints) {
 				// if no info, can't grant authorisation
@@ -266,11 +262,8 @@ public class ConstraintBasedPermission implements Serializable, Permission, Comp
 	/**
 	 * Gets the String representation that is persisted to DB.
 	 * 
-	 * @return
 	 */
 	public String getString() {
-	//	getStringcount++;
-		StopWatch sw = StopWatch.createStarted();
 		StringBuilder sb = new StringBuilder();
 		sb.append(getDomain()).append(ConstraintPermissionResolver.PART_DELIMITER);
 
@@ -283,13 +276,13 @@ public class ConstraintBasedPermission implements Serializable, Permission, Comp
 
 		boolean needsAnd = false;
 		IdConstraint idc = getIdConstraint();
-		if (idc != null && idc.getId().size() > 0) {
+		if (idc != null && !idc.getId().isEmpty()) {
 			needsAnd = true;
-			sb.append(idc.toString());
+			sb.append(idc);
 
 		}
 
-		if (propertyConstraints.size() > 0) {
+		if (!propertyConstraints.isEmpty()) {
 			if (needsAnd) {
 				sb.append(ConstraintPermissionResolver.CONSTRAINT_SEPARATOR);
 				needsAnd = false;
@@ -321,7 +314,7 @@ public class ConstraintBasedPermission implements Serializable, Permission, Comp
 			needsAnd = true;
 		}
 
-		if (locationConstraints.size() > 0) {
+		if (!locationConstraints.isEmpty()) {
 			if (needsAnd) {
 				sb.append(ConstraintPermissionResolver.CONSTRAINT_SEPARATOR);
 				needsAnd = false;
@@ -335,21 +328,19 @@ public class ConstraintBasedPermission implements Serializable, Permission, Comp
 				needsAnd = true;
 			}
 		}
-       // timeInEquals += sw.getNanoTime();
 		return sb.toString();
 	}
 
 	/**
 	 * Converts a constraint-based permission to an entity permission. This is
 	 * so that permissions can be parsed from strings into EntityPermissions.
-	 * 
-	 * @return
-	 */
+	 *
+   */
 	@Transient
 	public IEntityPermission getAsEntityPermission() {
 		EntityPermission ep = new EntityPermission();
 		ep.setDomain(getDomain());
-		if (getActions().size() > 0) {
+		if (!getActions().isEmpty()) {
 			ep.setAction(getActions().iterator().next());
 		}
 		for (PropertyConstraint pc : getPropertyConstraints().values()) {
@@ -361,7 +352,7 @@ public class ConstraintBasedPermission implements Serializable, Permission, Comp
 			ep.setGroupConstraints(grpConstraints);
 		}
 
-		if (getIdConstraint() != null && getIdConstraint().getId().size() > 0) {
+		if (getIdConstraint() != null && !getIdConstraint().getId().isEmpty()) {
 			ep.setId(getIdConstraint().getId().iterator().next());
 		}
 		return ep;
@@ -440,10 +431,7 @@ public class ConstraintBasedPermission implements Serializable, Permission, Comp
 			return false;
 		}
 		ConstraintBasedPermission other = (ConstraintBasedPermission) obj;
-		if (!getString().equals(other.getString())) {
-			return false;
-		}
-		return true;
-	}
+    return getString().equals(other.getString());
+  }
 
 }
