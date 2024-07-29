@@ -74,6 +74,9 @@ public enum Preference {
 	/** User enablement of Mendeley linking */
 	MENDELEY(Boolean.FALSE.toString(), SettingsType.BOOLEAN, PreferenceCategory.INTEGRATIONS, "Mendeley"),
 
+	/** User enablement of Digital Commons Data linking */
+	DIGITAL_COMMONS_DATA(Boolean.FALSE.toString(), SettingsType.BOOLEAN, PreferenceCategory.INTEGRATIONS, "Digital Commons Data"),
+
 	/** User enablement of Ecat linking
 	 * @deprecated ECAT integration has been removed. Need to keep this in place though to maintain ordinal value
 	 * which is used in the database.
