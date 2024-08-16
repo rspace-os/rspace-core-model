@@ -119,7 +119,7 @@ public enum Preference {
 			"Number of deleted items per page"),
 
 	/** Similar to UI_CLIENT_SETTINGS, but for storing arbitrary data in json key-value format  */
-	UI_JSON_SETTINGS("", SettingsType.STRING, PreferenceCategory.UI, "UI client-side settings, in json format");
+	UI_JSON_SETTINGS("", SettingsType.TEXT, PreferenceCategory.UI, "UI client-side settings, in json format");
 
 	private String defaultValue;
 	private SettingsType prefType;

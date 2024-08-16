@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import com.researchspace.core.testutil.CoreTestUtils;
 import com.researchspace.model.preference.Preference;
 import com.researchspace.model.record.TestFactory;
+import org.junit.jupiter.api.Assertions;
 
 public class UserPreferenceTest {
 
@@ -43,8 +45,7 @@ public class UserPreferenceTest {
 				TestFactory.createAnyUser("user"), "false");
 		up.getValueAsNumber();
 	}
-	
-	
+
 	@Test
 	(expected=IllegalArgumentException.class)
 	public void testBooleanPreferenceChecksArgs() {
@@ -96,6 +97,20 @@ public class UserPreferenceTest {
 		UserPreference boxPref = createUserPref(Preference.BOX_LINK_TYPE);
 		boxPref.setValue("VERSIONED");
 	}
-	
+
+	@Test
+	public void testValidLengthDependingOnPreferenceType() {
+		String longStringValue = StringUtils.repeat("x", 300);
+		String veryLongStringValue = StringUtils.repeat("x", 70000);
+
+		IllegalArgumentException iae = Assertions.assertThrows(IllegalArgumentException.class,
+				()-> createUserPref(Preference.UI_CLIENT_SETTINGS).setValue(longStringValue));
+		assertEquals("Value is too long, is 300 characters but max is 255", iae.getMessage());
+
+		createUserPref(Preference.UI_JSON_SETTINGS).setValue(longStringValue);
+		iae = Assertions.assertThrows(IllegalArgumentException.class,
+				()-> createUserPref(Preference.UI_JSON_SETTINGS).setValue(veryLongStringValue));
+		assertEquals("Text value is too long, is 70000 characters but max is 65535", iae.getMessage());
+	}
 
 }

@@ -44,7 +44,6 @@ public class AppConfigElementDescriptor implements Serializable {
 	private App app;
 
 	public AppConfigElementDescriptor(PropertyDescriptor descriptor) {
-		super();
 		this.descriptor = descriptor;
 	}
 
