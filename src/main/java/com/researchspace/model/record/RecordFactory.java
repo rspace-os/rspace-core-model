@@ -5,6 +5,7 @@ import static org.apache.commons.lang.StringUtils.trim;
 
 import com.researchspace.model.inventory.Basket;
 import com.researchspace.model.inventory.DigitalObjectIdentifier;
+import com.researchspace.model.inventory.field.ExtraTimeField;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -492,13 +493,16 @@ public class RecordFactory implements IRecordFactory {
 	@Override
 	public ExtraField createExtraField(FieldType type) {
 		checkArgs(type);
-		if (FieldType.TEXT.equals(type)) {
-			return new ExtraTextField();
-		} 
-		if (FieldType.NUMBER.equals(type)) {
-			return new ExtraNumberField();
+		switch(type) {
+			case TEXT:
+				return new ExtraTextField();
+			case NUMBER:
+				return new ExtraNumberField();
+			case TIME:
+				return new ExtraTimeField();
+			default:
+				throw new IllegalArgumentException("asked for extra field of unsupported type: " + type);
 		}
-		throw new IllegalArgumentException("asked for extra field of unsupported type: " + type.toString());
 	}
 
 	@Override
