@@ -1,5 +1,7 @@
 ## Changelog
 
+Summary of important or breaking changes.
+
 ## 2.1.1 2024-08-09
 - Added integration with Digital Commons Data
 
