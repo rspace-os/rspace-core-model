@@ -51,13 +51,13 @@ public class UserConnection {
 	@Column(length = 512)
 	private String imageUrl;
 
-	@Column(length = 512, nullable = false)
+	@Column(length = 2048, nullable = false)
 	private String accessToken;
 
-	@Column(length = 512)
+	@Column(length = 2048)
 	private String secret;
 
-	@Column(length = 512)
+	@Column(length = 2048)
 	private String refreshToken;
 	
 	/**
