@@ -1,5 +1,6 @@
 package com.researchspace.model.inventory.field;
 
+import com.researchspace.model.field.ErrorList;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 
+import java.time.format.ResolverStyle;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -22,10 +24,7 @@ public class InventoryDateField extends SampleField {
 
 	private static final long serialVersionUID = 2350588560175243555L;
 
-	private static DateFormat SUGGESTED_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-	static {
-		SUGGESTED_DATE_FORMAT.setLenient(false);
-	}
+	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	public InventoryDateField() {
 		this("");
@@ -35,23 +34,23 @@ public class InventoryDateField extends SampleField {
 		super(FieldType.DATE, name);
 	}
 
-	/**
-	 * Date field doesn't seem to have a required format internally 
-	 * (i.e. accepts any string as data), but for stricter checks 
-	 * or type guess this can be used.
-	 */
-	private static final DateTimeFormatter LENIENT_ISO_DATE_FORMATTER = 
-		new DateTimeFormatterBuilder()
-			.appendOptional(DateTimeFormatter.ISO_DATE_TIME)
-			.appendOptional(DateTimeFormatter.ISO_DATE)
-			.appendOptional(DateTimeFormatter.BASIC_ISO_DATE)
-			.toFormatter()
-			.withZone(ZoneId.systemDefault());
+	@Override
+	public ErrorList validate(String fieldData){
+		ErrorList errors = super.validate(fieldData);
+		if(!isValidDateFormat(fieldData)) {
+			errors.addErrorMsg(String.format("%s is an invalid date format. Valid format is yyyy-MM-dd.", fieldData));
+		}
+		return errors;
+	}
 	
 	@Override
 	public boolean isSuggestedFieldForData(String dateString) {
+		return isValidDateFormat(dateString);
+	}
+
+	private boolean isValidDateFormat(String date){
 		try {
-			LocalDate.parse(dateString, LENIENT_ISO_DATE_FORMATTER);
+			LocalDate.parse(date, DATE_FORMATTER);
 		} catch (DateTimeParseException e) {
 			return false;
 		}
