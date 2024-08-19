@@ -37,8 +37,10 @@ public class InventoryDateField extends SampleField {
 	@Override
 	public ErrorList validate(String fieldData){
 		ErrorList errors = super.validate(fieldData);
-		if(!isValidDateFormat(fieldData)) {
-			errors.addErrorMsg(String.format("%s is an invalid date format. Valid format is yyyy-MM-dd.", fieldData));
+		if(!(fieldData == null) && !fieldData.isEmpty()){
+			if(!isValidDateFormat(fieldData)) {
+				errors.addErrorMsg(String.format("%s is an invalid date format. Valid format is yyyy-MM-dd.", fieldData));
+			}
 		}
 		return errors;
 	}

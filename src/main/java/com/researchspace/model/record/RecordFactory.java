@@ -374,6 +374,7 @@ public class RecordFactory implements IRecordFactory {
 
 		InventoryTimeField time = new InventoryTimeField();
 		time.setName("MyTime");
+		time.setFieldData("00:00");
 		template.addSampleField(time);
 		
 		InventoryRadioFieldDef nodefaultsRadioFieldDef = new InventoryRadioFieldDef();
