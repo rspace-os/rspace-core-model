@@ -5,6 +5,7 @@ import static org.apache.commons.lang.StringUtils.trim;
 
 import com.researchspace.model.inventory.Basket;
 import com.researchspace.model.inventory.DigitalObjectIdentifier;
+import com.researchspace.model.inventory.field.InventoryTimeField;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -370,6 +371,10 @@ public class RecordFactory implements IRecordFactory {
 		InventoryAttachmentField aff = new InventoryAttachmentField();
 		aff.setName("MyAttachment");
 		template.addSampleField(aff);
+
+		InventoryTimeField time = new InventoryTimeField();
+		time.setName("MyTime");
+		template.addSampleField(time);
 		
 		InventoryRadioFieldDef nodefaultsRadioFieldDef = new InventoryRadioFieldDef();
 		nodefaultsRadioFieldDef.setRadioOptionsList(Arrays.asList("option1", "option2"));
