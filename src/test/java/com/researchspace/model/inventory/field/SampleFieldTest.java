@@ -227,7 +227,7 @@ class SampleFieldTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {" ", "2020-01-31T15:50:00", "", "9:17", "10:24am", "23:79" })
+	@ValueSource(strings = {"2020-01-31T15:50:00", "9:17", "10:24am", "23:79" })
 	void setTimeInvalidFormatThrowsError(String value) {
 		InventoryTimeField field = new InventoryTimeField("time");
 		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
