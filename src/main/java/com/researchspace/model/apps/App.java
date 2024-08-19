@@ -28,7 +28,7 @@ public class App implements Serializable {
 	public static final String APP_FIGSHARE = "app.figshare";
 	public static final String APP_DRYAD = "app.dryad";
 	public static final String APP_ZENODO = "app.zenodo";
-	public static final String APP_DIGITAL_COMMONS_DATA = "app.digital_commons_data";
+	public static final String APP_DIGITAL_COMMONS_DATA = "app.digitalCommonsData";
 	public static final String APP_GHANGOUTSCHAT = "app.ghangoutschat";
 
 	@OneToMany(mappedBy = "app", cascade = CascadeType.ALL)
