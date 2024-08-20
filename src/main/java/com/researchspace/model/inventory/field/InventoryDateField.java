@@ -1,15 +1,9 @@
 package com.researchspace.model.inventory.field;
 
 import com.researchspace.model.field.ErrorList;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
-
-import java.time.format.ResolverStyle;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -37,12 +31,14 @@ public class InventoryDateField extends SampleField {
 	@Override
 	public ErrorList validate(String fieldData){
 		ErrorList errors = super.validate(fieldData);
-		if(!(fieldData == null) && !fieldData.isEmpty()){
-			if(!isValidDateFormat(fieldData)) {
+		if(dateHasContentAndIsInvalid(fieldData)) {
 				errors.addErrorMsg(String.format("%s is an invalid date format. Valid format is yyyy-MM-dd.", fieldData));
 			}
-		}
 		return errors;
+	}
+
+	private boolean dateHasContentAndIsInvalid(String date){
+		return date != null && !date.isEmpty() && !isValidDateFormat(date);
 	}
 	
 	@Override

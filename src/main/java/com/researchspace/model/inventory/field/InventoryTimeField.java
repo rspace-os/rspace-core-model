@@ -39,12 +39,14 @@ public class InventoryTimeField extends SampleField {
 	@Override
 	public ErrorList validate(String fieldData){
 		ErrorList errors = super.validate(fieldData);
-		if(!(fieldData == null) && !fieldData.isEmpty()){
-			if(!isValidTimeFormat(fieldData)) {
+		if(timeHasContentAndIsInvalid(fieldData)){
 				errors.addErrorMsg(String.format("%s is an invalid 24hour time format. Valid format is 00:00.", fieldData));
-			}
 		}
 		return errors;
+	}
+
+	private boolean timeHasContentAndIsInvalid(String time){
+		return time != null && !time.isEmpty() && !isValidTimeFormat(time);
 	}
 
 	private boolean isValidTimeFormat(String time){
