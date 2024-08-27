@@ -141,27 +141,33 @@ class SampleFieldTest {
 		field.setFieldData(value);
 	}
 
-	/*
-	 * The test is here to document current behaviour.
-	 * Validation should probably be stricter than it is.
-	 */
 	@ParameterizedTest
-	@ValueSource(strings = { "2020-01-31", " ", "2020-01-31T15:50:00", "20200131",
-			"2020.01.01", "anything", "456.44", "-123" })
+	@ValueSource(strings = { "2020-01-31", "2024-08-19", "1999-12-31" })
 	void dateFieldValidValues(String value) {
 		InventoryDateField field = new InventoryDateField("date");
 		field.setFieldData(value);
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "2020-01-31", "2020-01-31T15:50:00", "20200131" })
+	@ValueSource(strings = {" ", "2020-01-31T15:50:00", "20200131",
+			"2020.01.01", "anything", "456.44", "-123" })
+	void setDateFieldWithInvalidFormatThrowsException(String value) {
+		InventoryDateField field = new InventoryDateField("date");
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+				() -> field.setFieldData(value) );
+		assertTrue(exception.getMessage().contains("is invalid for field type Date"));
+	}
+
+
+	@ParameterizedTest
+	@ValueSource(strings = { "2020-01-31", "1900-01-01", "2124-08-19"})
 	void dateFieldSuggestedForValue(String value) {
 		InventoryDateField field = new InventoryDateField("date");
 		assertTrue(field.isSuggestedFieldForData(value));
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "2020.01.01", "anything", "456.44", "-123" })
+	@ValueSource(strings = { "2020.01.01", "anything", "456.44", "-123", "2020-01-31T15:50:00", "20200131" })
 	void dateFieldNotSuggestedForValue(String value) {
 		InventoryDateField field = new InventoryDateField("date");
 		assertFalse(field.isSuggestedFieldForData(value));
@@ -198,30 +204,35 @@ class SampleFieldTest {
 		InventoryUriField field = new InventoryUriField("uri");
 		assertFalse(field.isSuggestedFieldForData(value));
 	}
-	
-	/*
-	 * The test is here to document current behaviour.
-	 * Validation should probably be stricter than it is.
-	 */
+
 	@ParameterizedTest
-	@ValueSource(strings = { "12:45", " ", "time", "no time", "-1"})
+	@ValueSource(strings = { "12:45", "00:00", "09:25", "23:59"})
 	void timeFieldValidValues(String value) {
 		InventoryTimeField field = new InventoryTimeField("time");
 		field.setFieldData(value);
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "12:45", "00:00" })
+	@ValueSource(strings = { "12:45", "00:00", "09:25", "23:59" })
 	void timeFieldSuggestedForValue(String value) {
 		InventoryTimeField field = new InventoryTimeField("time");
 		assertTrue(field.isSuggestedFieldForData(value));
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "time", "no time", "-1" })
+	@ValueSource(strings = { "time", "no time", "-1", " ", "10:24am", "23:79"})
 	void timeFieldNotSuggestedForValue(String value) {
 		InventoryTimeField field = new InventoryTimeField("time");
 		assertFalse(field.isSuggestedFieldForData(value));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"2020-01-31T15:50:00", "9:17", "10:24am", "23:79" })
+	void setTimeInvalidFormatThrowsError(String value) {
+		InventoryTimeField field = new InventoryTimeField("time");
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+				() -> field.setFieldData(value) );
+		assertTrue(exception.getMessage().contains("is invalid for field type Time"));
 	}
 
 	@Test

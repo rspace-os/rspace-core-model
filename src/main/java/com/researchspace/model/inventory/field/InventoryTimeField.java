@@ -1,9 +1,11 @@
 package com.researchspace.model.inventory.field;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.researchspace.model.field.ErrorList;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -16,17 +18,10 @@ import com.researchspace.model.field.FieldType;
 @Audited
 public class InventoryTimeField extends SampleField {
 
-	private static final long serialVersionUID = 8709980361506172103L;	
+	private static final long serialVersionUID = 8709980361506172103L;
 
-	/**
-	 * Time field doesn't seem to have a required format internally 
-	 * (i.e. InventoryTimeField/TimeFieldForm seems to be able to store 
-	 * any string as data), but for any checks/type guesses this can be used.
-	 */
-	private static DateFormat SUGGESTED_TIME_FORMAT = new SimpleDateFormat("HH:mm");
-	static {
-		SUGGESTED_TIME_FORMAT.setLenient(false);
-	}
+	private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm").withResolverStyle(
+			ResolverStyle.STRICT);
 	
 	public InventoryTimeField() {
 		this("");
@@ -38,9 +33,26 @@ public class InventoryTimeField extends SampleField {
 
 	@Override
 	public boolean isSuggestedFieldForData(String data) {
+		return isValidTimeFormat(data);
+	}
+
+	@Override
+	public ErrorList validate(String fieldData){
+		ErrorList errors = super.validate(fieldData);
+		if(timeHasContentAndIsInvalid(fieldData)){
+				errors.addErrorMsg(String.format("%s is an invalid 24hour time format. Valid format is HH:mm.", fieldData));
+		}
+		return errors;
+	}
+
+	private boolean timeHasContentAndIsInvalid(String time){
+		return time != null && !time.isEmpty() && !isValidTimeFormat(time);
+	}
+
+	private boolean isValidTimeFormat(String time){
 		try {
-			SUGGESTED_TIME_FORMAT.parse(data);
-		} catch (ParseException e) {
+			LocalTime.parse(time, TIME_FORMATTER);
+		} catch (DateTimeParseException e) {
 			return false;
 		}
 		return true;
@@ -52,5 +64,4 @@ public class InventoryTimeField extends SampleField {
 		copyFields(timeField);
 		return timeField;
 	}
-
 }
