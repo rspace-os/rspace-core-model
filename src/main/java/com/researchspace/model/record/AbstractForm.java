@@ -3,6 +3,9 @@ package com.researchspace.model.record;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang.StringUtils.join;
 
+import com.researchspace.model.audittrail.AuditDomain;
+import com.researchspace.model.audittrail.AuditTrailData;
+import com.researchspace.model.audittrail.AuditTrailProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,6 +66,7 @@ import com.researchspace.model.permissions.PermissionType;
 @Table(name="RSForm", indexes = { @Index(columnList = "systemForm", name = "isSystem"),
 		@Index(columnList = "stableID", name = "stableid") 
 })
+@AuditTrailData(auditDomain = AuditDomain.FORM)
 public abstract class AbstractForm implements Serializable, UniquelyIdentifiable, PermissionsAdaptable {
 
 	private static final long serialVersionUID = -244687216857908083L;
@@ -499,6 +503,7 @@ public abstract class AbstractForm implements Serializable, UniquelyIdentifiable
 
 	@Audited
 	@Transient
+	@AuditTrailProperty(name = "name")
 	public String getName() {
 		return getEditInfo().getName();
 	}
