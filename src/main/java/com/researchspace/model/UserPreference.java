@@ -2,6 +2,7 @@ package com.researchspace.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,24 +17,31 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.researchspace.model.preference.Preference;
 import com.researchspace.model.preference.SettingsType;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Persists user preferences.
  */
 @Entity
-@XmlType()
+@XmlType
 @XmlAccessorType(XmlAccessType.NONE)
+@NoArgsConstructor
+@EqualsAndHashCode(of = { "preference", "user"})
 public class UserPreference implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -575396996158819503L;
 
+	private static final long serialVersionUID = -575396996158819435L;
+
+	@Setter
+	private Long id;
+
+	@Setter
 	private Preference preference;
 
+	@Setter
 	private User user;
-
-	private Long id;
 
 	private String value;
 
@@ -43,66 +51,67 @@ public class UserPreference implements Serializable {
 	 * <ul>
 	 * <li>"true" or "false" if boolean
 	 * <li>Parseable into a Double if number
-	 * <li>less than 255 characters length if String.
+	 * <li>less than 65535 characters length if Text.
 	 * </ul>
 	 * 
 	 * @param preference
 	 * @param user
 	 * @param value
 	 *            - should be parsable into preference type. Any String should
-	 *            be &lt; 255 characters.
+	 *            be &lt; 65535 characters.
 	 * @throws if
 	 *             <code>value</code> is incompatible with its preference type.
 	 *             This ensures that no invalid data is stored in the database.
-	 *             m
 	 */
 	public UserPreference(Preference preference, User user, String value) {
-		super();
 		checkValue(preference, value);
 		this.preference = preference;
 		this.user = user;
 		this.value = value;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((preference == null) ? 0 : preference.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		return result;
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	public Long getId() {
+		return id;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
+	@XmlElement
+	public Preference getPreference() {
+		return preference;
+	}
+
+	@ManyToOne
+	@XmlIDREF
+	@XmlElement
+	public User getUser() {
+		return user;
+	}
+
+	@XmlElement
+	@Column(length = 65535)
+	public String getValue() {
+		if (value == null && preference != null) {
+			value = preference.getDefaultValue();
 		}
-		if (obj == null) {
-			return false;
+		return value;
+	}
+
+	/**
+	 * @throws IllegalArgumentException
+	 *             if <code>value</code> is incompatible with its preference type.
+	 */
+	public void setValue(String value) {
+		if (preference != null && value != null) {
+			checkValue(preference, value);
 		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		UserPreference other = (UserPreference) obj;
-		if (preference != other.preference) {
-			return false;
-		}
-		if (user == null) {
-			if (other.user != null) {
-				return false;
-			}
-		} else if (!user.equals(other.user)) {
-			return false;
-		}
-		return true;
+		this.value = value;
 	}
 
 	private void checkValue(Preference preference, String value) {
 		SettingsType.validate(preference.getPrefType(), value);
 
-		// for ENUM preference type run the validator to confirm that string
-		// value is correct
+		// for ENUM preference type run the validator to confirm that string value is correct
 		if (preference.getPrefType().equals(SettingsType.ENUM)) {
 			String validationMsg = preference.getInvalidErrorMessageForValue(value);
 			if (validationMsg != null) {
@@ -115,63 +124,6 @@ public class UserPreference implements Serializable {
 	public String toString() {
 		return "UserPreference [preference=" + preference + ", user=" + (user == null ? user : user.getUniqueName())
 				+ ", value=" + value + "]";
-	}
-
-	/**
-	 * For hibernate
-	 */
-	public UserPreference() {
-		super();
-	}
-
-	@XmlElement
-	public Preference getPreference() {
-		return preference;
-	}
-
-	public void setPreference(Preference preference) {
-		this.preference = preference;
-	}
-
-	@ManyToOne()
-	@XmlIDREF
-	@XmlElement
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	public Long getId() {
-		return id;
-	}
-
-	void setId(Long id) {
-		this.id = id;
-	}
-
-	@XmlElement
-	public String getValue() {
-		if (value == null && preference != null) {
-			value = preference.getDefaultValue();
-		}
-		return value;
-	}
-
-	/**
-	 * @throws IllegalArgumentException
-	 *             if <code>value</code> is incompatible with its preference
-	 *             type.
-	 */
-	public void setValue(String value) {
-		if (preference != null && value != null) {
-			checkValue(preference, value);
-		}
-		this.value = value;
 	}
 
 	@Transient
