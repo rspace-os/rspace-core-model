@@ -33,6 +33,7 @@ public class RecordInformation implements IFieldLinkableElement {
 	private Date modificationDate;
 	private String ownerUsername;
 	private String ownerFullName;
+	private String createdBy;
 	private Long ownerId;
 	private String description;
 	private GlobalIdentifier oid;
@@ -90,6 +91,7 @@ public class RecordInformation implements IFieldLinkableElement {
 		setOwnerUsername(form.getOwner().getUsername());
 		setOwnerFullName(form.getOwner().getFullName());
 		setOwnerId(form.getOwner().getId());
+		setCreatedBy(form.getCreatedBy());
 		setDescription(form.getDescription());
 		setOid(form.getOid());
 	}
