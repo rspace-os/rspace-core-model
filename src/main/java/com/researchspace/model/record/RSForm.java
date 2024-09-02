@@ -1,5 +1,7 @@
 package com.researchspace.model.record;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.researchspace.model.audittrail.AuditTrailIdentifier;
 import java.io.Serializable;
 
 import javax.persistence.Cacheable;
@@ -105,5 +107,11 @@ public class RSForm  extends AbstractForm implements Serializable, UniquelyIdent
 		}
 	}
 
+	@Transient
+	@JsonIgnore
+	@AuditTrailIdentifier()
+	public String getOidString() {
+		return getOid().getIdString();
+	}
 
 }
