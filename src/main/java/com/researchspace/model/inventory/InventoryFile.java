@@ -1,6 +1,6 @@
-
 package com.researchspace.model.inventory;
 
+import com.researchspace.model.EcatMediaFile;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -32,7 +32,6 @@ import lombok.Setter;
 
 /**
  * Basic model used to represent all files added as inventory attachments
- * 
  */
 @Entity
 @Getter
@@ -48,18 +47,17 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 	// indexing filename together with field data
 	@Field(name = "fieldData") 
 	private String fileName;
-
 	private Date creationDate;
 	private String createdBy;
-
 	private String extension;
 	private FileProperty fileProperty;
 	private long size;
 	private InventoryFileType fileType = InventoryFileType.GENERAL;
 	private String contentMimeType;
 	private boolean deleted;
-	
-	private SampleField sampleField; 
+
+	private EcatMediaFile mediaFile;
+	private SampleField sampleField;
 	
 	public enum InventoryFileType {
 		GENERAL, CHEMICAL
@@ -72,6 +70,22 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 			setSize(Long.parseLong(fileProperty.getFileSize()));
 		}
 		setCreationDate(new Date());
+	}
+
+	/**
+	 * Creates InventoryFile based on ELN Gallery file
+	 */
+	public InventoryFile(EcatMediaFile mediaFile) {
+		this(mediaFile.getFileName(), mediaFile.getFileProperty());
+		setCreatedBy(mediaFile.getCreatedBy());
+		setMediaFile(mediaFile);
+		setExtension(mediaFile.getExtension());
+		setSize(mediaFile.getSize());
+		if (mediaFile.isChemistryFile()) {
+			setFileType(InventoryFileType.CHEMICAL);
+		}
+		setContentMimeType(mediaFile.getContentType());
+		setDeleted(mediaFile.isDeleted());
 	}
 
 	@Id
@@ -105,6 +119,11 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 		this.fileProperty = fileProperty;
 	}
 
+	@ManyToOne
+	public EcatMediaFile getMediaFile() {
+		return mediaFile;
+	}
+
 	@ManyToOne(cascade = CascadeType.MERGE)
 	private SampleField getSampleField() {
 		return sampleField;
@@ -114,6 +133,11 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 	@Override
 	public GlobalIdentifier getConnectedRecordOid() {
 		return sampleField != null ? sampleField.getOid() : super.getConnectedRecordOid();
+	}
+
+	@Transient
+	public String getMediaFileGlobalIdentifier() {
+		return mediaFile != null ? mediaFile.getOid().getIdString() : null;
 	}
 
 	@Transient
@@ -136,5 +160,5 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 		copy.setDeleted(isDeleted());
 		return copy;
 	}
-	
+
 }
