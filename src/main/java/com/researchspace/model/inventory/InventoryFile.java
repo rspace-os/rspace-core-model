@@ -76,7 +76,7 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 	 * Creates InventoryFile based on ELN Gallery file
 	 */
 	public InventoryFile(EcatMediaFile mediaFile) {
-		this(mediaFile.getFileName(), mediaFile.getFileProperty());
+		this(mediaFile.getName(), mediaFile.getFileProperty());
 		setCreatedBy(mediaFile.getCreatedBy());
 		setMediaFile(mediaFile);
 		setExtension(mediaFile.getExtension());
