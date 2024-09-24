@@ -11,7 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -33,15 +35,28 @@ import lombok.Builder;
 @Entity
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-
+@Table(indexes = {@Index(columnList = "contentsHash", name = "contentsHash_idx")})
 public class FileProperty implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FileProperty [sdf=" + sdf + ",  relpath=" + relPath + ", fileCategory=" + fileCategory + ", fileGroup="
-				+ fileGroup + ", fileUser=" + fileUser + ", fileVersion=" + fileVersion + ", createDate=" + createDate
-				+ ", updateDate=" + updateDate + ", fileName=" + fileName + ", fileSize=" + fileSize + ", fileOwner="
-				+ fileOwner + "]";
+		return "FileProperty{" +
+				"sdf=" + sdf +
+				", fileCategory='" + fileCategory + '\'' +
+				", fileGroup='" + fileGroup + '\'' +
+				", fileUser='" + fileUser + '\'' +
+				", fileVersion='" + fileVersion + '\'' +
+				", root=" + root +
+				", createDate=" + createDate +
+				", updateDate=" + updateDate +
+				", fileName='" + fileName + '\'' +
+				", fileSize='" + fileSize + '\'' +
+				", fileOwner='" + fileOwner + '\'' +
+				", relPath='" + relPath + '\'' +
+				", external=" + external +
+				", contentsHash='" + contentsHash + '\'' +
+				", id=" + id +
+				'}';
 	}
 
 	@Transient
@@ -64,10 +79,8 @@ public class FileProperty implements Serializable {
 	private String fileOwner;
 	// relative path from within filestore, for 1.34
 	private String relPath;
-    private boolean external = false;
-    
-    
-	
+	private boolean external = false;
+	private String contentsHash;
 
 	/**
 	 * This is a temp column so that we can safely refactor the table and
@@ -109,20 +122,17 @@ public class FileProperty implements Serializable {
 	
 	/**
 	 * Builder for supplying the essential properties needed to construct a file path in the FileStore.
-	 * @param fileCategory
-	 * @param fileGroup
-	 * @param fileUser
-	 * @param fileOwner
-	 * @param fileVersion
 	 */
 	@Builder
-	public FileProperty(String fileCategory, String fileGroup, String fileUser, String fileOwner, String fileVersion) {
+	public FileProperty(String fileCategory, String fileGroup, String fileUser, String fileOwner,
+			String fileVersion, String contentsHash) {
 		this();
 		this.fileCategory = fileCategory;
 		this.fileGroup= fileGroup;
 		this.fileUser = fileUser;
 		this.fileOwner = fileOwner;
 		this.fileVersion = fileVersion;
+		this.contentsHash = contentsHash;
 	}
 
 	/**
@@ -218,6 +228,14 @@ public class FileProperty implements Serializable {
 		this.fileOwner = fileOwner;
 	}
 
+	public void setContentsHash(String contentsHash) {
+		this.contentsHash = contentsHash;
+	}
+
+	public String getContentsHash() {
+		return contentsHash;
+	}
+
 	/**
 	 * This generates the target path for storing and looking up from the
 	 * filesystem - <strong> don't change this!!</strong> <br/>
@@ -275,6 +293,7 @@ public class FileProperty implements Serializable {
 		fps.fileSize = this.fileSize;
 		fps.fileOwner = this.fileOwner;
 		fps.root = this.root;
+		fps.contentsHash = this.contentsHash;
 		return fps;
 	}
 
