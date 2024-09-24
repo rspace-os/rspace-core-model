@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.researchspace.model.EcatDocumentFile;
 import com.researchspace.model.EcatImage;
 import com.researchspace.model.FileProperty;
 import com.researchspace.model.FileStoreRoot;
@@ -697,22 +698,40 @@ class HibernateSandboxTest extends HibernateTest {
 	}
 	
 	@Test 
-	public void createSampleWithAttachedFile() throws IOException {
+	public void createSampleWithAttachedFiles() throws IOException {
 		User u = createAndSaveAnyUser();
 
+		// save gallery document file
+		FileProperty galleryFileFP = TestFactory.createAnyTransientFileProperty(u);
+		dao.save(galleryFileFP.getRoot(), FileStoreRoot.class);
+		galleryFileFP = dao.save(galleryFileFP, FileProperty.class);
+		EcatDocumentFile connectedMediaFile = TestFactory.createEcatDocument(10L, u);
+		connectedMediaFile.setFileProperty(galleryFileFP);
+		connectedMediaFile = dao.save(connectedMediaFile, EcatDocumentFile.class);
+
 		Sample sample = TestFactory.createBasicSampleInContainer(u);
-		FileProperty f1 = TestFactory.createAnyTransientFileProperty(u);
-		InventoryFile invFile = rf.createInventoryFile("testFileName.txt", f1, u);
-		sample.addAttachedFile(invFile);
+		// attach a standalone file
+		FileProperty standaloneFileFP = TestFactory.createAnyTransientFileProperty(u);
+		InventoryFile standaloneInvFile = rf.createInventoryFile("testFileName.txt", standaloneFileFP, u);
+		sample.addAttachedFile(standaloneInvFile);
+
+		// attach a gallery file
+		InventoryFile attachedGalleryFile = new InventoryFile(connectedMediaFile);
+		sample.addAttachedFile(attachedGalleryFile);
 
 		// save sample
 		saveAssociatedEntities(sample);
 		sample = saveSampleInContainer(sample);
-		
+
+		// verify
 		assertNotNull(sample.getId());
-		assertEquals(1, sample.getAttachedFiles().size());
+		assertEquals(2, sample.getAttachedFiles().size());
 		InventoryFile savedInvFile = sample.getAttachedFiles().get(0);
 		assertNotNull(savedInvFile.getId());
+		assertNull(savedInvFile.getMediaFileGlobalIdentifier());
+		InventoryFile savedGalleryAttachmentFile = sample.getAttachedFiles().get(1);
+		assertNotNull(savedGalleryAttachmentFile.getId());
+		assertNotNull(savedGalleryAttachmentFile.getMediaFileGlobalIdentifier());
 	}
 
 	@Test 
