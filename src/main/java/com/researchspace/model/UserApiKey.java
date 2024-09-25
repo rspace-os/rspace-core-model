@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserApiKey implements Serializable {
 
-	public static final String APIKEY_REGEX = "\\A\\$2a?\\$\\d\\d\\$[./0-9A-Za-z]{53}|[A-Za-z_0-9]+";
+	public static final String APIKEY_REGEX = "[A-Za-z_0-9]+";
 	private static final long serialVersionUID = 5001024745839923127L;
 
 	private String apiKey;
@@ -75,8 +75,8 @@ public class UserApiKey implements Serializable {
 		return "UserApiKey [key=" + apiKey + ", created=" + created + "]";
 	}
 
-	@Column(nullable = false, length = 60, unique = true)
-	@Size(min = 16, max = 60)
+	@Column(nullable = false, length = 64, unique = true)
+	@Size(min = 16, max = 64)
 	@Pattern(regexp = APIKEY_REGEX)
 	@NaturalId(mutable = true)// can be  reset
 	public String getApiKey() {
