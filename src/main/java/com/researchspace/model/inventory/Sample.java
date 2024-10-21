@@ -607,7 +607,7 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 	private void createSubSample(Function<Sample, String> nameMapper, QuantityInfo toCopyTotal, Sample sample) {
 		SubSample singleSS = new SubSample(sample);
 		sample.addSubSample(singleSS);
-		String ssName = SampleSeriesHelper2.getSerialNameForSubSample("", nameMapper.apply(this), 1, 1);
+		String ssName = InventorySeriesNamingHelper.getSerialNameForSubSample(nameMapper.apply(this), 1, 1);
 		singleSS.setName(ssName);
 
 		QuantityInfo newQuantity = toCopyTotal != null ? toCopyTotal.copy() 
