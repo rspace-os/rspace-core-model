@@ -35,6 +35,7 @@ public class Basket implements Serializable {
 
 	private String name;
 
+	@Setter(AccessLevel.PRIVATE)
 	private List<BasketItem> items = new ArrayList<>();
 
 	@Setter(AccessLevel.PRIVATE)
@@ -63,11 +64,6 @@ public class Basket implements Serializable {
 	@OrderBy(value = "id")
 	public List<BasketItem> getItems() {
 		return items;
-	}
-
-	public void setItems(List<BasketItem> items) {
-		this.items = items;
-		updateItemsCount();
 	}
 
 	private void updateItemsCount() {
