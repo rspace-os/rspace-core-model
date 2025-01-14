@@ -71,7 +71,11 @@ public enum Preference {
 	/** User enablement of Chemisrty search /structure */
 	CHEMISTRY(Boolean.FALSE.toString(), SettingsType.BOOLEAN, PreferenceCategory.INTEGRATIONS, "Chemistry"),
 	
-	/** User enablement of Mendeley linking */
+	/** User enablement of Mendeley linking
+	 * @deprecated Mendeley-linking integration has been removed. Need to keep this in place though to maintain 
+  	 * ordinal value which is used in the database.
+         * */
+	@Deprecated
 	MENDELEY(Boolean.FALSE.toString(), SettingsType.BOOLEAN, PreferenceCategory.INTEGRATIONS, "Mendeley"),
 
 	/** User enablement of Ecat linking
