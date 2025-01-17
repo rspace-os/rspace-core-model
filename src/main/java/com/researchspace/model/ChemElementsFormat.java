@@ -14,8 +14,12 @@ public enum ChemElementsFormat {
 	/**
 	 * Marvin XML format
 	 */
-	MRV("mrv");
+	MRV("mrv"),
 	
+	/**
+	 * Ketcher format
+	 */
+	KET("ket");
 	
 	public String getLabel() {
 		return label;
