@@ -9,14 +9,6 @@ import static com.researchspace.model.core.RecordType.TEMPLATE;
 import static com.researchspace.model.record.StructuredDocument.MAX_TAG_LENGTH;
 import static java.lang.String.format;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 import com.researchspace.core.util.CollectionFilter;
 import com.researchspace.core.util.MediaUtils;
 import com.researchspace.model.AbstractUserOrGroupImpl;
@@ -31,6 +23,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Predicate;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -251,7 +251,8 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	 * @throws IllegalAddChildOperation
 	 *             if adding this child will create a cycle..
 	 */
-	public RecordToFolder addChild(BaseRecord child, ChildAddPolicy policy, User owner, ACLPropagationPolicy aclPolicy)
+	public RecordToFolder addChild(BaseRecord child, ChildAddPolicy policy, User owner,
+			ACLPropagationPolicy aclPolicy, boolean skipAddingToChildren)
 			throws IllegalAddChildOperation {
 		// no self edges
 		if (this.equals(child)) {
@@ -268,11 +269,16 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 					child.getName(),this.getName() ));
 		}
 
-		RecordToFolder newedge = doAdd(child, owner);
+		RecordToFolder newedge = doAdd(child, owner, skipAddingToChildren);
 		if (newedge != null) {
 			postProcess(child, owner, newedge, aclPolicy);
 		}
 		return newedge;
+	}
+
+	public RecordToFolder addChild(BaseRecord child, ChildAddPolicy policy, User owner,
+			ACLPropagationPolicy aclPolicy){
+		return addChild(child, policy, owner, aclPolicy, false);
 	}
 
 	/*
@@ -300,21 +306,31 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		}
 	}
 
-	/*
-	 * Package scoped for testing; do not use externally; use addChild
-	 */
-	RecordToFolder doAdd(BaseRecord child, User owner) {
+
+	RecordToFolder doAdd(BaseRecord child, User owner, boolean skipAddingToChildren) {
 		RecordToFolder newedge = new RecordToFolder(child, this, owner.getUsername());
 
 		boolean addedP = child.parents.add(newedge);
 		if (!addedP) {
 			return null;
 		}
-		boolean addedC = children.add(newedge);
+		boolean addedC = true;
+		if (!skipAddingToChildren) {
+			/* it can be skipped without any functional disruption (since hibernate recognizes the
+			   change just from the `child.parents` when we persist the child), otherwise needs
+			   to load the children set, which is very inefficient for large folders */
+			addedC = children.add(newedge);
+		}
 		if (addedC && addedP) {
 			return newedge;
 		}
 		return null;
+	}
+	/*
+	 * Package scoped for testing; do not use externally; use addChild
+	 */
+	RecordToFolder doAdd(BaseRecord child, User owner) {
+		return doAdd(child, owner, false);
 	}
 
 	/**
@@ -336,8 +352,13 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	 *         not be created.
 	 * @throws IllegalAddChildOperation
 	 */
+	public RecordToFolder addChild(BaseRecord child, User owner, boolean skipAddingToChildren) throws IllegalAddChildOperation {
+		return addChild(child, ChildAddPolicy.DEFAULT, owner, ACLPropagationPolicy.DEFAULT_POLICY,
+				skipAddingToChildren);
+	}
+
 	public RecordToFolder addChild(BaseRecord child, User owner) throws IllegalAddChildOperation {
-		return addChild(child, ChildAddPolicy.DEFAULT, owner, ACLPropagationPolicy.DEFAULT_POLICY);
+		return addChild(child, owner, false);
 	}
 
 	public boolean removeChild(BaseRecord child, ACLPropagationPolicy aclPolicy) {
@@ -558,7 +579,8 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	 * @return The Folder that the records were added to.
 	 * @throws IllegalAddChildOperation
 	 */
-	public Folder addRecordToUsersSharedFolder(BaseRecord record, User sharee, ACLPropagationPolicy propagationPolicy)
+	public Folder addRecordToUsersSharedFolder(BaseRecord record, User sharee,
+			ACLPropagationPolicy propagationPolicy, boolean skipAddingToChildren)
 			throws IllegalAddChildOperation {
 		Folder parent = this;
 
@@ -572,8 +594,13 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		if (toAdd == null) {
 			toAdd = parent;
 		}
-		toAdd.addChild(record, ChildAddPolicy.DEFAULT, sharee, propagationPolicy);
+		toAdd.addChild(record, ChildAddPolicy.DEFAULT, sharee, propagationPolicy, skipAddingToChildren);
 		return toAdd;
+	}
+
+	public Folder addRecordToUsersSharedFolder(BaseRecord record, User sharee, ACLPropagationPolicy propagationPolicy)
+			throws IllegalAddChildOperation {
+		return addRecordToUsersSharedFolder(record, sharee, propagationPolicy, false);
 	}
 
 	/**
