@@ -21,7 +21,7 @@ public class GroupMessageOrRequest extends MessageOrRequest implements Serializa
 
 	private Group group;
 
-	GroupMessageOrRequest(MessageType type) {
+	public GroupMessageOrRequest(MessageType type) {
 		super(type);
 	}
 

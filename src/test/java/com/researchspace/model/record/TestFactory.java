@@ -29,8 +29,10 @@ import com.researchspace.model.Signature;
 import com.researchspace.model.Thumbnail;
 import com.researchspace.model.Thumbnail.SourceType;
 import com.researchspace.model.User;
+import com.researchspace.model.comms.Communication;
 import com.researchspace.model.comms.CommunicationStatus;
 import com.researchspace.model.comms.CommunicationTarget;
+import com.researchspace.model.comms.GroupMessageOrRequest;
 import com.researchspace.model.comms.MessageOrRequest;
 import com.researchspace.model.comms.MessageType;
 import com.researchspace.model.comms.Notification;
@@ -518,6 +520,17 @@ public class TestFactory {
 	 */
 	public static MessageOrRequest createAnyRequest(User originator, Record r) {
 		MessageOrRequest mor = new MessageOrRequest(MessageType.REQUEST_RECORD_REVIEW);
+		mor.setOriginator(originator);
+		mor.setStatus(CommunicationStatus.NEW);
+		mor.setRecord(r);
+		return mor;
+	}
+
+	public static GroupMessageOrRequest createAnyGroupRequest(User originator, Record r, Group g) {
+		GroupMessageOrRequest mor = new GroupMessageOrRequest(MessageType.REQUEST_JOIN_LAB_GROUP);
+		mor.setGroup(g);
+		mor.setId(999L);
+		mor.getGroup().setDisplayName("GroupName");
 		mor.setOriginator(originator);
 		mor.setStatus(CommunicationStatus.NEW);
 		mor.setRecord(r);
