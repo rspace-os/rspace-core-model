@@ -353,15 +353,17 @@ class HibernateSandboxTest extends HibernateTest {
 		
 		// when updating existing extra field
 		ahsf2.setSubSample(null);
-		assertThrows(ConstraintViolationException.class, ()->dao.save(ahsf2, ExtraTextField.class));
+		dao.save(ahsf2, ExtraTextField.class);
 		
 		// when saving new extra field
 		ExtraTextField unconnectedExtraField = TestFactory.createExtraTextField("", u, sample);
 		unconnectedExtraField.setSample(null);
-		assertThrows(ConstraintViolationException.class, ()->dao.save(unconnectedExtraField, ExtraTextField.class)); // no parents
+		dao.save(unconnectedExtraField, ExtraTextField.class); // no parents allowed
 		unconnectedExtraField.setSample(sample);
 		unconnectedExtraField.setSubSample(subSample);
-		assertThrows(ConstraintViolationException.class, ()->dao.save(unconnectedExtraField, ExtraTextField.class)); // two parents
+		assertThrows(ConstraintViolationException.class, () -> dao.save(unconnectedExtraField,
+				ExtraTextField.class)); // two parents not allowed
+
 		// should save fine now
 		unconnectedExtraField.setSample(null);
 		dao.save(unconnectedExtraField, ExtraTextField.class);
@@ -678,9 +680,9 @@ class HibernateSandboxTest extends HibernateTest {
 		// try saving incorrect material usage - linked to both sample and container
 		MaterialUsage incorrectMU = rf.createMaterialUsage(savedLom, savedContainer, null);
 		incorrectMU.setInventoryRecord(sample);
-		ConstraintViolationException cve = assertThrows(ConstraintViolationException.class, 
+		ConstraintViolationException cve = assertThrows(ConstraintViolationException.class,
 				()-> dao.save(incorrectMU, MaterialUsage.class));
-		assertEquals("MaterialUsage must be connected to exactly one inventory record", cve.getMessage());
+		assertEquals("MaterialUsage cannot be connected to more than one inventory record", cve.getMessage());
 	}
 	
 	@Test

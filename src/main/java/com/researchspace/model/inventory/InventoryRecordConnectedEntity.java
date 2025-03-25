@@ -93,7 +93,7 @@ public abstract class InventoryRecordConnectedEntity {
 	public String getConnectedRecordGlobalIdentifier() {
 		GlobalIdentifier parentOid = getConnectedRecordOid();
 		return parentOid != null ? parentOid.getIdString() : null;
-	}	
+	}
 
 	@PrePersist
 	@PreUpdate
@@ -102,8 +102,8 @@ public abstract class InventoryRecordConnectedEntity {
 		parentCount = sample == null ? parentCount : ++parentCount;
 		parentCount = subSample == null ? parentCount : ++parentCount;
 		parentCount = container == null ? parentCount : ++parentCount;
-		if (parentCount != 1) { 
-			throw new ConstraintViolationException(this.getClass().getSimpleName()  + " must be connected to exactly one inventory record", null);
+		if (parentCount > 1) {
+			throw new ConstraintViolationException(this.getClass().getSimpleName()  + " cannot be connected to more than one inventory record", null);
 		}
 	}
 
