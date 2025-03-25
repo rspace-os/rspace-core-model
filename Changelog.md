@@ -2,6 +2,9 @@
 
 Summary of important or breaking changes.
 
+## 2.9.0 2025-04-02
+- Extended DigitalObjectIdentifier to be not associated to any inventory item
+
 ## 2.1.1 2024-08-09
 - Added integration with Digital Commons Data
 

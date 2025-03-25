@@ -1,11 +1,14 @@
 
 package com.researchspace.model.inventory;
 
+import com.researchspace.model.User;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import com.researchspace.core.util.JacksonUtil;
 import com.researchspace.core.util.SecureStringUtils;
@@ -20,6 +23,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 /**
  * Basic model used to represent all identifiers added to inventory items
@@ -49,6 +54,8 @@ public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity impl
 
 	private String state;
 
+	private User owner;
+
 	@Setter(AccessLevel.PRIVATE)
 	private String publicLink;
 
@@ -75,6 +82,14 @@ public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity impl
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	public Long getId() {
 		return id;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true)
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+	@IndexedEmbedded
+	public User getOwner() {
+		return owner;
 	}
 
 	@Lob
@@ -130,6 +145,11 @@ public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity impl
 
 	public void addOtherListData(IdentifierOtherListProperty property, List<String> data) {
 		addOtherData(property.toString(), JacksonUtil.toJson(data));
+	}
+
+	@Transient
+	public boolean isAssociated(){
+		return getInventoryRecord() != null;
 	}
 	
 }
