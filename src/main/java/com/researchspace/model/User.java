@@ -184,6 +184,8 @@ public class User extends AbstractUserOrGroupImpl
 	@Setter
 	private String token; // used to back signup form in cloud version
 	@Setter
+	private UserAuthenticationMethod authenticatedBy;
+	@Setter
 	private List<User> connectedUsers;
 	@Setter
 	private List<Group> connectedGroups;
@@ -228,12 +230,19 @@ public class User extends AbstractUserOrGroupImpl
 	/**
 	 * Getter for verification token; this is used to verify cloud-based signup
 	 * and is only relevant in cloud-deployment.
-	 * 
-	 * @return
 	 */
 	@Transient
 	public String getToken() {
 		return token;
+	}
+
+	/**
+	 * Getter for authentication method that was used for logging this user into RSpace;
+	 * only relevant/populated for User object pointing to a subject executing the code
+	 */
+	@Transient
+	public UserAuthenticationMethod getAuthenticatedBy() {
+		return authenticatedBy;
 	}
 
 	/**
