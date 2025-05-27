@@ -94,11 +94,6 @@ public class OAuthToken implements Serializable, AuthenticationToken {
 		this.created = new Date();
 	}
 
-	public void setExpiryTime(Instant expiryTime) {
-		Validate.isTrue(expiryTime == null || expiryTime.isAfter(Instant.now()), "expiry time must be in the future ");
-		this.expiryTime = expiryTime;
-	}
-
 	public void setHashedAccessToken(String hashedAccessToken) {
 		Validate.isTrue(!isBlank(hashedAccessToken) || hashedAccessToken == null, "access token must be non-empty");
 		this.hashedAccessToken = hashedAccessToken;
