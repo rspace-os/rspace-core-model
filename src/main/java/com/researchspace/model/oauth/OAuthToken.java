@@ -4,7 +4,6 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -13,12 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 
-import lombok.Data;
 import org.apache.commons.lang3.Validate;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.hibernate.annotations.Cache;
