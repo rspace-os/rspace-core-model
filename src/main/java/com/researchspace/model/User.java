@@ -237,8 +237,8 @@ public class User extends AbstractUserOrGroupImpl
 	}
 
 	/**
-	 * Getter for authentication method that was used for logging this user into RSpace;
-	 * only relevant/populated for User object pointing to a subject executing the code
+	 * If this object represents the currently logged-in User, this method may store
+	 * info about authentication method used for logging the user into RSpace.
 	 */
 	@Transient
 	public UserAuthenticationMethod getAuthenticatedBy() {
