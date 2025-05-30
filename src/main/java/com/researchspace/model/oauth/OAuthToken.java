@@ -82,7 +82,7 @@ public class OAuthToken implements Serializable, AuthenticationToken {
 	 * Public constructor with all required fields.
 	 */
 	public OAuthToken(User user, String clientId, OAuthTokenType tokenType) {
-		Validate.noNullElements(new Object[]{user, clientId, tokenType}, "No null arguments");
+		Validate.noNullElements(new Object[]{user, clientId, tokenType}, "userId/clientId/tokenType cannot be null");
 		Validate.isTrue(!isBlank(clientId), "client ID must be non-empty");
 		this.user = user;
 		this.clientId = clientId;
