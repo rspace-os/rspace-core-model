@@ -38,7 +38,6 @@ public class UserApiKey implements Serializable {
 	private User user;
 
 	public UserApiKey(User user, String apiKey) {
-		super();
 		this.apiKey = apiKey;
 		this.user = user;
 		this.created = new Date();

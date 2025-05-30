@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Stream;
 
+import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,23 +25,25 @@ class OAuthTokenTest {
 		anyUser = createAnyUser("any");
 	}
 
-	@ParameterizedTest(name = "{index}: user:{0}, clientId:{1}, accessToken:{2})")
+	@ParameterizedTest(name = "{index}: user:{0}, clientId:{1}, tokenType:{2})")
 	@MethodSource("constructorValidationArguments")
-	void constructorValidationNoNullArgs(User user, String clientId, String hashedToken) {
-		assertIllegalArgumentException(() -> new OAuthToken(user, clientId, hashedToken));
+	void constructorValidationNoNullArgs(User user, String clientId, OAuthTokenType tokenType) {
+		assertIllegalArgumentException(() -> new OAuthToken(user, clientId, tokenType));
 	}
 
+	@Test
 	void expiryTimeInFuture() {
-		assertIllegalArgumentException(() -> new OAuthToken(anyUser, "anId", "token", inthePast()));
-		OAuthToken valid = new OAuthToken(anyUser, "id", "token", inTheFuture());
-		assertEquals("id", valid.getClientId());
+		OAuthToken token = new OAuthToken(anyUser, "id", OAuthTokenType.UI_TOKEN);
+		assertIllegalArgumentException(() -> token.setExpiryTime(inthePast()));
+		token.setExpiryTime(inTheFuture());
+		assertEquals("id", token.getClientId());
 	}
 
 	static Stream<Arguments> constructorValidationArguments() throws Throwable {
-		return Stream.of(Arguments.of(null, "clientid", "hashedToken"),
-				Arguments.of(createAnyUser("any"), "", "hashedToken"),
-				Arguments.of(createAnyUser("any"), null, "hashedToken"),
-				Arguments.of(createAnyUser("any"), "clientId", " "),
+		return Stream.of(Arguments.of(null, "clientid", OAuthTokenType.UI_TOKEN),
+				Arguments.of(createAnyUser("any"), "", OAuthTokenType.UI_TOKEN),
+				Arguments.of(createAnyUser("any"), null, OAuthTokenType.UI_TOKEN),
+				Arguments.of(createAnyUser("any"), "clientId", null),
 				Arguments.of(null, null, null)
 		);
 	}

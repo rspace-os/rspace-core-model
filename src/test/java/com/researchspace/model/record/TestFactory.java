@@ -29,7 +29,6 @@ import com.researchspace.model.Signature;
 import com.researchspace.model.Thumbnail;
 import com.researchspace.model.Thumbnail.SourceType;
 import com.researchspace.model.User;
-import com.researchspace.model.comms.Communication;
 import com.researchspace.model.comms.CommunicationStatus;
 import com.researchspace.model.comms.CommunicationTarget;
 import com.researchspace.model.comms.GroupMessageOrRequest;
@@ -53,6 +52,7 @@ import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.field.ExtraNumberField;
 import com.researchspace.model.inventory.field.ExtraTextField;
 import com.researchspace.model.oauth.OAuthToken;
+import com.researchspace.model.oauth.OAuthTokenType;
 import com.researchspace.model.oauth.UserConnection;
 import com.researchspace.model.oauth.UserConnectionId;
 import com.researchspace.model.permissions.ConstraintPermissionResolver;
@@ -686,8 +686,8 @@ public class TestFactory {
 	 * @param anyUser
 	 * @return
 	 */
-	public static OAuthToken createOAuthToken (User anyUser) {
-		OAuthToken token =   new OAuthToken(anyUser, "clientId", "hashedAccessToken");
+	public static OAuthToken createOAuthTokenForUI(User anyUser) {
+		OAuthToken token = new OAuthToken(anyUser, "clientId", OAuthTokenType.UI_TOKEN);
 		token.setHashedRefreshToken("refreshToken");
 		return token;
 	}
