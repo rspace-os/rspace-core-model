@@ -49,7 +49,7 @@ import lombok.Setter;
 public abstract class SampleField implements Serializable, ValidatingField, Comparable<SampleField> {
 
 	private static final long serialVersionUID = 6951489011943609794L;
-	
+
 	private Long id;
 
 	private String name;
@@ -71,7 +71,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 
 	public static SampleField fromFieldTypeString(String fieldTypeString) {
 		Validate.notNull(fieldTypeString, "cannot create SampleField for null field type");
-		
+
 		String fieldType = StringUtils.capitalize(fieldTypeString);
 		switch (fieldType) {
 		case FieldType.STRING_TYPE:
@@ -94,17 +94,19 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 			return new InventoryRadioField();
 		case FieldType.URI_TYPE:
 			return new InventoryUriField();
+    case FieldType.IDENTIFIER_TYPE:
+			return new InventoryIdentifierField();
 		default:
 			throw new IllegalArgumentException(String.format("Unsupported field type %s", fieldType));
 		}
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	public Long getId() {
 		return id;
 	}
-	
+
 	@Column(nullable = false, length = 50)
 	public String getName() {
 		return name;
@@ -135,7 +137,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 
 	/**
 	 * Validate and saves incoming string as field data.
-	 * 
+	 *
 	 * @throws IllegalArgumentException if is invalid data
 	 * @param fieldData
 	 */
@@ -146,7 +148,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 
 	/**
 	 * Checks if incoming string is a valid data for the field
-	 * 
+	 *
 	 * @throws IllegalArgumentException if is invalid data
 	 * @param fieldData
 	 */
@@ -157,7 +159,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 					fieldData, getType().getType(), el.getAllErrorMessagesAsStringsSeparatedBy(",")));
 		}
 	}
-	
+
 	/**
 	 * Boolean flag to check if field supports storing data as list of options,
 	 * e.g. as radio or choice fields does.
@@ -169,7 +171,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 
 	/**
 	 * Convenient method for retrieving all possible options of radio/choice field.
-	 * (only implemented by these classes)  
+	 * (only implemented by these classes)
 	 */
 	@Transient
 	public List<String> getAllOptions() {
@@ -178,7 +180,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 
 	/**
 	 * Convenient method for retrieving selected options of choice/radio field.
-	 * (only implemented by these classes)  
+	 * (only implemented by these classes)
 	 */
 	@Transient
 	public List<String> getSelectedOptions() {
@@ -187,7 +189,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 
 	/**
 	 * Convenient method for setting selected options of choice/radio field.
-	 * (only implemented by these classes)  
+	 * (only implemented by these classes)
 	 */
 	@Transient
 	public void setSelectedOptions(List<String> selectedOptions) {
@@ -197,7 +199,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 	/**
 	 * Convenient method for retrieving field attachment.
 	 * (only implemented by InventoryAttachmentField class)
-	 * 
+	 *
 	 * @return attached inventory file, or null.
 	 */
 	@Transient
@@ -207,14 +209,14 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 
 	/**
 	 * Convenient method for setting field attachment
-	 * (only implemented by InventoryAttachmentField class)  
+	 * (only implemented by InventoryAttachmentField class)
 	 */
 	@Transient
 	public void setAttachedFile(InventoryFile file) {
 		throw new UnsupportedOperationException(getType() + " field doesn't support file attachments");
 	}
-	
-	
+
+
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	public Sample getSample() {
@@ -222,8 +224,8 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 	}
 
 	/**
-	 * The template field that was used for creating this sample field. 
-	 * 
+	 * The template field that was used for creating this sample field.
+	 *
 	 * The template can be modified independently of samples created from it,
 	 * so unless the sample points to the latest template definition its field
 	 * properties may differ from template field properties.
@@ -238,7 +240,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 	 * Subclasses can override with validation. this implementation only checks if field
 	 * is not mandatory and empty. This method can be invoked by client code and is also invoked via
 	 * {@code setFieldData(data)}
-	 * 
+	 *
 	 * @param fieldData
 	 */
 	public ErrorList validate(String fieldData) {
@@ -256,7 +258,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 	}
 
 	public abstract SampleField shallowCopy();
-	
+
 	@Transient
 	public GlobalIdentifier getOid() {
 		return new GlobalIdentifier(GlobalIdPrefix.SF, getId());
@@ -272,7 +274,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 	public boolean isSuggestedFieldForData(String data) {
 		return false;
 	}
-	
+
 	@Override
 	public int compareTo(SampleField other) {
 		return columnIndex.compareTo(other.columnIndex);
@@ -293,26 +295,26 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 	}
 
 	/**
-	 * Note: don't call this method directly, but rather call {@link #{Sample.updateToLatestTemplateDefinition()} 
+	 * Note: don't call this method directly, but rather call {@link #{Sample.updateToLatestTemplateDefinition()}
 	 * to update whole sample.
-	 * 
-	 * This method applies changes from latest template field: 
-	 *  - updates name of the field (if changed) 
+	 *
+	 * This method applies changes from latest template field:
+	 *  - updates name of the field (if changed)
 	 *  - updates columnIndex of the field (if changed)
 	 *  - applies 'deleted' flag to the field, but only if field value is empty. If field value
 	 *    is not empty, an exception is thrown.
-	 * 
-	 * @return true if method resulted in any change (modification) to the field 
+	 *
+	 * @return true if method resulted in any change (modification) to the field
 	 * @throws IllegalStateException if the field or stored data is not compatible with latest template definition,
-	 *     e.g. doesn't have connected template field, or doesn't have data and latest field is marked as mandatory. 
+	 *     e.g. doesn't have connected template field, or doesn't have data and latest field is marked as mandatory.
 	 */
 	public boolean updateToLatestTemplateDefinition() {
 		if (templateField == null) {
 			throw new IllegalStateException("Field [" + getName() + "] has no connected template field");
 		}
-		
+
 		boolean fieldUpdated = false;
-		
+
 		// apply change to field name
 		if (!getName().equals(templateField.getName())) {
 			setName(templateField.getName());
