@@ -9,7 +9,7 @@ public enum FieldType {
 
 	NUMBER("Number"), STRING("String"), TEXT("Text"), RADIO("Radio"),
 	CHOICE("Choice"), DATE("Date"), TIME("Time"), REFERENCE("Reference"), ATTACHMENT("Attachment"),
-	URI("Uri");
+	URI("Uri"), IDENTIFIER("Identifier");
 
 	private String type;
 	public static final String NUMBER_TYPE = "Number";
@@ -22,6 +22,7 @@ public enum FieldType {
 	public static final String REFERENCE_TYPE = "Reference";
 	public static final String ATTACHMENT_TYPE = "Attachment";
 	public static final String URI_TYPE = "Uri";
+	public static final String IDENTIFIER_TYPE = "Identifier";
 
 	/**
 	 * Gets the field type for an input String or <code>null</code> if the argument
@@ -37,25 +38,27 @@ public enum FieldType {
 		switch (capitalize(fieldType.toLowerCase())) {
 
 		case NUMBER_TYPE:
-			return FieldType.NUMBER;
+			return NUMBER;
 		case STRING_TYPE:
-			return FieldType.STRING;
+			return STRING;
 		case TEXT_TYPE:
-			return FieldType.TEXT;
+			return TEXT;
 		case RADIO_TYPE:
-			return FieldType.RADIO;
+			return RADIO;
 		case CHOICE_TYPE:
-			return FieldType.CHOICE;
+			return CHOICE;
 		case DATE_TYPE:
-			return FieldType.DATE;
+			return DATE;
 		case TIME_TYPE:
-			return FieldType.TIME;
+			return TIME;
 		case REFERENCE_TYPE:
-			return FieldType.REFERENCE;
+			return REFERENCE;
 		case ATTACHMENT_TYPE:
-			return FieldType.ATTACHMENT;
+			return ATTACHMENT;
 		case URI_TYPE:
-			return FieldType.URI;
+			return URI;
+		case IDENTIFIER_TYPE:
+			return IDENTIFIER;
 		default:
 			return null;
 		}
