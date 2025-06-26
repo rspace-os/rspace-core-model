@@ -1,5 +1,6 @@
 package com.researchspace.model.externalWorkflows;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,6 +47,16 @@ public class ExternalWorkFlowInvocation {
     this.externalWorkFlowData = externalWorkFlowData;
     this.status = status;
     this.externalWorkFlow = externalWorkFlow;
+    for(ExternalWorkFlowData data : externalWorkFlowData) {
+      if(data.getExternalWorkflowInvocations() == null) {
+        data.setExternalWorkflowInvocations(new ArrayList<>());
+      }
+     data.getExternalWorkflowInvocations().add(this);
+    }
+    if(externalWorkFlow.getExternalWorkflowInvocations() == null) {
+      externalWorkFlow.setExternalWorkflowInvocations(new ArrayList<>());
+    }
+    externalWorkFlow.getExternalWorkflowInvocations().add(this);
   }
   protected ExternalWorkFlowInvocation() {
   }

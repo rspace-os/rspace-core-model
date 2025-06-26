@@ -1,6 +1,6 @@
 package com.researchspace.model.externalWorkflows;
 
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -32,7 +33,8 @@ public class ExternalWorkFlow {
   private String description;
 
   @OneToMany(mappedBy = "externalWorkFlow")
-  private Set<ExternalWorkFlowInvocation> externalWorkflowInvocations;
+  @Setter
+  private List<ExternalWorkFlowInvocation> externalWorkflowInvocations;
   @Builder()
   public ExternalWorkFlow( @NonNull String extId,  @NonNull String name,  @NonNull String description) {
     this.extId = extId;
