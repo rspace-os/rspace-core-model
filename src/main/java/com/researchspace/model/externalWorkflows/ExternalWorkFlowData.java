@@ -1,7 +1,8 @@
 package com.researchspace.model.externalWorkflows;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -98,7 +99,7 @@ public class ExternalWorkFlowData implements Serializable {
 
   @ManyToMany(mappedBy = "externalWorkFlowData")
   @Setter
-  private List<ExternalWorkFlowInvocation> externalWorkflowInvocations;
+  private Set<ExternalWorkFlowInvocation> externalWorkflowInvocations = new HashSet<>();
   @Builder()
   public ExternalWorkFlowData(
       @NonNull ExternalService externalService,  @NonNull long rspacedataid,  @NonNull RSPACE_DATA_TYPE rspaceDataType,

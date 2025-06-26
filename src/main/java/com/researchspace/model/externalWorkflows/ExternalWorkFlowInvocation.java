@@ -1,7 +1,9 @@
 package com.researchspace.model.externalWorkflows;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,7 +35,7 @@ public class ExternalWorkFlowInvocation {
   @JoinTable(name = "ExtInvoc_ExtData", joinColumns = {
       @JoinColumn(name = "invocation_id") }, inverseJoinColumns = @JoinColumn(name = "data_id"))
   @NotNull
-  private List<ExternalWorkFlowData> externalWorkFlowData;
+  private Set<ExternalWorkFlowData> externalWorkFlowData = new HashSet<>();
   @Setter
   @NotNull
   private String status;
@@ -41,20 +43,14 @@ public class ExternalWorkFlowInvocation {
   @ManyToOne
   private ExternalWorkFlow externalWorkFlow;
   @Builder()
-  public ExternalWorkFlowInvocation(@NonNull String extId, @NonNull List<ExternalWorkFlowData> externalWorkFlowData,
+  public ExternalWorkFlowInvocation(@NonNull String extId, @NonNull Set<ExternalWorkFlowData> externalWorkFlowData,
       @NonNull String status, @NonNull ExternalWorkFlow externalWorkFlow) {
     this.extId=extId;
     this.externalWorkFlowData = externalWorkFlowData;
     this.status = status;
     this.externalWorkFlow = externalWorkFlow;
     for(ExternalWorkFlowData data : externalWorkFlowData) {
-      if(data.getExternalWorkflowInvocations() == null) {
-        data.setExternalWorkflowInvocations(new ArrayList<>());
-      }
      data.getExternalWorkflowInvocations().add(this);
-    }
-    if(externalWorkFlow.getExternalWorkflowInvocations() == null) {
-      externalWorkFlow.setExternalWorkflowInvocations(new ArrayList<>());
     }
     externalWorkFlow.getExternalWorkflowInvocations().add(this);
   }

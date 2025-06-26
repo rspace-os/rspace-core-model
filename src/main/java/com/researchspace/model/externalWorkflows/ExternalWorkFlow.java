@@ -1,6 +1,7 @@
 package com.researchspace.model.externalWorkflows;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,7 +35,7 @@ public class ExternalWorkFlow {
 
   @OneToMany(mappedBy = "externalWorkFlow")
   @Setter
-  private List<ExternalWorkFlowInvocation> externalWorkflowInvocations;
+  private Set<ExternalWorkFlowInvocation> externalWorkflowInvocations = new HashSet<>();
   @Builder()
   public ExternalWorkFlow( @NonNull String extId,  @NonNull String name,  @NonNull String description) {
     this.extId = extId;
