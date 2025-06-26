@@ -1,9 +1,8 @@
 package com.researchspace.model.externalWorkflows;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,6 +40,7 @@ public class ExternalWorkFlowInvocation {
   private String status;
 
   @ManyToOne
+  @JoinColumn(name = "external_work_flow_id")
   private ExternalWorkFlow externalWorkFlow;
   @Builder()
   public ExternalWorkFlowInvocation(@NonNull String extId, @NonNull Set<ExternalWorkFlowData> externalWorkFlowData,
