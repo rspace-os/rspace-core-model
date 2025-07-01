@@ -96,6 +96,10 @@ public class RSChemElement implements Serializable, IFieldLinkableElement {
 	 */
 	private Integer rgroupId;
 
+	@Lob
+	@Column(name = "metadata", columnDefinition = "LONGTEXT")
+	private String metadata;
+
 	/**
 	 * A String describing the format of the chem element
 	 */
