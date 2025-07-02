@@ -8,6 +8,7 @@ import com.researchspace.model.record.BaseRecord;
 import com.researchspace.model.record.RSForm;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -15,6 +16,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class JournalEntry {
 
 	private Long id;
