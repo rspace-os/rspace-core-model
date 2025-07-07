@@ -58,7 +58,7 @@ public class RSChemElement implements Serializable, IFieldLinkableElement {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private Long id;
-	
+
 	private Long parentId;
 
 	private Long ecatChemFileId;
@@ -96,8 +96,7 @@ public class RSChemElement implements Serializable, IFieldLinkableElement {
 	 */
 	private Integer rgroupId;
 
-	@Lob
-	@Column(name = "metadata", columnDefinition = "LONGTEXT")
+	@Column(columnDefinition="TEXT")
 	private String metadata;
 
 	/**
@@ -116,7 +115,7 @@ public class RSChemElement implements Serializable, IFieldLinkableElement {
 	@ManyToOne
 	@JsonIgnore
 	private Record record;
-	
+
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable=false, updatable=false)
@@ -132,7 +131,7 @@ public class RSChemElement implements Serializable, IFieldLinkableElement {
 	@ManyToOne
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	private FileProperty imageFileProperty;
-	
+
 	public RSChemElement() {
 	}
 
