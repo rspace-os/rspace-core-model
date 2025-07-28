@@ -22,10 +22,10 @@ public class ExternalWorkFlowData implements Serializable {
   public enum ExternalService {
     GALAXY;
   }
-  public enum RSPACE_CONTAINER_TYPE {
+  public enum RspaceContainerType {
     DOCUMENT, FIELD;
   }
-  public enum RSPACE_DATA_TYPE {
+  public enum RspaceDataType {
     LOCAL, EXTERNAL;
   }
   @Id
@@ -45,7 +45,7 @@ public class ExternalWorkFlowData implements Serializable {
    * whether this is data local to RSpace or External data
    */
   @NotNull
-  private RSPACE_DATA_TYPE rspaceDataType;
+  private RspaceDataType rspaceDataType;
 
   /**
    * the id of the rspace field/document which was used to initiate data transfer for the external workflow.
@@ -63,7 +63,7 @@ public class ExternalWorkFlowData implements Serializable {
    * the type of RSpace container this data belongs to
    */
   @NotNull
-  private RSPACE_CONTAINER_TYPE rspaceContainerType;
+  private RspaceContainerType rspaceContainerType;
 
   /**
    * Filename for this data on the remote service
@@ -102,8 +102,8 @@ public class ExternalWorkFlowData implements Serializable {
   private Set<ExternalWorkFlowInvocation> externalWorkflowInvocations = new HashSet<>();
   @Builder()
   public ExternalWorkFlowData(
-      @NonNull ExternalService externalService,  @NonNull long rspacedataid,  @NonNull RSPACE_DATA_TYPE rspaceDataType,
-      @NonNull long rspacecontainerId,  @NonNull String rspaceContainerName,   @NonNull RSPACE_CONTAINER_TYPE rspaceContainerType,  @NonNull String extName,
+      @NonNull ExternalService externalService,  @NonNull long rspacedataid,  @NonNull ExternalWorkFlowData.RspaceDataType rspaceDataType,
+      @NonNull long rspacecontainerId,  @NonNull String rspaceContainerName,   @NonNull ExternalWorkFlowData.RspaceContainerType rspaceContainerType,  @NonNull String extName,
       @NonNull String extId,  @NonNull String extSecondaryId,  @NonNull String extContainerID,  @NonNull String extContainerName,  @NonNull String baseUrl
       ){
       this.externalService = externalService;
