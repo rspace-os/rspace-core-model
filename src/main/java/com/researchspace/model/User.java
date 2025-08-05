@@ -67,8 +67,7 @@ import org.hibernate.search.annotations.Store;
 
 /**
  * This class represents the basic "user" object.
- * 
- * 
+ *
  * User objects natural sort-order is compatible with equals() and is based on
  * username.
  */
@@ -122,7 +121,7 @@ public class User extends AbstractUserOrGroupImpl
 
 	public static final String ALLOWED_PWD_CHARS_REGEX = "^[\\S+]{" + MIN_PWD_LENGTH + ",}$";
 
-	private static Pattern multiUSerPattern = Pattern.compile(",?\\s*([^<,]+)(<.+?>)?");
+	private static final Pattern multiUserPattern = Pattern.compile(",?\\s*([^<,]+)(<.+?>)?");
 
 	private Date loginFailure;
 	private Date lastLogin;
@@ -335,20 +334,17 @@ public class User extends AbstractUserOrGroupImpl
 	};
 
 	/**
-	 * Utility method to parse out usernames from an auto-complete string of
-	 * type ' user1<Bob Jones>,user 2<Simon Smith>,user3;
+	 * Utility method to parse out usernames from an auto-complete string formatted as
+	 * "user1<Bob Jones>,user 2<Simon Smith>,user3",
 	 * <p/>
-	 * I.e., a comma separated list of usernames with optional extra information
+	 * i.e. a comma separated list of usernames with optional extra information
 	 * between angle brackets
 	 * 
-	 * @param multiuser
-	 * @return
+	 * @param multiuserString
+	 * @return extracted usernames
 	 */
-	public static final String[] getUsernameesFromMultiUser(String multiuser) {
-		// format of type String user = " user1<Bob Jones>,user 2<Simon
-		// Smith>,user3";
-
-		Matcher m = multiUSerPattern.matcher(multiuser);
+	public static String[] getUsernamesFromMultiUser(String multiuserString) {
+		Matcher m = multiUserPattern.matcher(multiuserString);
 		Set<String> uname = new TreeSet<>();
 		while (m.find()) {
 			if (m.group(1) != null && !StringUtils.isBlank(m.group(1))) {
