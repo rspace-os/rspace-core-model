@@ -228,14 +228,14 @@ public class UserTest {
 		
 		String[] tests = new String[] { userStr1, userStr2, userStr3, userStr4 };
 		for (String test : tests) {
-			String[] parsed = User.getUsernameesFromMultiUser(test);
+			String[] parsed = User.getUsernamesFromMultiUser(test);
 			assertEquals( 3, parsed.length,"parsing [" + test + "] failed");
 			assertEquals("user1", parsed[0]);
 			assertEquals("user2", parsed[1]);
 			assertEquals("user3", parsed[2]);
 		}
 		String singleUser = " user1<Bob Jones>, "; // ignore blank suffix
-		String [] parsed = User.getUsernameesFromMultiUser(singleUser); 
+		String [] parsed = User.getUsernamesFromMultiUser(singleUser);
 		assertEquals(1, parsed.length);
 	}
 
