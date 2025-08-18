@@ -64,8 +64,8 @@ public class StoichiometryMolecule {
 
   @Column private Double mass;
 
-  @Column(name = "expected_amount")
-  private Double expectedAmount;
+  @Column(name = "actual_amount")
+  private Double actualAmount;
 
   @Column(name = "actual_yield")
   private Double actualYield;
