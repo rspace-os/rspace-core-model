@@ -1320,30 +1320,28 @@ public abstract class BaseRecord
 
     @Transient
     public boolean isShared() {
-        Set<String> usersOrGrpsInACL = makeSharedUserNames();
-        usersOrGrpsInACL.remove(ANONYMOUS_USER);
-        // We only expect to see a single username if a record hasn't been shared
-        if (usersOrGrpsInACL.size() > 1) {
-            return true;
+        String lastUser = null;
+        for (ACLElement el : this.getSharingACL().getAclElements()) {
+            if (!ANONYMOUS_USER.equals(el.getUserOrGrpUniqueName())) {
+                if (lastUser != null && !lastUser.equals(el.getUserOrGrpUniqueName())) {
+                    /* We only expect to see a single username if a record hasn't been shared */
+                    return true;
+                }
+                lastUser = el.getUserOrGrpUniqueName();
+            }
         }
-
         return false;
     }
 
-    private Set<String> makeSharedUserNames() {
-        Set<String> usersOrGrpsInACL = new HashSet<>();
-
+    @Transient
+    public boolean isPublished() {
         for (ACLElement el : this.getSharingACL().getAclElements()) {
-            usersOrGrpsInACL.add(el.getUserOrGrpUniqueName());
+            if (ANONYMOUS_USER.equals(el.getUserOrGrpUniqueName())) {
+                return true;
+            }
         }
-        return usersOrGrpsInACL;
+        return false;
     }
-
-        @Transient
-        public boolean isPublished() {
-            Set<String> usersOrGrpsInACL = makeSharedUserNames();
-            return usersOrGrpsInACL.contains(ANONYMOUS_USER);
-        }
 
     /**
      * Boolean test for whether this record is a structured document shared into a notebook.
