@@ -2,6 +2,9 @@
 
 Summary of important or breaking changes.
 
+## 2.14.0 2025-09-05
+- Restructuring core model objects for DMP
+
 ## 2.9.0 2025-04-02
 - Extended DigitalObjectIdentifier to be not associated to any inventory item
 
