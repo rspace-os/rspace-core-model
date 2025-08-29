@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Table(name = "Stoichiometry")
@@ -28,6 +29,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "molecules")
+@Audited
 public class Stoichiometry {
 
   @Id

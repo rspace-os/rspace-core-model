@@ -21,6 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Table(name = "StoichiometryMolecule")
@@ -30,6 +31,7 @@ import org.hibernate.annotations.Type;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "stoichiometry")
+@Audited
 public class StoichiometryMolecule {
 
   @Id
