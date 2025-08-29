@@ -122,8 +122,8 @@ public class NotebookTest {
 
 	@Test
 	public void moveTo() throws InterruptedException, IllegalAddChildOperation {
-		 makeNestedFolders();
-		 Folder old = nb3.getParent();
+		makeNestedFolders();
+		Folder old = nb3.getParent();
 		assertTrue(nb3.move(nb3.getParent(), folder1, anyuser)); // OK
 		assertFalse(nb3.move(old, folder1, anyuser)); // not OK, is already in t1
 	}

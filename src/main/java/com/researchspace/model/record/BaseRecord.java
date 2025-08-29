@@ -1,6 +1,7 @@
 package com.researchspace.model.record;
 
 import static com.researchspace.model.RecordGroupSharing.ANONYMOUS_USER;
+import static com.researchspace.model.core.RecordType.SHARED_FOLDER;
 import static java.util.stream.Collectors.toCollection;
 
 import com.researchspace.core.util.CollectionFilter;
@@ -573,6 +574,18 @@ public abstract class BaseRecord
      * @throws IllegalAddChildOperation
      */
     public boolean move(Folder from, Folder to, User u) throws IllegalAddChildOperation {
+        return doMove(from, to, u, false);
+    }
+
+    /**
+     * Version of {@link #move(Folder, Folder, User)} method that allows illegal moves out of shared.
+     * This variant should be only called in test setup, to reproduce historical issues like RSDEV-796.
+     */
+    public boolean unsafeMove(Folder from, Folder to, User u) throws IllegalAddChildOperation {
+        return doMove(from, to, u, true);
+    }
+
+    private boolean doMove(Folder from, Folder to, User u, boolean allowUnsafeMove) throws IllegalAddChildOperation {
         if (from == null || to == null || u == null) {
             return false;
         }
@@ -581,6 +594,17 @@ public abstract class BaseRecord
         }
         if (from.isNotebook() && !getOwner().equals(from.getOwner())) {
             return false;
+        }
+        if (!allowUnsafeMove) {
+            if (isFolder() && ((Folder) this).isSystemFolder()) {
+                return false;
+            }
+            if (from.isTopLevelSharedFolder()) {
+                return false;
+            }
+            if (from.isSharedFolder() && !to.isSharedFolder()) {
+                return false;
+            }
         }
 
         boolean removed = from.removeChild(this);
