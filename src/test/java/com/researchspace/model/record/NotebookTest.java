@@ -98,6 +98,7 @@ public class NotebookTest {
 		assertTrue(n.hasType(RecordType.NOTEBOOK));
 		assertTrue(n.isNotebook());
 	}
+
 	//RSPAC1814
 	@Test
 	public void moveOutOfNotebookRequiresSameOwner() {
@@ -106,7 +107,6 @@ public class NotebookTest {
 		assertTrue(sd.move(notebook, folder1, anyuser));
 		assertEquals(0, notebook.getChildrens().size());
 		assertEquals(1, folder1.getChildrens().size());
-		
 	}
 	
 	@Test

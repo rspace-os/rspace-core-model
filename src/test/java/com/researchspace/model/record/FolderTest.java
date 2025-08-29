@@ -228,6 +228,7 @@ public class FolderTest {
 	@Test
 	public void addToSharedFolder() throws IllegalAddChildOperation {
 		Folder sharedFolder = new Folder();
+		sharedFolder.setSystemFolder(true);
 		sharedFolder.setName(SHARED_FOLDER_NAME);
 		User user = TestFactory.createAnyUser("us");
 		Folder root = TestFactory.createAFolder("root", user);

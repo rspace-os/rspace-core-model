@@ -590,7 +590,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		}
 	
 		Folder toAdd = null;
-		toAdd = parent.getSubFolderByName(SHARED_FOLDER_NAME);
+		toAdd = parent.getSystemSubFolderByName(SHARED_FOLDER_NAME);
 		if (toAdd == null) {
 			toAdd = parent;
 		}
@@ -648,6 +648,16 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	public Folder getSubFolderByName(String name) {
 		for (BaseRecord child : getChildrens()) {
 			if (child.isFolder() && child.getName().equals(name)) {
+				return (Folder) child;
+			}
+		}
+		return null;
+	}
+
+	@Transient
+	public Folder getSystemSubFolderByName(String name) {
+		for (BaseRecord child : getChildrens()) {
+			if (child.isFolder() && ((Folder) child).isSystemFolder() && child.getName().equals(name)) {
 				return (Folder) child;
 			}
 		}
