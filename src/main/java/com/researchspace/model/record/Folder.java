@@ -366,7 +366,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		if (toRemove != null) {
 			boolean removed1 = children.remove(toRemove);
 			boolean removed2 = child.getParents().remove(toRemove);
-			boolean removedOK = removed1 && removed2;
+			boolean removedOK = removed1 || removed2;
 			if (removedOK) {
 				aclPolicy.onRemove(this, child);
 				return true;
@@ -386,14 +386,19 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	}
 
 	RecordToFolder findRecordInChildRelations(BaseRecord child) {
-		RecordToFolder toRemove = null;
 		for (RecordToFolder reln : children) {
 			if (reln.getRecord().equals(child)) {
-				toRemove = reln;
-				break;
+				return reln;
 			}
 		}
-		return toRemove;
+		/* 'children' may not have recently shared record, as sharing in some cases skips adding
+		to 'children' array for better performance. Check child's parents in that case. */
+		for (RecordToFolder reln : child.getParents()) {
+			if (reln.getRecord().equals(child)) {
+				return reln;
+			}
+		}
+		return null;
 	}
 
 	/**

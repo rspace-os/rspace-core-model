@@ -605,6 +605,12 @@ public abstract class BaseRecord
             if (from.isSharedFolder() && !to.isSharedFolder()) {
                 return false;
             }
+            if (!from.isSharedFolder() && to.isSharedFolder()) {
+                return false;
+            }
+            if (!from.isSharedFolder() && !from.getOwner().equals(to.getOwner())) {
+                return false; // block move from user's Workspace folder into somebody else's
+            }
         }
 
         boolean removed = from.removeChild(this);
