@@ -490,6 +490,7 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
 	public StructuredDocument copyNoFields() {
 		StructuredDocument clone = new StructuredDocument(this.form);
 		clone.setDocTag(this.docTag);
+        clone.setTagMetaData(this.tagMetaData);
 		this.shallowCopyRecordInfo(clone);
 		clone.setMarkedForVersionIncrement(isMarkedForVersionIncrement());
 		clone.setTemplate(this.getTemplate());
