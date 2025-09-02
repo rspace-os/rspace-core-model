@@ -1007,8 +1007,7 @@ public class User extends AbstractUserOrGroupImpl
 		if (getRootFolder() == null) {
 			return null;
 		}
-		//return getRootFolder().getSystemSubFolderByName(Folder.SHARED_FOLDER_NAME);
-		return getRootFolder().getSubFolderByName(Folder.SHARED_FOLDER_NAME);
+		return getRootFolder().getSystemSubFolderByName(Folder.SHARED_FOLDER_NAME);
 	}
 
 	public void setRootFolder(Folder rootFolder) {
