@@ -386,14 +386,12 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	}
 
 	RecordToFolder findRecordInChildRelations(BaseRecord child) {
-		RecordToFolder toRemove = null;
 		for (RecordToFolder reln : children) {
 			if (reln.getRecord().equals(child)) {
-				toRemove = reln;
-				break;
+				return reln;
 			}
 		}
-		return toRemove;
+		return null;
 	}
 
 	/**
@@ -590,7 +588,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		}
 	
 		Folder toAdd = null;
-		toAdd = parent.getSubFolderByName(SHARED_FOLDER_NAME);
+		toAdd = parent.getSystemSubFolderByName(SHARED_FOLDER_NAME);
 		if (toAdd == null) {
 			toAdd = parent;
 		}
@@ -641,13 +639,27 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 
 	/**
 	 * Gets an immediate subfolder by name, or <code>null</code> if not found.
-	 * 
+	 *
+	 * @deprecated there may be multiple subfolders with given name, this
+	 * 		method just returns the first one, which may be not what is expected
+	 *
 	 * @param name
 	 */
+	@Deprecated
 	@Transient
 	public Folder getSubFolderByName(String name) {
 		for (BaseRecord child : getChildrens()) {
 			if (child.isFolder() && child.getName().equals(name)) {
+				return (Folder) child;
+			}
+		}
+		return null;
+	}
+
+	@Transient
+	public Folder getSystemSubFolderByName(String name) {
+		for (BaseRecord child : getChildrens()) {
+			if (child.isFolder() && ((Folder) child).isSystemFolder() && child.getName().equals(name)) {
 				return (Folder) child;
 			}
 		}

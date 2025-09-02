@@ -98,6 +98,7 @@ public class NotebookTest {
 		assertTrue(n.hasType(RecordType.NOTEBOOK));
 		assertTrue(n.isNotebook());
 	}
+
 	//RSPAC1814
 	@Test
 	public void moveOutOfNotebookRequiresSameOwner() {
@@ -106,7 +107,6 @@ public class NotebookTest {
 		assertTrue(sd.move(notebook, folder1, anyuser));
 		assertEquals(0, notebook.getChildrens().size());
 		assertEquals(1, folder1.getChildrens().size());
-		
 	}
 	
 	@Test
@@ -122,8 +122,8 @@ public class NotebookTest {
 
 	@Test
 	public void moveTo() throws InterruptedException, IllegalAddChildOperation {
-		 makeNestedFolders();
-		 Folder old = nb3.getParent();
+		makeNestedFolders();
+		Folder old = nb3.getParent();
 		assertTrue(nb3.move(nb3.getParent(), folder1, anyuser)); // OK
 		assertFalse(nb3.move(old, folder1, anyuser)); // not OK, is already in t1
 	}
