@@ -639,9 +639,13 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 
 	/**
 	 * Gets an immediate subfolder by name, or <code>null</code> if not found.
-	 * 
+	 *
+	 * @deprecated there may be multiple subfolders with given name, this
+	 * 		method just returns the first one, which may be not what is expected
+	 *
 	 * @param name
 	 */
+	@Deprecated
 	@Transient
 	public Folder getSubFolderByName(String name) {
 		for (BaseRecord child : getChildrens()) {
