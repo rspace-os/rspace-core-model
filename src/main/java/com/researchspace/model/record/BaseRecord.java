@@ -602,7 +602,7 @@ public abstract class BaseRecord
             if (from.isTopLevelSharedFolder()) {
                 return false;
             }
-            if (from.isSharedFolder() && !to.isSharedFolder()) {
+            if (from.isSharedFolder() && !(to.isSharedFolder() || to.isNotebook())) {
                 return false;
             }
             if (!from.isSharedFolder() && to.isSharedFolder()) {
