@@ -366,7 +366,8 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		if (toRemove != null) {
 			boolean removed1 = children.remove(toRemove);
 			boolean removed2 = child.getParents().remove(toRemove);
-			boolean removedOK = removed1 || removed2;
+			//boolean removedOK = removed1 || removed2;
+			boolean removedOK = removed1 && removed2;
 			if (removedOK) {
 				aclPolicy.onRemove(this, child);
 				return true;
