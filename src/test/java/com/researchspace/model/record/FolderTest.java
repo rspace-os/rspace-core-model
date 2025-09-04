@@ -1,5 +1,6 @@
 package com.researchspace.model.record;
 
+import static com.researchspace.model.record.Folder.SHARED_FOLDER_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -128,13 +129,38 @@ public class FolderTest {
 	}
 
 	@Test
-	public void moveToTReurnsFalseIfTargetAlreadyHoldsRecord()
+	public void moveToReturnsFalseIfTargetAlreadyHoldsRecord()
 			throws InterruptedException, IllegalAddChildOperation {
 		makeNestedFolders();
 		Folder old = t3.getParent();
 		assertTrue(t3.move(t3.getParent(), t1, anyuser)); // OK
 		assertFalse(t3.move(old, t1, anyuser)); // not OK, is already in t1
 		assertFalse(t3.move(null, null, null)); // no null args
+	}
+
+	@Test
+	public void moveToReturnsFalseIfMovingSharedFoldersOutOfShared() {
+		Folder workspaceRoot = new Folder();
+		workspaceRoot.addType(RecordType.ROOT);
+		Folder workspaceSubfolder = new Folder();
+
+		Folder sharedFolder = new Folder();
+		sharedFolder.setSystemFolder(true);
+		sharedFolder.setName(SHARED_FOLDER_NAME);
+		Folder sharedGroupFolder = new Folder();
+		sharedGroupFolder.addType(RecordType.SHARED_GROUP_FOLDER_ROOT);
+		Folder sharedGroupSubFolder = new Folder();
+		sharedGroupSubFolder.addType(RecordType.SHARED_FOLDER);
+
+		workspaceRoot.addChild(workspaceSubfolder, anyuser);
+		workspaceRoot.addChild(sharedFolder, anyuser);
+		sharedFolder.addChild(sharedGroupFolder, anyuser);
+		sharedGroupFolder.addChild(sharedGroupSubFolder, anyuser);
+
+		// shared folders of various types shouldn't be movable out of Workspace->Shared hierarchy
+		assertFalse(sharedFolder.move(workspaceRoot, workspaceSubfolder, anyuser));
+		assertFalse(sharedGroupFolder.move(sharedFolder, workspaceSubfolder, anyuser));
+		assertFalse(sharedGroupSubFolder.move(sharedGroupFolder, workspaceSubfolder, anyuser));
 	}
 
 	@Test
@@ -202,7 +228,8 @@ public class FolderTest {
 	@Test
 	public void addToSharedFolder() throws IllegalAddChildOperation {
 		Folder sharedFolder = new Folder();
-		sharedFolder.setName(Folder.SHARED_FOLDER_NAME);
+		sharedFolder.setSystemFolder(true);
+		sharedFolder.setName(SHARED_FOLDER_NAME);
 		User user = TestFactory.createAnyUser("us");
 		Folder root = TestFactory.createAFolder("root", user);
 		root.addType(RecordType.ROOT);
