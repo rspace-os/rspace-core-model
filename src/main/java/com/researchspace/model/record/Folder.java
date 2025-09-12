@@ -114,8 +114,8 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	 */
 	public static final String DEFAULT_FOLDER_NAME = "Untitled Folder";
 
+	@Setter
 	private boolean systemFolder;
-
 	@Setter
 	private String docTag;
 	@Setter
@@ -214,10 +214,6 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	public boolean isSharedFolder() {
 		return hasType(SHARED_FOLDER) || hasType(INDIVIDUAL_SHARED_FOLDER_ROOT)
 				|| hasType(SHARED_GROUP_FOLDER_ROOT);
-	}
-
-	public void setSystemFolder(boolean systemFolder) {
-		this.systemFolder = systemFolder;
 	}
 
 	// checks if existing parents are child.
