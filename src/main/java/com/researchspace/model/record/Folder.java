@@ -32,6 +32,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -42,15 +43,11 @@ import org.hibernate.search.annotations.Indexed;
 @XmlRootElement
 @Audited
 @Indexed
+@NoArgsConstructor
 @AuditTrailData(auditDomain = AuditDomain.FOLDER)
 public class Folder extends BaseRecord implements TaggableElnRecord {
-	
-	public Folder() {
-	}
-	
-	public Folder(ImportOverride override) {
-		super(override);
-	}
+
+	private static final long serialVersionUID = 7810039088384043137L;
 
 	/**
 	 * Exports Gallery folder name
@@ -117,16 +114,18 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	 */
 	public static final String DEFAULT_FOLDER_NAME = "Untitled Folder";
 
-	private boolean systemFolder = false;
-	/**
-	 * Generates a predicate testing whether a folder is Gallery top-level folder, e.g. one of Images, Documents etc.
-	 * USeful if you want to test if a target media folder can accept the correct content.
-	 * @param mediaTypeRootName  A GalleryContent type as returned by {@link MediaUtils#extractFileType(String fileSuffix)}
-	 */
-	public static Predicate<BaseRecord> targetFolderIsCorrectTypeForMedia(String mediaTypeRootName) {
-		return folder->folder.hasType(RecordType.SYSTEM) &&
-				mediaTypeRootName.equals(folder.getName()) &&
-				 !folder.hasType(RecordType.ROOT);
+	private boolean systemFolder;
+
+	@Setter
+	private String docTag;
+	@Setter
+	private String tagMetaData;
+
+	@Setter(AccessLevel.PACKAGE)
+	private Set<RecordToFolder> children = new HashSet<>();
+
+	public Folder(ImportOverride override) {
+		super(override);
 	}
 
 	/**
@@ -138,6 +137,35 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		return systemFolder;
 	}
 
+	@Column(length = MAX_TAG_LENGTH)
+	@Size(max = MAX_TAG_LENGTH)
+	@Field
+	public String getDocTag() {
+		return docTag;
+	}
+
+	@Lob
+	public String getTagMetaData() {
+		return tagMetaData;
+	}
+
+	@NotAudited
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "folder", orphanRemoval = true)
+	public Set<RecordToFolder> getChildren() {
+		return children;
+	}
+
+	/**
+	 * Generates a predicate testing whether a folder is Gallery top-level folder, e.g. one of Images, Documents etc.
+	 * USeful if you want to test if a target media folder can accept the correct content.
+	 * @param mediaTypeRootName  A GalleryContent type as returned by {@link MediaUtils#extractFileType(String fileSuffix)}
+	 */
+	public static Predicate<BaseRecord> targetFolderIsCorrectTypeForMedia(String mediaTypeRootName) {
+		return folder->folder.hasType(RecordType.SYSTEM) &&
+				mediaTypeRootName.equals(folder.getName()) &&
+				!folder.hasType(RecordType.ROOT);
+	}
+
 	/**
 	 * Boolean test for whether this folder is the top-level Templates folder
 	 */
@@ -145,7 +173,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	public boolean isTemplateFolder() {
 		return systemFolder && TEMPLATE_MEDIA_FOLDER_NAME.equals(getName()) && hasType(TEMPLATE);
 	}
-	
+
 	/**
 	 * Boolean test for whether this folder is the API inbox folder
 	 */
@@ -153,7 +181,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	public boolean isApiInboxFolder() {
 		return systemFolder && API_INBOX_FOLDER_NAME.equals(getName()) && hasType(API_INBOX);
 	}
-	
+
 	/**
 	 * Boolean test for whether this folder is an additional content folder (Imports, API)
 	 */
@@ -161,7 +189,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	public boolean isImportedContentFolder() {
 		return isApiInboxFolder() || isImportsFolder();
 	}
-	
+
 	/**
 	 * Boolean test for whether this folder is the API inbox folder
 	 */
@@ -170,14 +198,14 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		return systemFolder && IMPORTS_INBOX_FOLDER_NAME.equals(getName()) && hasType(IMPORTS);
 	}
 
-    /**
-     * Boolean test for whether this folder is the top-level Shared folder
-     * 
-     */
-    @Transient
-    public boolean isTopLevelSharedFolder() {
-        return systemFolder && SHARED_FOLDER_NAME.equals(getName());
-    }
+	/**
+	 * Boolean test for whether this folder is the top-level Shared folder
+	 *
+	 */
+	@Transient
+	public boolean isTopLevelSharedFolder() {
+		return systemFolder && SHARED_FOLDER_NAME.equals(getName());
+	}
 
 	/**
 	 * Boolean test for whether this folder is Shared folder, or its sub folder
@@ -192,47 +220,12 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		this.systemFolder = systemFolder;
 	}
 
-	private static final long serialVersionUID = 7810039088384043137L;
-
-	@Setter(AccessLevel.PACKAGE)
-	private Set<RecordToFolder> children = new HashSet<>();
-
-	/*
-	 * For hibernate
-	 */
-	@NotAudited
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "folder", orphanRemoval = true)
-	public Set<RecordToFolder> getChildren() {
-		return children;
-	}
-
-	@Setter
-	private String docTag;
-	@Setter
-	private String tagMetaData;
-
-	@Column(length = MAX_TAG_LENGTH)
-	@Size(max = MAX_TAG_LENGTH)
-	@Field
-	public String getDocTag() {
-		return docTag;
-	}
-
-	@Lob
-	public String getTagMetaData() {
-		return tagMetaData;
-	}
-	
 	// checks if existing parents are child.
 	private boolean checkParents(Folder curr, BaseRecord child, Stack<BaseRecord> stack) {
 
 		CycleSafeIterator it = new CycleSafeIterator(curr);
 		while (it.hasNext()) {
 			BaseRecord br = it.next();
-			// if (br == null) { // findbugs complains about this .. can next()
-			// not return null?
-			// return false;
-			// } else
 			if (br.equals(child)) {
 				return false;
 			}
@@ -293,7 +286,6 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		}
 		aclPolicy.onAdd(this, child);
 		updateRecordTypeIfAddingSubfolderToSharedFolder(child);
-		
 	}
 
 	private void updateRecordTypeIfAddingSubfolderToSharedFolder(BaseRecord child) {
@@ -305,7 +297,6 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 			}
 		}
 	}
-
 
 	RecordToFolder doAdd(BaseRecord child, User owner, boolean skipAddingToChildren) {
 		RecordToFolder newedge = new RecordToFolder(child, this, owner.getUsername());
@@ -514,26 +505,17 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 			e.printStackTrace();
 		}
 		this.shallowCopyRecordInfo(clone);
-		// gen.generateId(clone);
 		if (recursiveCopyChildren) {
 			for (RecordToFolder r : getChildren()) {
 				if (r.getRecord().isFolder()) {
 					Folder f = ((Folder) r.getRecord()).copy(user, true);
-					// gen.generateId(f);
 					clone.addChild(f, user);
 				} else {
 					BaseRecord r2 = r.getRecord().copy();
-					// gen.generateId(r2);
 					clone.addChild(r2, user);
 				}
 			}
 		}
-	}
-
-	@Transient
-	// @SearchableProperty
-	public String getIndexContent() {
-		return this.getName();
 	}
 
 	@Transient
@@ -622,19 +604,6 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	@Transient
 	public String getRecordInfoType() {
 		return isSystemFolder() ? DOCUMENT_CATEGORIES.SYSTEM_FOLDER : DOCUMENT_CATEGORIES.FOLDER;
-	}
-
-	/**
-	 * 
-	 */
-	public void setAllSubfoldersAndRecordsDeleted() {
-		setDeleted(true);
-		for (RecordToFolder rtf : children) {
-			rtf.setRecordInFolderDeleted(true);
-			if (getOwner().isOwnerOfRecord(rtf.getRecord())) {
-				rtf.getRecord().setDeleted(true);
-			}
-		}
 	}
 
 	/**
