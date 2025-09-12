@@ -145,7 +145,8 @@ public class StructuredDocumentTest {
 		StructuredDocument sd = TestFactory.createAnySD();
 		sd.setId(1L);// persistence id
 		Thread.sleep(2);
-		sd.setDocTag("tagTest");
+        sd.setDocTag("tagTest");
+        sd.setTagMetaData("tagMetaDataTest");
 		sd.setSharingACL(RecordSharingACL.createACLForUserOrGroup(
 											new Group("a",TestFactory.createAnyUser("any")), 
 											PermissionType.WRITE));
@@ -153,6 +154,7 @@ public class StructuredDocumentTest {
 		assertNull(copy.getId()); // copy initially transient
 		Set<String>toExclude = ModelTestUtils.generateExclusionFieldsFrom(
 				"id","creationDate","modificationDate","fields","editInfo", "oid", "version");
+        assertNotNull(copy.getTagMetaData());
 		assertEquals(sd.getDocTag(), copy.getDocTag());
 
 		List<Class<? super StructuredDocument>> classesToConsider = new ArrayList<>();
