@@ -382,25 +382,6 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	}
 
 	/**
-	 * Boolean test as to whether the relationship between this Folder and the
-	 * argument record is marked as deleted or not.
-	 * 
-	 * @param r
-	 *            A direct child of this folder
-	 * @return <code>true</code> if <code>child</code> is marked as deleted,
-	 *         <code>false</code> otherwise.
-	 */
-	@Transient
-	public boolean isMarkedDeleted(BaseRecord r) {
-		for (RecordToFolder rtf : getChildren()) {
-			if (rtf.getRecord().equals(r)) {
-				return rtf.isRecordInFolderDeleted();
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Visitor-pattern method that iterates over the folder tree, calling the
 	 * <em>process()</em> method of the supplied
 	 * {@link RecordContainerProcessor} on each record and folder.
@@ -603,24 +584,8 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	}
 
 	/**
-	 * Gets an immediate subfolder by name, or <code>null</code> if not found.
-	 *
-	 * @deprecated there may be multiple subfolders with given name, this
-	 * 		method just returns the first one, which may be not what is expected
-	 *
-	 * @param name
+	 * Gets an immediate child system folder by name, or <code>null</code> if not found.
 	 */
-	@Deprecated
-	@Transient
-	public Folder getSubFolderByName(String name) {
-		for (BaseRecord child : getChildrens()) {
-			if (child.isFolder() && child.getName().equals(name)) {
-				return (Folder) child;
-			}
-		}
-		return null;
-	}
-
 	@Transient
 	public Folder getSystemSubFolderByName(String name) {
 		for (BaseRecord child : getChildrens()) {
