@@ -1002,14 +1002,6 @@ public class User extends AbstractUserOrGroupImpl
 		return rootFolder;
 	}
 
-	@Transient
-	public Folder getSharedFolder() {
-		if (getRootFolder() == null) {
-			return null;
-		}
-		return getRootFolder().getSystemSubFolderByName(Folder.SHARED_FOLDER_NAME);
-	}
-
 	public void setRootFolder(Folder rootFolder) {
 		this.rootFolder = rootFolder;
 	}
