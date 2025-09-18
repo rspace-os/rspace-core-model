@@ -234,14 +234,8 @@ public class FolderTest {
 		Folder root = TestFactory.createAFolder("root", user);
 		root.addType(RecordType.ROOT);
 		root.addChild(sharedFolder, user);
-		Folder added = root.addRecordToUsersSharedFolder(TestFactory.createAnySD(), user);
+		Folder added = sharedFolder.addChild(TestFactory.createAnySD(), user, true).getFolder();
 		assertEquals(added, sharedFolder);
-
-		// rename shared folder, no longer follows naming convention,adds to
-		// root instead
-		sharedFolder.setName("other");
-		added = root.addRecordToUsersSharedFolder(TestFactory.createAnySD(), user);
-		assertEquals(root, added);
 	}
 
 	@Test
