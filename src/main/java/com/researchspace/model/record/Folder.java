@@ -411,7 +411,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	/**
 	 * Gets children records / subfolders of this folder.
 	 *
-	 * @deprecated this method loads all children of folder, which may be very inefficient;
+	 * @deprecated the method loads all children of the folder, which may be very inefficient;
 	 * 		rethink if you really need to operate on everything inside the folder, and even if you do,
 	 * 		use direct db query
 	 */
@@ -424,7 +424,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	/**
 	 * Gets child records filtered by a {@link CollectionFilter}
 	 *
-	 * @deprecated this method iterates over all children of folder, which may be very inefficient;
+	 * @deprecated the method iterates over all children of the folder, which may be very inefficient;
 	  	you should rather use direct db query, with the requested filter
 	 *
 	 * @param rf
@@ -447,7 +447,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	 * Convenience method to return only subfolders of this folder, ignoring any
 	 * records as children.
 	 *
-	 * @deprecated this method iterates over all children of folder, which may be very inefficient;
+	 * @deprecated the method iterates over all children of the folder, which may be very inefficient;
 	 *  	you should rather retrieve subfolders with direct db query
 	 * @return a non-null {@link Set} of subfolders
 	 */
@@ -549,7 +549,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	/**
 	 * Gets an immediate child system folder by name, or <code>null</code> if not found.
 	 *
-	 * @deprecated this method iterates over children of folder, which may be very inefficient;
+	 * @deprecated the method iterates over children of the folder, which may be very inefficient;
 	 * 		you should rather retrieve requested folder with direct db query
 	 */
 	@Deprecated
