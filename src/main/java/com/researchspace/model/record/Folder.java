@@ -260,7 +260,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 
 		RecordToFolder newedge = doAdd(child, owner, skipAddingToChildren);
 		if (newedge != null) {
-			postProcess(child, owner, newedge, aclPolicy);
+			postProcess(child, aclPolicy);
 		}
 		return newedge;
 	}
@@ -274,7 +274,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	 * Performs any actions required after the parent-child relations are
 	 * established.
 	 */
-	void postProcess(BaseRecord child, User owner, RecordToFolder newedge, ACLPropagationPolicy aclPolicy) {
+	private void postProcess(BaseRecord child, ACLPropagationPolicy aclPolicy) {
 		if (isTemplateFolder()) {
 			new DefaultPermissionFactory().setUpACLForTemplateFolderChildPermissions(child, getOwner());
 		} else if (isImportedContentFolder()) {
@@ -308,7 +308,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 			   to load the children set, which is very inefficient for large folders */
 			addedC = children.add(newedge);
 		}
-		if (addedC && addedP) {
+		if (addedC) {
 			return newedge;
 		}
 		return null;
@@ -349,7 +349,15 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	}
 
 	public boolean removeChild(BaseRecord child, ACLPropagationPolicy aclPolicy) {
-		RecordToFolder toRemove = findRecordInChildRelations(child);
+		RecordToFolder toRemove = null;
+		// find record in child relations
+		for (RecordToFolder reln : children) {
+			if (reln.getRecord().equals(child)) {
+				toRemove = reln;
+				break;
+			}
+		}
+
 		if (toRemove != null) {
 			boolean removed1 = children.remove(toRemove);
 			boolean removed2 = child.getParents().remove(toRemove);
@@ -370,34 +378,6 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	 */
 	public boolean removeChild(BaseRecord child) {
 		return removeChild(child, ACLPropagationPolicy.DEFAULT_POLICY);
-	}
-
-	RecordToFolder findRecordInChildRelations(BaseRecord child) {
-		for (RecordToFolder reln : children) {
-			if (reln.getRecord().equals(child)) {
-				return reln;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Boolean test as to whether the relationship between this Folder and the
-	 * argument record is marked as deleted or not.
-	 * 
-	 * @param r
-	 *            A direct child of this folder
-	 * @return <code>true</code> if <code>child</code> is marked as deleted,
-	 *         <code>false</code> otherwise.
-	 */
-	@Transient
-	public boolean isMarkedDeleted(BaseRecord r) {
-		for (RecordToFolder rtf : getChildren()) {
-			if (rtf.getRecord().equals(r)) {
-				return rtf.isRecordInFolderDeleted();
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -430,7 +410,12 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 
 	/**
 	 * Gets children records / subfolders of this folder.
+	 *
+	 * @deprecated the method loads all children of the folder, which may be very inefficient;
+	 * 		rethink if you really need to operate on everything inside the folder, and even if you do,
+	 * 		use direct db query
 	 */
+	@Deprecated
 	@Transient
 	public Set<BaseRecord> getChildrens() {
 		return getChildrens(DEFAULT_FILTER);
@@ -438,9 +423,13 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 
 	/**
 	 * Gets child records filtered by a {@link CollectionFilter}
-	 * 
+	 *
+	 * @deprecated the method iterates over all children of the folder, which may be very inefficient;
+	  	you should rather use direct db query, with the requested filter
+	 *
 	 * @param rf
 	 */
+	@Deprecated
 	@Transient
 	public Set<BaseRecord> getChildrens(CollectionFilter<BaseRecord> rf) {
 		Set<BaseRecord> rc = new HashSet<>();
@@ -457,9 +446,12 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	/**
 	 * Convenience method to return only subfolders of this folder, ignoring any
 	 * records as children.
-	 * 
+	 *
+	 * @deprecated the method iterates over all children of the folder, which may be very inefficient;
+	 *  	you should rather retrieve subfolders with direct db query
 	 * @return a non-null {@link Set} of subfolders
 	 */
+	@Deprecated
 	@Transient
 	public Set<Folder> getSubfolders() {
 		Set<Folder> rc = new HashSet<>();
@@ -544,54 +536,6 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 		return isRootFolder() && getOwner().getUniqueName().equals(userOrGroup.getUniqueName());
 	}
 
-	/**
-	 * Overloaded method that adds a record to user's 'Shared' Folder if
-	 * possible, otherwise to their root folder using the specified
-	 * {@link ACLPropagationPolicy}.
-	 * 
-	 * @param record
-	 * @param sharee
-	 * @param propagationPolicy
-	 * @return The Folder that the records were added to.
-	 * @throws IllegalAddChildOperation
-	 */
-	public Folder addRecordToUsersSharedFolder(BaseRecord record, User sharee,
-			ACLPropagationPolicy propagationPolicy, boolean skipAddingToChildren)
-			throws IllegalAddChildOperation {
-		Folder parent = this;
-
-		if (parent != null && !parent.isRootFolder()) {
-			RSPath records = getParentHierarchyForUser(getOwner());
-			parent = (Folder) records.getFirstElement().orElseThrow(()->new IllegalStateException("No root folder!"));
-		}
-	
-		Folder toAdd = null;
-		toAdd = parent.getSystemSubFolderByName(SHARED_FOLDER_NAME);
-		if (toAdd == null) {
-			toAdd = parent;
-		}
-		toAdd.addChild(record, ChildAddPolicy.DEFAULT, sharee, propagationPolicy, skipAddingToChildren);
-		return toAdd;
-	}
-
-	public Folder addRecordToUsersSharedFolder(BaseRecord record, User sharee, ACLPropagationPolicy propagationPolicy)
-			throws IllegalAddChildOperation {
-		return addRecordToUsersSharedFolder(record, sharee, propagationPolicy, false);
-	}
-
-	/**
-	 * Adds a record to user's 'Shared' Folder if possible, otherwise to their
-	 * root folder, using the default {@link ACLPropagationPolicy}
-	 * 
-	 * @param record
-	 * @param sharee
-	 * @return The Folder that the records were added to.
-	 * @throws IllegalAddChildOperation
-	 */
-	public Folder addRecordToUsersSharedFolder(BaseRecord record, User sharee) throws IllegalAddChildOperation {
-		return addRecordToUsersSharedFolder(record, sharee, ACLPropagationPolicy.DEFAULT_POLICY);
-	}
-
 	@Override
 	public String toString() {
 		return "Folder [ editInfo=" + getEditInfo() + ", deleted=" + deleted + "]";
@@ -603,24 +547,12 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	}
 
 	/**
-	 * Gets an immediate subfolder by name, or <code>null</code> if not found.
+	 * Gets an immediate child system folder by name, or <code>null</code> if not found.
 	 *
-	 * @deprecated there may be multiple subfolders with given name, this
-	 * 		method just returns the first one, which may be not what is expected
-	 *
-	 * @param name
+	 * @deprecated the method iterates over children of the folder, which may be very inefficient;
+	 * 		you should rather retrieve requested folder with direct db query
 	 */
 	@Deprecated
-	@Transient
-	public Folder getSubFolderByName(String name) {
-		for (BaseRecord child : getChildrens()) {
-			if (child.isFolder() && child.getName().equals(name)) {
-				return (Folder) child;
-			}
-		}
-		return null;
-	}
-
 	@Transient
 	public Folder getSystemSubFolderByName(String name) {
 		for (BaseRecord child : getChildrens()) {
@@ -634,7 +566,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	/**
 	 * Don't use this - use copy(User, IDGenerator) instead
 	 * 
-	 * @deprecated
+	 * @deprecated use copy(User, IDGenerator) instead
 	 */
 	@Override
 	@Deprecated
