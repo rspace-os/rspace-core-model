@@ -75,6 +75,13 @@ public class Breadcrumb {
 		return null;
 	}
 
+	public Long getFolderId() {
+		if (!elements.isEmpty()) {
+			return elements.get(elements.size() - 1).getId();
+		}
+		return null;
+	}
+
 	public String getAsStringPath() {
 		return elements.stream().skip(1)
 				.map(el -> el.getDisplayname())
