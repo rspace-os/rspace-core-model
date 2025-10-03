@@ -1,5 +1,6 @@
 package com.researchspace.model.permissions;
 
+import com.researchspace.model.utils.Utils;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
