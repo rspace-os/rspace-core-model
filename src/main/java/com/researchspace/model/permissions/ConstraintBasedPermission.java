@@ -1,5 +1,8 @@
 package com.researchspace.model.permissions;
 
+import com.researchspace.model.IEntityPermission;
+import com.researchspace.model.User;
+import com.researchspace.model.utils.Utils;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -7,16 +10,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
-
 import org.apache.shiro.authz.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.researchspace.model.IEntityPermission;
-import com.researchspace.model.User;
 
 /**
  * Permission implementation in RS for representing a user's permissions.
