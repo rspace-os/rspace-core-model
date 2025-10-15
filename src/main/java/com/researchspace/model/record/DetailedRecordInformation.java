@@ -56,7 +56,7 @@ public class DetailedRecordInformation extends RecordInformation {
 
 	public DetailedRecordInformation(RSForm form) {
 		super(form);
-		addType("Form");
+		setType(DOCUMENT_CATEGORIES.FORM);
 	}
 
 	public DetailedRecordInformation(BaseRecord baseRecord) {
@@ -64,7 +64,7 @@ public class DetailedRecordInformation extends RecordInformation {
 
 		// some fields are being populated by toRecordInfo() method
 		RecordInformation basicInfo = baseRecord.toRecordInfo();
-		addType(basicInfo.getType());
+		setType(basicInfo.getType());
 		setExtension(basicInfo.getExtension());
 		setWidthResized(basicInfo.getWidthResized());
 		setHeightResized(basicInfo.getHeightResized());

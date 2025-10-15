@@ -647,7 +647,7 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
 		} else {
 			type = DOCUMENT_CATEGORIES.STRUCTURED_DOCUMENT;
 		}
-		recordInfo.addType(type);
+		recordInfo.setType(type);
 
 		return recordInfo;
 	}

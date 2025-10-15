@@ -583,7 +583,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 
 	public RecordInformation toRecordInfo() {
 		RecordInformation info = super.toRecordInfo();
-		info.addType(getRecordInfoType());
+		info.setType(getRecordInfoType());
 		return info;
 	}
 

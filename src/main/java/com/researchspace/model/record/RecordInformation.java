@@ -98,10 +98,6 @@ public class RecordInformation implements IFieldLinkableElement {
 		setOid(form.getOid());
 	}
 
-	public void addType(String type) {
-		this.type = type;
-	}
-
 	public Date getCreationDate() {
 		return creationDate == null ? null : new Date(creationDate.getTime());
 	}

@@ -149,7 +149,7 @@ public abstract class EcatMediaFile extends Record implements Serializable, Conv
 		RecordInformation info = super.toRecordInfo();
 		info.setExtension(getExtension());
 		info.setSize(getSize());
-		info.addType(getRecordInfoType());
+		info.setType(getRecordInfoType());
 		info.setVersion(getVersion());
 		return info;
 	}

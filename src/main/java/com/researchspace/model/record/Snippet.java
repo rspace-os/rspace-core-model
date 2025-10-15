@@ -82,7 +82,7 @@ public class Snippet extends Record {
 
 	public RecordInformation toRecordInfo() {
 		RecordInformation recordInfo = super.toRecordInfo();
-		recordInfo.addType(DOCUMENT_CATEGORIES.SNIPPET);
+		recordInfo.setType(DOCUMENT_CATEGORIES.SNIPPET);
 		return recordInfo;
 	}
 }
