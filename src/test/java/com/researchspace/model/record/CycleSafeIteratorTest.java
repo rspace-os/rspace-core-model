@@ -65,7 +65,7 @@ public class CycleSafeIteratorTest {
 		it = new CycleSafeIterator(f3);
 		assertNElementsIterated(3, it);
 
-		f5.addChild(f1, u);
+		f5.addChild(f1, u, true);
 		it = new CycleSafeIterator(f3);
 		assertNElementsIterated(4, it);
 		it = new CycleSafeIterator(f4);
@@ -76,7 +76,7 @@ public class CycleSafeIteratorTest {
 		f3.doAddToParentsOnly(f7,u);
 		boolean addexception =false;
 		try {
-			f1.addChild(f6, u);
+			f1.addChild(f6, u, true);
 		} catch (IllegalAddChildOperation e) {
 			addexception = true;
 		}
@@ -91,7 +91,7 @@ public class CycleSafeIteratorTest {
 	}
 
 	@Test
-	public void testPErformance() throws IllegalAddChildOperation, InterruptedException{
+	public void testPerformance() throws IllegalAddChildOperation, InterruptedException{
 		final int NUM_FOLDERS=60;
 		Folder [] flders = new Folder [NUM_FOLDERS];
 		flders[0]= TestFactory.createAFolder("0", u);
@@ -99,7 +99,7 @@ public class CycleSafeIteratorTest {
 		for (int i=1; i< NUM_FOLDERS;i++){
 			flders[i]= TestFactory.createAFolder(i+"", u);
 			Thread.sleep(1);
-			flders[i-1].addChild(flders[i], u);
+			flders[i-1].addChild(flders[i], u, true);
 			
 		}
 		long start = System.currentTimeMillis();

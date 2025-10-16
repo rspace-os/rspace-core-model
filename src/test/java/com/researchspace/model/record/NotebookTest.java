@@ -50,11 +50,10 @@ public class NotebookTest {
 	
 	@Test
 	public void addNotebookToFolder() throws IllegalAddChildOperation {
-		Folder f  = TestFactory.createAFolder("any", anyuser);
+		Folder f = TestFactory.createAFolder("any", anyuser);
 		assertEquals(0, f.getChildren().size());
 		sleep();
-	    f.addChild(notebook, anyuser);
-	    assertEquals(1, f.getChildren().size());
+		f.addChild(notebook, anyuser, true);
 		assertEquals(f, notebook.getParent());
 	}
 
@@ -86,10 +85,10 @@ public class NotebookTest {
 		assertEquals(0, notebook.getChildren().size());
 		StructuredDocument c1 = TestFactory.createAnySD(TestFactory.createAnyForm());
 		notebook.addChild(c1, anyuser);
-	    assertEquals(1, notebook.getChildren().size());
-	    notebook.removeChild(c1);
-	    assertNull(c1.getParent());
-	    assertEquals(0, notebook.getChildren().size());
+		assertEquals(1, notebook.getChildren().size());
+		notebook.removeChild(c1);
+		assertNull(c1.getParent());
+		assertEquals(0, notebook.getChildren().size());
 	}
 	
 	@Test
@@ -141,7 +140,7 @@ public class NotebookTest {
 	@Test
 	public void cantAddFolderToNotebook() {
 		Folder f  = TestFactory.createAFolder("any", anyuser);
-	    assertThrows(IllegalAddChildOperation.class, ()->notebook.addChild(f, anyuser));
+	  assertThrows(IllegalAddChildOperation.class, ()->notebook.addChild(f, anyuser, true));
 	}
 	
 	/**

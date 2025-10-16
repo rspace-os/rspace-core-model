@@ -53,7 +53,7 @@ public class BreadcrumbGeneratorTest {
 		Folder child = TestFactory.createAFolder("child", u1);
 		parent.setId(1L);
 		child.setId(2L);
-		parent.addChild(child, u1);
+		parent.addChild(child, u1, true);
 		Thread.sleep(1);
 
 		Breadcrumb bcrumb = bGen.generateBreadcrumb(child, parent);
@@ -62,15 +62,15 @@ public class BreadcrumbGeneratorTest {
 
 		Folder gchild = TestFactory.createAFolder("gchild", u1);
 		gchild.setId(3L);
-		child.addChild(gchild, u1);
+		child.addChild(gchild, u1, true);
 
 		Breadcrumb bCrumb2 = bGen.generateBreadcrumb(gchild, parent);
 		assertEquals(3, bCrumb2.getElements().size());
 
 		Folder bothChildAndGChild = TestFactory.createAFolder("bothChildAndGChild", u1);
 		bothChildAndGChild.setId(4L);
-		parent.addChild(bothChildAndGChild, u1);
-		child.addChild(bothChildAndGChild, u1);
+		parent.addChild(bothChildAndGChild, u1, true);
+		child.addChild(bothChildAndGChild, u1, true);
 
 		Breadcrumb bCrumb3 = bGen.generateBreadcrumb(bothChildAndGChild, parent);
 		assertEquals(2, bCrumb3.getElements().size());
@@ -88,7 +88,7 @@ public class BreadcrumbGeneratorTest {
 		Folder child = TestFactory.createAFolder("child", user);
 		parent.setId(1L);
 		child.setId(2L);
-		parent.addChild(child, user);
+		parent.addChild(child, user, true);
 		Thread.sleep(1);
 
 		Breadcrumb bcrumb = bGen.generateBreadcrumbToHome(child, parent, null);

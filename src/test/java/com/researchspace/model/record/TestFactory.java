@@ -244,7 +244,7 @@ public class TestFactory {
 	public static Notebook createANotebookWithNEntries(String name, User owner, int numEnties) {
 		Notebook rtd = createANotebook(name, owner);
 		IntStream.rangeClosed(1, numEnties).forEach((i) -> {
-			rtd.addChild(TestFactory.createAnySD(), owner);
+			rtd.addChild(TestFactory.createAnySD(), owner, true);
 		});
 		return rtd;
 	}
@@ -550,7 +550,7 @@ public class TestFactory {
 		Folder root = TestFactory.createAFolder("root", sd.getOwner());
 		root.setId(2L);
 		root.addType(RecordType.ROOT);
-		root.addChild(sd, sd.getOwner());
+		root.addChild(sd, sd.getOwner(), true);
 		sd.getOwner().setRootFolder(root);
 
 		sd.getFields().get(0).setFieldData("data");

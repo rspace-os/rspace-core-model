@@ -46,7 +46,7 @@ public class CycleAnalyzerTest {
 		f3.doAddToParentsOnly(f7,u);
 		boolean addexception =false;
 		try {
-			f1.addChild(f6, u);
+			f1.addChild(f6, u, true);
 		} catch (IllegalAddChildOperation e) {
 			addexception = true;
 		}
