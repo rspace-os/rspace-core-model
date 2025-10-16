@@ -21,7 +21,6 @@ import com.researchspace.model.core.RecordType;
 import com.researchspace.model.permissions.DefaultPermissionFactory;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 import java.util.function.Predicate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -217,7 +216,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	}
 
 	// checks if existing parents are child.
-	private boolean checkParents(Folder curr, BaseRecord child, Stack<BaseRecord> stack) {
+	private boolean checkParents(Folder curr, BaseRecord child) {
 
 		CycleSafeIterator it = new CycleSafeIterator(curr);
 		while (it.hasNext()) {
@@ -252,7 +251,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 					"%s] to  folder[%s]", policy, child, this));
 		}
 		// no cycles for cycles
-		if (!checkParents(this, child, new Stack<>())) {
+		if (!checkParents(this, child)) {
 			throw new IllegalAddChildOperation(format("Addition of [%s] to  folder[%s] "+
 		    " would produce a cycle in the folder tree, which currently is not permitted.", 
 					child.getName(),this.getName() ));
@@ -316,8 +315,8 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 	/*
 	 * Package scoped for testing; do not use externally; use addChild
 	 */
-	RecordToFolder doAdd(BaseRecord child, User owner) {
-		return doAdd(child, owner, false);
+	void doAddToParentsOnly(BaseRecord child, User owner) {
+		doAdd(child, owner, true);
 	}
 
 	/**

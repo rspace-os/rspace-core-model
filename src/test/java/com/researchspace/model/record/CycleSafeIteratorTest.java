@@ -49,39 +49,38 @@ public class CycleSafeIteratorTest {
 		assertFalse(it.hasNext());
 		assertThrowsNoSuchElementException(it);
 		//f1->f2->f3,f1->f4
-		f1.doAdd(f2, u);
-		f1.doAdd(f4, u);
-		f2.doAdd(f3, u);
-		
-	    
-		 it = new CycleSafeIterator(f3);
-		 assertNElementsIterated(2, it);
-		
-		f4.doAdd(f3, u);
-		 it = new CycleSafeIterator(f3);
-		 assertNElementsIterated(3, it);
-		 
-		 // redundant edge, f3 already reachable to f1 via f2
-		 f1.doAdd(f3, u);
-		 it = new CycleSafeIterator(f3);
-		 assertNElementsIterated(3, it);
-		 
-		 f5.addChild(f1, u);
-		 it = new CycleSafeIterator(f3);
-		 assertNElementsIterated(4, it);
-		 it = new CycleSafeIterator(f4);
-		 assertNElementsIterated(2, it);
+		f1.doAddToParentsOnly(f2, u);
+		f1.doAddToParentsOnly(f4, u);
+		f2.doAddToParentsOnly(f3, u);
+
+		it = new CycleSafeIterator(f3);
+		assertNElementsIterated(2, it);
+
+		f4.doAddToParentsOnly(f3, u);
+		it = new CycleSafeIterator(f3);
+		assertNElementsIterated(3, it);
+
+		// redundant edge, f3 already reachable to f1 via f2
+		f1.doAddToParentsOnly(f3, u);
+		it = new CycleSafeIterator(f3);
+		assertNElementsIterated(3, it);
+
+		f5.addChild(f1, u);
+		it = new CycleSafeIterator(f3);
+		assertNElementsIterated(4, it);
+		it = new CycleSafeIterator(f4);
+		assertNElementsIterated(2, it);
 		
 		 // forcibly create cycle by calling method which does not check for cycles.
-		f7.doAdd(f1, u);
-		f3.doAdd(f7,u);
+		f7.doAddToParentsOnly(f1, u);
+		f3.doAddToParentsOnly(f7,u);
 		boolean addexception =false;
 		try {
-		f1.addChild(f6, u);
-		}catch (IllegalAddChildOperation e){
-			addexception=true;
+			f1.addChild(f6, u);
+		} catch (IllegalAddChildOperation e) {
+			addexception = true;
 		}
-		if(!addexception){
+		if (!addexception) {
 			fail();
 		}
 		CycleSafeIterator it2 = new CycleSafeIterator(f1);
@@ -89,9 +88,8 @@ public class CycleSafeIteratorTest {
 			BaseRecord br = it2.next();
 		}
 		assertTrue(it2.isCycleDetected());
-		
-		 
 	}
+
 	@Test
 	public void testPErformance() throws IllegalAddChildOperation, InterruptedException{
 		final int NUM_FOLDERS=60;
@@ -126,11 +124,10 @@ public class CycleSafeIteratorTest {
 	private void assertThrowsNoSuchElementException(CycleSafeIterator it) {
 		try {
 			it.next();
-		}catch(NoSuchElementException e){
+		} catch (NoSuchElementException e) {
 			return;
 		}
 		fail("expected no such elemetn exception");
-		
 	}
 
 	@Test
@@ -139,8 +136,6 @@ public class CycleSafeIteratorTest {
 		Folder f1 = TestFactory.createAFolder("f1", u);
 		Iterator<Folder> cycleIt = new CycleSafeIterator(f1);
 		cycleIt.remove();
-		
 	}
-	
 
 }

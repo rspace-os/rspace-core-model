@@ -338,7 +338,7 @@ public class FolderTest {
 		assertEquals(4, sd.getAllAncestors().size());
 		
 		// create artificial cycle in folder structure, ensure that getAllAncestors can handle it
-		folders.get(0).doAdd(root, anyuser);
+		folders.get(0).doAddToParentsOnly(root, anyuser);
 		assertEquals(4, sd.getAllAncestors().size());
 	}
 
