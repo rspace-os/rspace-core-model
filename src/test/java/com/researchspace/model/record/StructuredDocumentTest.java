@@ -283,17 +283,17 @@ public class StructuredDocumentTest {
    }
 
     @Test
-	public void isDeletedFOrUserTest() {
+	public void isDeletedForUserTest() {
 		StructuredDocument sd = TestFactory.createAnySD();
 		User user = TestFactory.createAnyUser("user");
 		User user2 = TestFactory.createAnyUser("user2");
 		Folder f1 = TestFactory.createAFolder("f1", user);
 		Folder f2 = TestFactory.createAFolder("f1", user2);
 		// add 2 users' folders
-		f1.addChild(sd, user);
-		f2.addChild(sd, user2);
+		RecordToFolder rtf1 = f1.addChild(sd, user, true);
+		f2.addChild(sd, user2, true);
 	   
-		f1.getChildren().iterator().next().setRecordInFolderDeleted(true);
+		rtf1.setRecordInFolderDeleted(true);
 		assertTrue(sd.isDeletedForUser(user));
 		assertFalse(sd.isDeletedForUser(user2));
 	}
@@ -319,7 +319,7 @@ public class StructuredDocumentTest {
 		assertFalse(sd.isNotebookEntry()); //false by default
 		User user = TestFactory.createAnyUser("any");
 		Folder flder = TestFactory.createAFolder("flder", user);
-		flder.addChild(sd, user);
+		flder.addChild(sd, user, true);
 		sd.setOwner(user);
 		assertFalse(sd.isNotebookEntry()); //still false, it's just a regular record in a folder.
 		assertNull(sd.getParentNotebook());
@@ -329,7 +329,7 @@ public class StructuredDocumentTest {
 		Notebook otherNB = TestFactory.createANotebook("otherNotebook", other);
 
 		// user add to other notebook
-		otherNB.addChild(sd, user);
+		otherNB.addChild(sd, user, true);
 		// can still find the parent
 		assertNotNull(sd.getParentNotebook());
 		// but searching for original parent returns null
@@ -338,7 +338,7 @@ public class StructuredDocumentTest {
 		// now we'll add to our notebook.
 		sd.notebook = null; // reset cached value
 		Notebook userNB = TestFactory.createANotebook("userNotebook", user);
-		userNB.addChild(sd, user);
+		userNB.addChild(sd, user, true);
 		assertTrue(sd.isNotebookEntry());
 		assertNotNull(sd.getParentNotebook());
 		// searching for original parent returns it
@@ -356,14 +356,15 @@ public class StructuredDocumentTest {
 		Folder f3 = TestFactory.createAFolder("f3", u3);
 		// add a document to each user's folder
 		StructuredDocument sd = TestFactory.createAnySD();
-		f1.addChild(sd, u1);
-		f2.addChild(sd, u2);
-		f3.addChild(sd, u3);
+		RecordToFolder rtf1 = f1.addChild(sd, u1, true);
+		f2.addChild(sd, u2, true);
+		f3.addChild(sd, u3, true);
 		// and  mark as deleted from 1st user's folder 
-		f1.getChildren().iterator().next().setRecordInFolderDeleted(true);
+		rtf1.setRecordInFolderDeleted(true);
 		
 		assertTrue(sd.isDeletedForUser(u1));
 		assertFalse(sd.isDeletedForUser(u2));
+		assertFalse(sd.isDeletedForUser(u3));
 	}
 	
 	@Test
@@ -461,17 +462,17 @@ public class StructuredDocumentTest {
 		notebook.setId(-1L);
 		assertFalse(doc.isDocumentInSharedNotebook( group));
 		// in notebook, but not shared
-		notebook.addChild(doc, anyUser);
+		notebook.addChild(doc, anyUser, true);
 		assertFalse(doc.isDocumentInSharedNotebook( group));
 		
 		Folder someFolder  = TestFactory.createAFolder("normalFolder", anyUser);
 		someFolder.setId(-3L);
-		someFolder.addChild(notebook, anyUser);
+		someFolder.addChild(notebook, anyUser, true);
 		assertFalse(doc.isDocumentInSharedNotebook(group));
 		
 		Folder sharedFolder  = TestFactory.createAFolder("sahredFolder", anyUser);
 		sharedFolder.setId(groupFolderId);
-		sharedFolder.addChild(notebook, anyUser);
+		sharedFolder.addChild(notebook, anyUser, true);
 		assertTrue(doc.isDocumentInSharedNotebook( group));	
 	}
 	

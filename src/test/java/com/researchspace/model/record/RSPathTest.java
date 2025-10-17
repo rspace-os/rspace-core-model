@@ -39,9 +39,9 @@ public class RSPathTest {
 		child = createAFolder("child", user);
 		record = createAnySD();
 		record2 = createAnySD();
-		parent.addChild(middle, user);
-		middle.addChild(child, user);
-		child.addChild(record, user);
+		parent.addChild(middle, user, true);
+		middle.addChild(child, user, true);
+		child.addChild(record, user, true);
 		user.setRootFolder(parent);
 	}
 
@@ -99,12 +99,12 @@ public class RSPathTest {
 
 	}
 	@Test
-	public void testMerge (){
+	public void testMerge() {
 		List<BaseRecord> srcToVia = new ArrayList<>();
 		List<BaseRecord> viaToTarget = new ArrayList<>();
 		parent.removeChild(middle);
 		record.setParents(new HashSet<>());
-		parent.addChild(record, user);
+		parent.addChild(record, user, true);
 		srcToVia.add(parent);
 		srcToVia.add(record);
 		viaToTarget.add(parent);
