@@ -349,18 +349,19 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 
 	public boolean removeChild(BaseRecord child, ACLPropagationPolicy aclPolicy) {
 		RecordToFolder toRemove = null;
-		// find record in child relations
-		for (RecordToFolder reln : children) {
-			if (reln.getRecord().equals(child)) {
+		// find record in child's parent relations
+		for (RecordToFolder reln : child.getParents()) {
+			if (reln.getFolder().equals(this)) {
 				toRemove = reln;
 				break;
 			}
 		}
 
 		if (toRemove != null) {
-			boolean removed1 = children.remove(toRemove);
-			boolean removed2 = child.getParents().remove(toRemove);
-			boolean removedOK = removed1 && removed2;
+			boolean removedOK = child.getParents().remove(toRemove);
+			/* try removing from children, but continue if recordToFolder is not there,
+			    which can happen if addChild() method was called with 'skipAddingToChildren=true' */
+			children.remove(toRemove);
 			if (removedOK) {
 				aclPolicy.onRemove(this, child);
 				return true;
