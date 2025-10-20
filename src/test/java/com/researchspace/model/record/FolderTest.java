@@ -63,11 +63,11 @@ public class FolderTest {
 	}
 
 	@Test
-	public void getGenerateCycleAttemptThrowsExcpetion() throws IllegalAddChildOperation {
+	public void getGenerateCycleAttemptThrowsException() throws IllegalAddChildOperation {
 		Folder f2 = TestFactory.createAFolder("1", anyuser);
 		Folder f3 = TestFactory.createAFolder("1", anyuser);
-		f2.addChild(f3, anyuser);
-		assertThrows(IllegalAddChildOperation.class, ()->f3.addChild(f2, anyuser));
+		f2.addChild(f3, anyuser, true);
+		assertThrows(IllegalAddChildOperation.class, ()->f3.addChild(f2, anyuser, true));
 	}
 
 	private void sleep(int i) {
@@ -173,7 +173,7 @@ public class FolderTest {
 		Folder newRoot = new Folder();
 		newRoot.setOwner(anyuser);
 		f.setOwner(anyuser);
-		newRoot.addChild(f, anyuser);
+		newRoot.addChild(f, anyuser, true);
 		newRoot.addType(RecordType.ROOT);
 		assertTrue(f.isRootFolder()); // must can be root for a user
 		assertTrue(newRoot.isRootFolderForUser(anyuser));
@@ -187,9 +187,8 @@ public class FolderTest {
 		
 		Folder mediaRoot = TestFactory.createAFolder("media", anyuser);
 		mediaRoot.addType(RecordType.ROOT_MEDIA);
-		mediaRoot.addChild(anyFolder, anyuser);
+		mediaRoot.addChild(anyFolder, anyuser, true);
 		assertEquals(GlobalIdPrefix.GF, anyFolder.getGlobalIdPrefix());
-		
 	}
 
 	@Test
@@ -233,7 +232,7 @@ public class FolderTest {
 		User user = TestFactory.createAnyUser("us");
 		Folder root = TestFactory.createAFolder("root", user);
 		root.addType(RecordType.ROOT);
-		root.addChild(sharedFolder, user);
+		root.addChild(sharedFolder, user, true);
 		Folder added = sharedFolder.addChild(TestFactory.createAnySD(), user, true).getFolder();
 		assertEquals(added, sharedFolder);
 	}
@@ -243,7 +242,7 @@ public class FolderTest {
 		Folder templateFolder = TestFactory.createTemplateFolder(anyuser);
 		Folder newFolder = TestFactory.createAFolder("any", anyuser);
 		assertFalse(newFolder.getSharingACL().isPermitted(anyuser, PermissionType.DELETE));
-		templateFolder.addChild(newFolder, anyuser);
+		templateFolder.addChild(newFolder, anyuser, true);
 		assertTrue(newFolder.getSharingACL().isPermitted(anyuser, PermissionType.DELETE));
 	}
 
@@ -259,14 +258,14 @@ public class FolderTest {
 	public void defaultACLPRopagationPolicyDoesNotPropagatesAnonymousShareAcl() throws InterruptedException {
 		makeNestedFolders();
 		Record record = TestFactory.createAnySD();
-		t3.addChild(record, anyuser);
+		t3.addChild(record, anyuser, true);
 		Folder newRoot = TestFactory.createAFolder("newParent", anyuser);
 		ConstraintPermissionResolver parser = new ConstraintPermissionResolver();
 		ACLElement anonymousSharedElement = new ACLElement(
 				RecordGroupSharing.ANONYMOUS_USER,
 				parser.resolvePermission("RECORD:READ:"));
 		newRoot.getSharingACL().addACLElement(anonymousSharedElement);
-		newRoot.addChild(t1, anyuser);
+		newRoot.addChild(t1, anyuser, true);
 		for(ACLElement el : t1.getSharingACL().getAclElements()){
 			assertFalse(el.getUserOrGrpUniqueName().equals(RecordGroupSharing.ANONYMOUS_USER));
 		}
@@ -334,11 +333,11 @@ public class FolderTest {
 		List<Folder> folders = sd.getAllAncestors();
 		assertEquals(3, folders.size());
 		Folder x = TestFactory.createAFolder("parent2", anyuser);
-		x.addChild(sd, anyuser);
+		x.addChild(sd, anyuser, true);
 		assertEquals(4, sd.getAllAncestors().size());
 		
 		// create artificial cycle in folder structure, ensure that getAllAncestors can handle it
-		folders.get(0).doAdd(root, anyuser);
+		folders.get(0).doAddToParentsOnly(root, anyuser);
 		assertEquals(4, sd.getAllAncestors().size());
 	}
 
@@ -402,7 +401,7 @@ public class FolderTest {
 		User subject = child.getOwner();
 		Folder importsFlder = TestFactory.createAnImportsFolder(subject);
 		new DefaultPermissionFactory().setUpAclForIndividualInboxFolder(importsFlder, subject);
-		importsFlder.addChild(child, subject);
+		importsFlder.addChild(child, subject, true);
 		assertTrue(child.getSharingACL().isPermitted(subject, PermissionType.COPY));
 		assertTrue(child.getSharingACL().isPermitted(subject, PermissionType.DELETE));
 		assertTrue(child.getSharingACL().isPermitted(subject, PermissionType.RENAME));
