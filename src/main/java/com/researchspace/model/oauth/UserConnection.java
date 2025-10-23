@@ -1,24 +1,21 @@
 package com.researchspace.model.oauth;
 
+import com.researchspace.model.permissions.TextEncryptor;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
-
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import com.researchspace.model.permissions.TextEncryptor;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * Maps to possible Spring-generated UserConnection class.
@@ -51,13 +48,13 @@ public class UserConnection {
 	@Column(length = 512)
 	private String imageUrl;
 
-	@Column(length = 2048, nullable = false)
+	@Column(length = 4096, nullable = false)
 	private String accessToken;
 
-	@Column(length = 2048)
+	@Column(length = 4096)
 	private String secret;
 
-	@Column(length = 2048)
+	@Column(length = 4096)
 	private String refreshToken;
 	
 	/**
