@@ -75,7 +75,6 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 
 	private QuantityInfo storageTempMin;
 	private QuantityInfo storageTempMax;
-	private QuantityUtils qUtils = new QuantityUtils();
 
 	private List<SubSample> subSamples = new ArrayList<>();
 	private int activeSubSamplesCount;
@@ -434,11 +433,6 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 	@Override
 	public InventoryRecord.InventoryRecordType getType() {
 		return InventoryRecordType.SAMPLE;
-	}
-
-	@Transient
-	private QuantityUtils getqUtils() {
-		return qUtils;
 	}
 
     /**
