@@ -282,8 +282,8 @@ public class TestFactory {
 		User u = new User(uname);
 		u.setFirstName("first");
 		u.setLastName("last");
-		u.setPassword("13d249f2cb4127b40cfa757866850278793f814ded3c587fe5889e889a7a9f6c"); // testpass
-		u.setConfirmPassword("13d249f2cb4127b40cfa757866850278793f814ded3c587fe5889e889a7a9f6c");
+		u.setPassword("Cwl!OVXYlVekgMm4#y!oFDG szvSk4gTo10a22OhqDBMi0Brhg"); // testpass
+		u.setConfirmPassword("Cwl!OVXYlVekgMm4#y!oFDG szvSk4gTo10a22OhqDBMi0Brhg");
 		u.setEmail(uname + "@b");
 		return u;
 	}
