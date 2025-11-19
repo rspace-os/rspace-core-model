@@ -12,11 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Access(AccessType.PROPERTY)
 @Setter
 @NoArgsConstructor
+@Audited
 public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
 
   private Long id;
