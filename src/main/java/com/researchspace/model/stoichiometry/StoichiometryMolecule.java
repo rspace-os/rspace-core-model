@@ -47,8 +47,7 @@ public class StoichiometryMolecule {
   @JoinColumn(name = "rs_chem_id", nullable = false)
   private RSChemElement rsChemElement;
 
-  @OneToOne
-  @JoinColumn(name = "inventory_link_id")
+  @OneToOne(mappedBy = "stoichiometryMolecule")
   private StoichiometryInventoryLink inventoryLink;
 
   @Enumerated(EnumType.STRING)
