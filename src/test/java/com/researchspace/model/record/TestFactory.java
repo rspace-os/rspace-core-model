@@ -273,10 +273,9 @@ public class TestFactory {
 	}
 
 	/**
-	 * Creates a transient user with the given username and email 'username@b'
-	 * and pwd set to 'testpass'
+	 * Creates a transient user with the given username and hashed 'testpass' password.
 	 * 
-	 * @param uname
+	 * @param uname username
 	 * @return The created user.
 	 */
 	public static User createAnyUser(String uname) {
@@ -290,6 +289,13 @@ public class TestFactory {
 		return user;
 	}
 
+	/**
+	 * Create a transient user with given username and plaintext 'testpass' password.
+	 * To be used for user-creation test requests, which don't expect hashed password.
+	 *
+	 * @param uname username
+	 * @return the created user.
+	 */
 	public static User createAnyUserWithPlainTextPassword(String uname) {
 		User u = new User(uname);
 		u.setFirstName("first");
