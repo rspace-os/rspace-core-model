@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
 
 import com.researchspace.core.testutil.CoreTestUtils;
+import com.researchspace.core.util.SecureStringUtils;
 import com.researchspace.core.util.TransformerUtils;
 import com.researchspace.core.util.progress.ProgressMonitor;
 import com.researchspace.core.util.progress.ProgressMonitorImpl;
@@ -273,22 +274,32 @@ public class TestFactory {
 
 	/**
 	 * Creates a transient user with the given username and email 'username@b'
-	 * and pwd 'testpass'
+	 * and pwd set to 'testpass'
 	 * 
 	 * @param uname
 	 * @return The created user.
 	 */
 	public static User createAnyUser(String uname) {
+		User user = createAnyUserWithPlainTextPassword(uname);
+
+		// hash password fields so test user can be used in shiro login flow
+		String testPassSha256 = SecureStringUtils.getHashForSigning(user.getPassword()).toString();
+		user.setPassword(testPassSha256);
+		user.setConfirmPassword(testPassSha256);
+
+		return user;
+	}
+
+	public static User createAnyUserWithPlainTextPassword(String uname) {
 		User u = new User(uname);
 		u.setFirstName("first");
 		u.setLastName("last");
-		// sha256 of 'testpass' string
-		String testPassSha256 = "13d249f2cb4127b40cfa757866850278793f814ded3c587fe5889e889a7a9f6c";
-		u.setPassword(testPassSha256);
-		u.setConfirmPassword(testPassSha256);
+		u.setPassword("testpass");
+		u.setConfirmPassword("testpass");
 		u.setEmail(uname + "@b");
 		return u;
 	}
+
 	/**
 	 * Creates n users; usernames will be prefix + 0-based index
 	 * @param numUsers
