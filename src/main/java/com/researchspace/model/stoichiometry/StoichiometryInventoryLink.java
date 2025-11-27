@@ -3,13 +3,18 @@ package com.researchspace.model.stoichiometry;
 import com.researchspace.model.inventory.InventoryRecordConnectedEntity;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+
+import com.researchspace.model.units.QuantityInfo;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -23,8 +28,7 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
 
   private Long id;
   private StoichiometryMolecule stoichiometryMolecule;
-  private String unit;
-  private Double quantityUsed;
+  private QuantityInfo quantityUsed;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,14 +42,11 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
     return stoichiometryMolecule;
   }
 
-  @Column(length = 32)
-  public String getUnit() {
-    return unit;
-  }
-
-  @Column(name = "quantity_used")
-  public Double getQuantityUsed() {
-    return quantityUsed;
-  }
+  @Embedded
+  @AttributeOverrides({
+          @AttributeOverride(name = "unitId", column = @Column(name = "unit_id")),
+          @AttributeOverride(name = "numericValue", column = @Column(name = "quantity_used", precision = 19, scale = 3))
+  })
+  public QuantityInfo getQuantity() {return quantityUsed;}
 }
 
