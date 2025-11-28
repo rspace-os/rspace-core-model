@@ -28,7 +28,7 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
 
   private Long id;
   private StoichiometryMolecule stoichiometryMolecule;
-  private QuantityInfo quantityUsed;
+  private QuantityInfo quantity;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +47,6 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
           @AttributeOverride(name = "unitId", column = @Column(name = "unit_id")),
           @AttributeOverride(name = "numericValue", column = @Column(name = "quantity_used", precision = 19, scale = 3))
   })
-  public QuantityInfo getQuantity() {return quantityUsed;}
+  public QuantityInfo getQuantity() {return quantity;}
 }
 
