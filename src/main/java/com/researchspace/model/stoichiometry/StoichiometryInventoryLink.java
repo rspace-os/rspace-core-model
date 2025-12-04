@@ -17,6 +17,7 @@ import javax.persistence.OneToOne;
 import com.researchspace.model.units.QuantityInfo;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.envers.Audited;
 
 @Entity
@@ -29,6 +30,7 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
   private Long id;
   private StoichiometryMolecule stoichiometryMolecule;
   private QuantityInfo quantity;
+  private boolean reducesStock;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,5 +50,10 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
           @AttributeOverride(name = "numericValue", column = @Column(name = "quantity_used", precision = 19, scale = 3))
   })
   public QuantityInfo getQuantity() {return quantity;}
+
+  @Column(name = "reduces_stock")
+  public boolean getReducesStock() {
+    return reducesStock;
+  }
 }
 
