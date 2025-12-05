@@ -10,6 +10,4 @@ public class CacheNames {
 	
 	public static final String MATHELEMENT = "com.researchspace.model.RSMath";
 
-	public static final String CACHE_RAID_CONNECTION = "com.researchspace.webapp.integrations.raid.RaIDServiceClientAdapter.isConnectionAlive";
-
 }
