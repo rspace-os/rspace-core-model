@@ -13,7 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.ConstraintViolationException;
 
+import com.researchspace.model.inventory.Sample;
 import com.researchspace.model.units.QuantityInfo;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -49,11 +51,24 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
           @AttributeOverride(name = "unitId", column = @Column(name = "unit_id")),
           @AttributeOverride(name = "numericValue", column = @Column(name = "quantity_used", precision = 19, scale = 3))
   })
-  public QuantityInfo getQuantity() {return quantity;}
+  public QuantityInfo getQuantity() {
+    return quantity;
+  }
 
   @Column(name = "reduces_stock")
   public boolean getReducesStock() {
     return reducesStock;
+  }
+
+  @Override
+  public void validateBeforeSave() {
+    super.validateBeforeSave();
+    if (getInventoryRecord() instanceof Sample){
+      Sample sample = (Sample) getInventoryRecord();
+      if(sample.isTemplate()){
+        throw new ConstraintViolationException("Cannot link stoichiometry to sample template", null);
+      }
+    }
   }
 }
 
