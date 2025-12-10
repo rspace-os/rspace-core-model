@@ -76,7 +76,7 @@ public class SampleTest {
 	public void copy() throws IllegalArgumentException, IllegalAccessException {
 		Sample copy = sample.copy(anyUser);
 		
-		Set<String> toIgnore = TransformerUtils.toSet("subSamples", "activeSubSamples", "qUtils", "id",
+		Set<String> toIgnore = TransformerUtils.toSet("subSamples", "activeSubSamples", "id",
 				"activeExtraFields", "extraFields", "activeBarcodes", "barcodes", "activeIdentifiers", "identifiers",
 				"sample", "editInfo", "attachedFiles", "files");
 		ModelTestUtils.assertCopiedFieldsAreEqual(copy, sample, toIgnore,
