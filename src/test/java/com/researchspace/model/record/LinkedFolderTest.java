@@ -60,9 +60,7 @@ class LinkedFolderTest {
 		return new ACLElement(user.getUsername(), readPer());
 	}
 	private ConstraintBasedPermission readPer() {
-		ConstraintBasedPermission cbp = new ConstraintBasedPermission(PermissionDomain.RECORD, 
-				PermissionType.READ);
-		return cbp;
+		return new ConstraintBasedPermission(PermissionDomain.RECORD, PermissionType.READ);
 	}
 
 }

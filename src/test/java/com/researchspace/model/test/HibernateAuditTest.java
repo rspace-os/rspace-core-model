@@ -39,8 +39,7 @@ class HibernateAuditTest extends HibernateTest {
 		AuditReader ar = getAuditReader();
 		AuditQuery q = ar.createQuery().forRevisionsOfEntity(cls, false, false)
 				.add(AuditEntity.id().eq(primaryKey));
-		List<AuditedEntity<T>> rc = processGenericResults(q.getResultList(), cls);
-		return rc;
+		return processGenericResults(q.getResultList(), cls);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

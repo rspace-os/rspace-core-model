@@ -1,4 +1,5 @@
 package com.researchspace.model.field;
+
 import static com.researchspace.core.testutil.CoreTestUtils.assertIllegalArgumentException;
 import static com.researchspace.model.record.TestFactory.createEcatAudio;
 import static com.researchspace.model.record.TestFactory.createEcatImage;
@@ -7,26 +8,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.researchspace.model.EcatAudio;
+import com.researchspace.model.EcatImage;
+import com.researchspace.model.EcatVideo;
+import com.researchspace.model.FieldAttachment;
+import com.researchspace.model.User;
+import com.researchspace.model.record.TestFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import com.researchspace.model.EcatAudio;
-import com.researchspace.model.EcatImage;
-import com.researchspace.model.EcatVideo;
-import com.researchspace.model.FieldAttachment;
-import com.researchspace.model.User;
-import com.researchspace.model.inventory.field.SampleField;
-import com.researchspace.model.record.TestFactory;
 
 
 

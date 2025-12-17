@@ -42,7 +42,7 @@ public class UnitConversionsTest {
 		
 		double curies = Units.BECQUEREL.getConverterTo(curie).convert(3.7e10);
 		System.err.println(curies);
-		System.err.println(mBq.getSymbol() +"," + mBq.getSystemUnit() +", to string:" + mBq.toString());
+		System.err.println(mBq.getSymbol() +"," + mBq.getSystemUnit() +", to string:" + mBq);
 		
 
 		double parsed = AbstractUnit.parse("MBq").asType(Radioactivity.class).getConverterTo(curie).convert(37000);

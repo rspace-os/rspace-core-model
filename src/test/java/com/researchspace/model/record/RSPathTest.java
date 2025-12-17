@@ -27,9 +27,8 @@ public class RSPathTest {
 	Folder parent;
 	Folder middle;
 	Folder child;
-	StructuredDocument record, record2;
+	StructuredDocument record;
 	User user;
-	List<BaseRecord> recs = new ArrayList<>();
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -38,7 +37,6 @@ public class RSPathTest {
 		middle = createAFolder("middle", user);
 		child = createAFolder("child", user);
 		record = createAnySD();
-		record2 = createAnySD();
 		parent.addChild(middle, user, true);
 		middle.addChild(child, user, true);
 		child.addChild(record, user, true);

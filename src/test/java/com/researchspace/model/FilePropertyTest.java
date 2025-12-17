@@ -18,7 +18,6 @@ import com.researchspace.model.record.TestFactory;
 
 public class FilePropertyTest {
 	
-	FileProperty fp;
 	User user;
 	FileStoreRoot fsroot;
 	File anyFile;

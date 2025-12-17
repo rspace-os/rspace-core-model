@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -38,13 +39,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConstraintBasedPermissionTest {
 
-	Permission toTest;
 	ConstraintBasedPermission userPermission;
 	
 	EntityPermission docPermission;
 	@Before
 	public void setUp() throws Exception {
-		
 	}
 
 	@After
@@ -265,8 +264,8 @@ public class ConstraintBasedPermissionTest {
 		long speededFinish = sw.getTime();
 		long speededElapsed = speededFinish - speededStart;
 		double speedup = ((double)slowElapsed / (double)speededElapsed);
-		System.err.println(String.format("slow - %d ms, speeded - %d ms, speed up = %4.5f", slowElapsed, speededElapsed,
-				speedup ));
+		System.err.printf("slow - %d ms, speeded - %d ms, speed up = %4.5f%n", slowElapsed, speededElapsed,
+				speedup );
 		
 		final double MINIMUM_OBSERVED_SPEEDUP = 20.0;
 		assertTrue( speedup > MINIMUM_OBSERVED_SPEEDUP,"speedup factor was only " +speedup);
@@ -319,8 +318,7 @@ public class ConstraintBasedPermissionTest {
 	
 	public static Set<PermissionType> createPermissonActionSet(PermissionType ... pts){
 		Set<PermissionType> rc = new HashSet<>();
-		for (PermissionType pt: pts)
-			rc.add(pt);	
+		rc.addAll(Arrays.asList(pts));
 		return rc;
 	}
 
