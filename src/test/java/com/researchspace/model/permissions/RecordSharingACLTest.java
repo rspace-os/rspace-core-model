@@ -123,8 +123,7 @@ public class RecordSharingACLTest {
 		assertEquals(2, acl.getNumPermissions());
 		assertEquals(toSet, acl.getString()); // test round-trip
 
-		String perm3 = "G3=RECORD:CREATE:";
-		String toSet2 = perm3;
+		String toSet2 = "G3=RECORD:CREATE:";
 		acl.setAcl(toSet2);
 		// should overwrite,
 		assertEquals(1, acl.getNumPermissions());

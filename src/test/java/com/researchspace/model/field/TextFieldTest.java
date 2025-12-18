@@ -9,7 +9,6 @@ import org.junit.Test;
 
 public class TextFieldTest {
 
-	public static final String OLD_FLD_NAME = "XXX";
 	private static final String RTFDATA = "RTFDATA";
 	 static final String DEFAULT = "default";
 

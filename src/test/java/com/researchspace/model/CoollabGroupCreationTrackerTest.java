@@ -13,14 +13,12 @@ import com.researchspace.model.comms.MessageType;
 public class CoollabGroupCreationTrackerTest {
 	
 	CollabGroupCreationTracker tracker;
-	MessageOrRequest mor;
 
 	@Before
 	public void setUp() throws Exception {
 		MessageOrRequest anyMsg= new MessageOrRequest(MessageType.REQUEST_EXTERNAL_SHARE);
 		tracker= new CollabGroupCreationTracker();
 		tracker.setMor(anyMsg);
-		
 	}
 
 	@After

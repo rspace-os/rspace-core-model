@@ -240,11 +240,11 @@ public class StructuredDocumentTest {
 		sd.notifyDelta(DeltaType.DELETED);
 		assertFalse(sd.isMarkedForVersionIncrement());
 
-		assertEquals(Long.valueOf(oldModified.toEpochMilli()), Long.valueOf(sd.getModificationDateMillis()));
+		assertEquals(Long.valueOf(oldModified.toEpochMilli()), sd.getModificationDateMillis());
 		
 		sd.notifyDelta(DeltaType.UNDELETED);
 		assertFalse(sd.isMarkedForVersionIncrement());
-		assertEquals(Long.valueOf(oldModified.toEpochMilli()), Long.valueOf(sd.getModificationDateMillis()));
+		assertEquals(Long.valueOf(oldModified.toEpochMilli()), sd.getModificationDateMillis());
 
 		sd.notifyDelta(DeltaType.RENAME);
 		assertTrue(sd.isMarkedForVersionIncrement());
@@ -262,7 +262,7 @@ public class StructuredDocumentTest {
 	    
 		sd.notifyDelta(DeltaType.NOREVISION_UPDATE);
 		assertFalse(sd.isMarkedForVersionIncrement());
-		assertEquals(Long.valueOf(oldModified.toEpochMilli()), Long.valueOf(sd.getModificationDateMillis()));
+		assertEquals(Long.valueOf(oldModified.toEpochMilli()), sd.getModificationDateMillis());
    }
    
    @Test

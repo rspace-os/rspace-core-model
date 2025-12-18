@@ -33,34 +33,28 @@ public class ConstrainPermissionResolverTest {
 
 	@Test
 	public void testResolvePermission() {
-		ConstraintBasedPermission p = (ConstraintBasedPermission)resolver.
-					resolvePermission(TEST_STRING1);
-	    LocationConstraint lc = new LocationConstraint("/a/b/c*");
-	    assertEquals(lc,p.getLocationConstraints().iterator().next() );
-	    
-	    PropertyConstraint EXPECTED_PROP_CONSTRAINT= new PropertyConstraint("owner", "user");
-	    assertEquals(EXPECTED_PROP_CONSTRAINT, p.getPropertyConstraints().get("owner")); 
+		ConstraintBasedPermission p = resolver.resolvePermission(TEST_STRING1);
+		LocationConstraint lc = new LocationConstraint("/a/b/c*");
+		assertEquals(lc,p.getLocationConstraints().iterator().next() );
+
+		PropertyConstraint EXPECTED_PROP_CONSTRAINT= new PropertyConstraint("owner", "user");
+		assertEquals(EXPECTED_PROP_CONSTRAINT, p.getPropertyConstraints().get("owner"));
 	}
 	/*
 	 * Tests that  String->Object->STring->Object conversions are consistent.
 	 * String equality is too strict; a permission can be define with > 1 string (e.g., ordering is not important)
 	 */
 	@Test
-	public void testSTringRoundTrip (){
+	public void testStringRoundTrip (){
 		for (String toTest: TESTSTRINGS){
-			ConstraintBasedPermission p = (ConstraintBasedPermission)resolver.
-					resolvePermission(toTest);
-			PermissionTestUtils.assertPermissionsAreEquivalent(p,(ConstraintBasedPermission)resolver.
-					resolvePermission(p.getString()));
+			ConstraintBasedPermission p = resolver.resolvePermission(toTest);
+			PermissionTestUtils.assertPermissionsAreEquivalent(p,resolver.resolvePermission(p.getString()));
 		}
-		
-		
 	}
 	
 	@Test
 	public void testResolvePermissionWithGroups() {
-		ConstraintBasedPermission p = (ConstraintBasedPermission)resolver.
-				resolvePermission(TEST_STRING5);
+		ConstraintBasedPermission p = resolver.resolvePermission(TEST_STRING5);
 		GroupConstraint gc = p.getGroupConstraint();
 		assertNotNull(gc);
 		assertEquals(new GroupConstraint("group1"), gc);
@@ -68,8 +62,7 @@ public class ConstrainPermissionResolverTest {
 	
 	@Test
 	public void testResolvePermissionWithCommunities() {
-		ConstraintBasedPermission p = (ConstraintBasedPermission)resolver.
-				resolvePermission(TEST_STRING_COMMUNITY);
+		ConstraintBasedPermission p = resolver.resolvePermission(TEST_STRING_COMMUNITY);
 		CommunityConstraint gc = p.getCommunityConstraint();
 		assertNotNull(gc);
 		assertEquals(new CommunityConstraint(23), gc);
@@ -77,8 +70,7 @@ public class ConstrainPermissionResolverTest {
 	}
 	@Test
 	public void testResolvePermissionWithIds() {
-		ConstraintBasedPermission p = (ConstraintBasedPermission)resolver.
-				resolvePermission(TEST_STRING2);
+		ConstraintBasedPermission p = resolver.resolvePermission(TEST_STRING2);
 		IdConstraint idConstraint=p.getIdConstraint();
 		assertEquals(4, idConstraint.getId().size());		
 	}

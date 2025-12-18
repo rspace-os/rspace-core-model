@@ -11,7 +11,7 @@ import com.researchspace.model.permissions.SymmetricTextEncryptor;
 import com.researchspace.model.record.TestFactory;
 
 
-class UserConnectionTest {
+public class UserConnectionTest {
 
 	@Test
 	@DisplayName("equality based on embedded ID")
@@ -57,8 +57,7 @@ class UserConnectionTest {
 
 	private SymmetricTextEncryptor setUpEncryptor() {
 		byte [] key  =  RandomUtils.nextBytes(16);
-		SymmetricTextEncryptor enc = new SymmetricTextEncryptor (key);
-		return enc;
+		return new SymmetricTextEncryptor(key);
 	}
 	
 	@Test

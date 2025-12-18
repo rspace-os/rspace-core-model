@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 class GroupTest {
 
 	Group group;
-	User pi1, u2, u3, u4;
+	User pi1, u2, u3;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -30,7 +30,6 @@ class GroupTest {
 		pi1.setLastName("some");
 		u2 = new User("u2");
 		u3 = new User("u3");
-		u4 = new User("u4");
 	}
 
 	@AfterEach

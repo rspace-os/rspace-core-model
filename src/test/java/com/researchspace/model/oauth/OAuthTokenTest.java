@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,7 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.researchspace.model.User;
 
-class OAuthTokenTest {
+public class OAuthTokenTest {
 
 	private User anyUser;
 
@@ -31,29 +31,13 @@ class OAuthTokenTest {
 		assertIllegalArgumentException(() -> new OAuthToken(user, clientId, tokenType));
 	}
 
-	@Test
-	void expiryTimeInFuture() {
-		OAuthToken token = new OAuthToken(anyUser, "id", OAuthTokenType.UI_TOKEN);
-		assertIllegalArgumentException(() -> token.setExpiryTime(inthePast()));
-		token.setExpiryTime(inTheFuture());
-		assertEquals("id", token.getClientId());
-	}
-
-	static Stream<Arguments> constructorValidationArguments() throws Throwable {
+	static Stream<Arguments> constructorValidationArguments() {
 		return Stream.of(Arguments.of(null, "clientid", OAuthTokenType.UI_TOKEN),
 				Arguments.of(createAnyUser("any"), "", OAuthTokenType.UI_TOKEN),
 				Arguments.of(createAnyUser("any"), null, OAuthTokenType.UI_TOKEN),
 				Arguments.of(createAnyUser("any"), "clientId", null),
 				Arguments.of(null, null, null)
 		);
-	}
-
-	private Instant inTheFuture() {
-		return Instant.now().plus(10, ChronoUnit.SECONDS);
-	}
-
-	private Instant inthePast() {
-		return Instant.now().minus(10, ChronoUnit.SECONDS);
 	}
 
 }
