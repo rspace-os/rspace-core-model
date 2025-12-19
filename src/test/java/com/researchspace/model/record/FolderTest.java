@@ -97,8 +97,8 @@ public class FolderTest {
 		sleep(1);
 		Folder t1Copy = t1.copy(anyuser, true);
 		sleep(1);
-		Folder t2Copy = (Folder) t1Copy.getSubfolders().iterator().next();
-		Folder t3Copy = (Folder) t2Copy.getSubfolders().iterator().next();
+		Folder t2Copy = t1Copy.getSubfolders().iterator().next();
+		Folder t3Copy = t2Copy.getSubfolders().iterator().next();
 		assertNotNull(t2Copy);
 		assertEquals(t2.getDocTag(), t2Copy.getDocTag());
 		assertNotNull(t3Copy);

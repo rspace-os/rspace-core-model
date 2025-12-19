@@ -1,42 +1,23 @@
 package com.researchspace.model.record;
 
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
-
 import com.researchspace.core.testutil.CoreTestUtils;
 import com.researchspace.core.util.SecureStringUtils;
 import com.researchspace.core.util.TransformerUtils;
-import com.researchspace.core.util.progress.ProgressMonitor;
-import com.researchspace.core.util.progress.ProgressMonitorImpl;
-import com.researchspace.model.ArchivalCheckSum;
-import com.researchspace.model.ChemElementsFormat;
-import com.researchspace.model.Community;
 import com.researchspace.model.EcatAudio;
-import com.researchspace.model.EcatComment;
 import com.researchspace.model.EcatDocumentFile;
 import com.researchspace.model.EcatImage;
-import com.researchspace.model.EcatImageAnnotation;
 import com.researchspace.model.EcatVideo;
 import com.researchspace.model.FileProperty;
 import com.researchspace.model.FileStoreRoot;
 import com.researchspace.model.Group;
 import com.researchspace.model.ImageBlob;
-import com.researchspace.model.RSChemElement;
 import com.researchspace.model.RSMath;
 import com.researchspace.model.RSpaceModelTestUtils;
 import com.researchspace.model.Role;
 import com.researchspace.model.RoleInGroup;
-import com.researchspace.model.Signature;
 import com.researchspace.model.Thumbnail;
 import com.researchspace.model.Thumbnail.SourceType;
 import com.researchspace.model.User;
-import com.researchspace.model.comms.CommunicationStatus;
-import com.researchspace.model.comms.CommunicationTarget;
-import com.researchspace.model.comms.GroupMessageOrRequest;
-import com.researchspace.model.comms.MessageOrRequest;
-import com.researchspace.model.comms.MessageType;
-import com.researchspace.model.comms.Notification;
-import com.researchspace.model.comms.NotificationType;
 import com.researchspace.model.core.RecordType;
 import com.researchspace.model.field.DateFieldForm;
 import com.researchspace.model.field.Field;
@@ -52,8 +33,6 @@ import com.researchspace.model.inventory.SampleSource;
 import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.field.ExtraNumberField;
 import com.researchspace.model.inventory.field.ExtraTextField;
-import com.researchspace.model.oauth.OAuthToken;
-import com.researchspace.model.oauth.OAuthTokenType;
 import com.researchspace.model.oauth.UserConnection;
 import com.researchspace.model.oauth.UserConnectionId;
 import com.researchspace.model.permissions.ConstraintPermissionResolver;
@@ -63,13 +42,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.IntStream;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -91,18 +67,6 @@ public class TestFactory {
 	 */
 	public static StructuredDocument createAnySD() {
 		return createAnySD(createAnyForm());
-	}
-
-	/**
-	 * Creates a structured document with a single text field, to which the text
-	 * is added.
-	 * 
-	 * @return
-	 */
-	public static StructuredDocument createAnySDWithText(String fieldText) {
-		StructuredDocument doc = createAnySD();
-		doc.getFields().get(0).setFieldData(fieldText);
-		return doc;
 	}
 
 	/**
@@ -193,11 +157,6 @@ public class TestFactory {
 		return rtd;
 	}
 
-	public static Folder createASystemFolder(String name, User owner) {
-		sleep1();
-		return rf.createSystemCreatedFolder(name, owner);
-	}
-	
 	public static Folder createAnAPiInboxFolder( User owner) {
 		sleep1();
 		return rf.createApiInboxFolder(owner);
@@ -239,14 +198,6 @@ public class TestFactory {
 		rtd.setName(name);
 		rtd.addType(RecordType.NOTEBOOK);
 		rtd.setModifiedBy(owner.getUsername());
-		return rtd;
-	}
-
-	public static Notebook createANotebookWithNEntries(String name, User owner, int numEnties) {
-		Notebook rtd = createANotebook(name, owner);
-		IntStream.rangeClosed(1, numEnties).forEach((i) -> {
-			rtd.addChild(TestFactory.createAnySD(), owner, true);
-		});
 		return rtd;
 	}
 
@@ -304,16 +255,6 @@ public class TestFactory {
 		u.setConfirmPassword("testpass");
 		u.setEmail(uname + "@b");
 		return u;
-	}
-
-	/**
-	 * Creates n users; usernames will be prefix + 0-based index
-	 * @param numUsers
-	 * @param unamePrefix
-	 * @return A List of n users
-	 */
-	public static List<User> createNUsers(int numUsers, String unamePrefix) {
-		return IntStream.range(0, numUsers).mapToObj(i->"user"+i).map(TestFactory::createAnyUser).collect(toList());
 	}
 
 	/**
@@ -415,181 +356,6 @@ public class TestFactory {
 		return fp;
 	}
 
-	public static EcatImageAnnotation createImageAnnoatation(long parentId, long id) {
-		EcatImageAnnotation ecatImageAnnotation = new EcatImageAnnotation();
-		ecatImageAnnotation.setParentId(parentId);
-		ecatImageAnnotation.setId(id);
-		ecatImageAnnotation.setAnnotations("JSON OBJECT WITH ANNOTATIONS");
-		return ecatImageAnnotation;
-	}
-
-	public static EcatImageAnnotation createSketch(long parentId, long id) {
-		EcatImageAnnotation ecatImageAnnotation = new EcatImageAnnotation();
-		ecatImageAnnotation.setParentId(parentId);
-		ecatImageAnnotation.setId(id);
-		ecatImageAnnotation.setAnnotations("JSON OBJECT WITH ANNOTATIONS");
-		return ecatImageAnnotation;
-	}
-
-	/**
-	 * Creates a transient chem element with a default chemical string.
-	 * 
-	 * @param parentId
-	 *            the field id
-	 * @param id
-	 *            the id that this
-	 * @return
-	 * @throws IOException
-	 */
-	public static RSChemElement createChemElement(Long parentId, long id) throws IOException {
-		RSChemElement rsChemElement = new RSChemElement();
-		rsChemElement.setParentId(parentId);
-		rsChemElement.setId(id);
-		rsChemElement.setChemId(1);
-		rsChemElement.setChemElementsFormat(ChemElementsFormat.MOL);
-
-		InputStream molInput = TestFactory.class.getResourceAsStream("/TestResources/Amfetamine.mol");
-		String chemElementMolString = IOUtils.toString(molInput, StandardCharsets.UTF_8);
-		molInput.close();
-
-		rsChemElement.setChemElements(chemElementMolString);
-		return rsChemElement;
-	}
-
-	public static RecordInformation createRecordInformation(long id) {
-		RecordInformation recordInformation = new RecordInformation();
-		recordInformation.setId(id);
-		return recordInformation;
-	}
-
-	/**
-	 * Creates a new {@link EcatComment} linked to the parentId
-	 * 
-	 * @param parentId
-	 * @param id
-	 * @return
-	 */
-	public static EcatComment createEcatComment(long parentId, Record record, long id) {
-		EcatComment ecatComment = new EcatComment();
-		ecatComment.setParentId(parentId);
-		ecatComment.setRecord(record);
-		ecatComment.setComId(id);
-		return ecatComment;
-	}
-
-	public static ArchivalCheckSum createAnArchivalChecksum() {
-		ArchivalCheckSum csum = new ArchivalCheckSum();
-		csum.setArchivalDate(new Date().getTime());
-		csum.setUid(CoreTestUtils.getRandomName(10));
-		csum.setZipName("archive" + ".zip");
-		csum.setZipSize(12345);
-		csum.setCheckSum(19876);
-		return csum;
-	}
-
-	/**
-	 * Creates a Message of type SimpleMessage
-	 * 
-	 * @param originator
-	 * @return
-	 */
-	public static MessageOrRequest createAnyMessage(User originator) {
-		MessageOrRequest mor = new MessageOrRequest(MessageType.SIMPLE_MESSAGE);
-		mor.setOriginator(originator);
-		mor.setStatus(CommunicationStatus.NEW);
-		return mor;
-	}
-
-	/**
-	 * Creates a Message of type SimpleMessage with a single CommunicationTarget
-	 * recipient.
-	 * 
-	 * @param originator
-	 * @param recipient
-	 * @return
-	 */
-	public static MessageOrRequest createAnyMessageForRecipuent(User originator, User recipient) {
-		return createAnyMessageForRecipientOfType(originator, recipient, MessageType.SIMPLE_MESSAGE);
-	}
-	
-	/**
-	 * Creates a Message of specified type with a single CommunicationTarget
-	 * recipient.
-	 * @param originator
-	 * @param recipient
-	 * @param type
-	 * @return
-	 */
-	public static MessageOrRequest createAnyMessageForRecipientOfType(User originator, User recipient,
-			MessageType type) {
-		MessageOrRequest mor = new MessageOrRequest(type);
-		mor.setOriginator(originator);
-		mor.setStatus(CommunicationStatus.NEW);
-		CommunicationTarget ct = new CommunicationTarget();
-		ct.setRecipient(recipient);
-		mor.addRecipient(ct);
-		return mor;
-	}
-
-	/**
-	 * Creates a Request of some type for a record
-	 * 
-	 * @param originator
-	 * @return
-	 */
-	public static MessageOrRequest createAnyRequest(User originator, Record r) {
-		MessageOrRequest mor = new MessageOrRequest(MessageType.REQUEST_RECORD_REVIEW);
-		mor.setOriginator(originator);
-		mor.setStatus(CommunicationStatus.NEW);
-		mor.setRecord(r);
-		return mor;
-	}
-
-	public static GroupMessageOrRequest createAnyGroupRequest(User originator, Record r, Group g) {
-		GroupMessageOrRequest mor = new GroupMessageOrRequest(MessageType.REQUEST_JOIN_LAB_GROUP);
-		mor.setGroup(g);
-		mor.setId(999L);
-		mor.getGroup().setDisplayName("GroupName");
-		mor.setOriginator(originator);
-		mor.setStatus(CommunicationStatus.NEW);
-		mor.setRecord(r);
-		return mor;
-	}
-
-	/**
-	 * Creates a root folder and document owned by the same user with dummy
-	 * ids. This is for use by non-database tests that need to work with a
-	 * document with its associations already set up.
-	 * <br> A User is also created by this method, who is the owner of the folder and document.
-	 * 
-	 * @return
-	 */
-	public static StructuredDocument createWiredFolderAndDocument() {
-		StructuredDocument sd = TestFactory.createAnySD();
-		Folder root = TestFactory.createAFolder("root", sd.getOwner());
-		root.setId(2L);
-		root.addType(RecordType.ROOT);
-		root.addChild(sd, sd.getOwner(), true);
-		sd.getOwner().setRootFolder(root);
-
-		sd.getFields().get(0).setFieldData("data");
-		sd.getFields().get(0).setId(3L);
-		sd.setId(1L);
-		return sd;
-	}
-
-	/*
-	 * Creates a notification message
-	 */
-	public static Notification createANotification(User sender) {
-		Notification not = new Notification();
-		not.setMessage("a message");
-		not.setNotificationMessage(" a notification message");
-		not.setNotificationType(NotificationType.NOTIFICATION_DOCUMENT_EDITED);
-		not.setOriginator(sender);
-		return not;
-	}
-
 	/**
 	 * Creates a textfield form with
 	 * 
@@ -611,7 +377,7 @@ public class TestFactory {
 		byte[] imageBytes = IOUtils.toByteArray(inputStream);
 
 		Thumbnail thumbnail1 = new Thumbnail();
-		thumbnail1.setSourceId(1l);
+		thumbnail1.setSourceId(1L);
 		thumbnail1.setSourceType(SourceType.IMAGE);
 		thumbnail1.setHeight(height);
 		thumbnail1.setWidth(width);
@@ -619,42 +385,6 @@ public class TestFactory {
 		ImageBlob blob1 = new ImageBlob(imageBytes);
 		thumbnail1.setImageBlob(blob1);
 		return thumbnail1;
-	}
-
-	public static ProgressMonitor createAProgressMonitor(int totalWork, String desc) {
-		return new ProgressMonitorImpl(totalWork, desc);
-	}
-
-	/**
-	 * Create a Community with names and profile text set, but no ID or admin
-	 * IDs
-	 * 
-	 * @return A Community
-	 */
-	public static Community createACommunity() {
-		Community comm = new Community();
-		comm.setDisplayName("A display name");
-		comm.setUniqueName(randomAlphabetic(10));
-		comm.setProfileText("Some profile text");
-		return comm;
-
-	}
-
-	/**
-	 * Creates a Signature object, setting in associations to the documetn and
-	 * the signer, but not the ID
-	 * 
-	 * @param doc
-	 * @param any
-	 * @return
-	 */
-	public static Signature createASignature(StructuredDocument doc, User any) {
-		Signature sig = new Signature();
-		sig.setRecordSigned(doc);
-		sig.setSigner(any);
-		sig.setSignatureDate(new Date());
-		sig.setStatement("I have signed this");
-		return sig;
 	}
 
 	/**
@@ -667,8 +397,7 @@ public class TestFactory {
 	 */
 	public static FileProperty createAnyTransientFileProperty(User owner) throws IOException {
 		FileStoreRoot fsRoot = new FileStoreRoot("/some/path");
-		FileProperty fp = createAFileProperty(File.createTempFile("any", ".txt"), owner, fsRoot);
-		return fp;
+		return createAFileProperty(File.createTempFile("any", ".txt"), owner, fsRoot);
 	}
 
 	/**
@@ -698,26 +427,6 @@ public class TestFactory {
 		conn.setRefreshToken("refresh");
 		conn.setSecret("secret");
 		return conn;
-	}
-	
-	/**
-	 * Creates an OAuth token with access and refresh tokens set
-	 * @param anyUser
-	 * @return
-	 */
-	public static OAuthToken createOAuthTokenForUI(User anyUser) {
-		OAuthToken token = new OAuthToken(anyUser, "clientId", OAuthTokenType.UI_TOKEN);
-		token.setHashedRefreshToken("refreshToken");
-		return token;
-	}
-	/**
-	 * Creates numRecords records with an owner.
-	 * @param numRecords
-	 * @return
-	 */
-	public static List<BaseRecord> createNRecords(int numRecords) {
-		User any = createAnyUser("anyUser");
-		return IntStream.range(0, numRecords).mapToObj(i->createAnyRecord(any)).collect(toList());
 	}
 
 	public static Sample createBasicSampleInContainer(User user) {

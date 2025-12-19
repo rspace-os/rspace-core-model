@@ -296,7 +296,7 @@ public class FormTest {
 	public void testReorderRequiresSameFieldIds() {
 		setUpFormWith3Fields();
 		// 4L is not in form
-		assertThrows(IllegalArgumentException.class, ()->form.reorderFields(toList(1L, 2l, 4L)));
+		assertThrows(IllegalArgumentException.class, ()->form.reorderFields(toList(1L, 2L, 4L)));
 		
 	}
 
@@ -305,7 +305,8 @@ public class FormTest {
 		setUpFormWith3Fields();
 		form.getFieldForms().get(0).setDeleted(true);
 		// one is now delted
-		assertThrows(IllegalArgumentException.class, ()->form.reorderFields(TransformerUtils.toList(1L, 2l, 3L)));	
+		assertThrows(IllegalArgumentException.class, ()->form.reorderFields(TransformerUtils.toList(1L,
+				2L, 3L)));
 	}
 
 	private void setUpFormWith3Fields() {

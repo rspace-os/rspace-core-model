@@ -23,7 +23,6 @@ public class FieldTestUtils {
 	
 	/**
 	 * Creates a populated StringFieldForm for tests
-	 * @return
 	 */
 	public static StringFieldForm createStringForm() {
 		StringFieldForm sft= new StringFieldForm();

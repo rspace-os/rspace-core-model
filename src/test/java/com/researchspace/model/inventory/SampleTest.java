@@ -103,7 +103,7 @@ public class SampleTest {
 	@DisplayName("Use OID Distinguish samples from templates")
 	public void globalId() {
 		assertTrue(sample.getGlobalIdentifier().startsWith("SA"));
-		assertTrue(sample.getOid().getPrefix().equals(GlobalIdPrefix.SA));
+		assertEquals(sample.getOid().getPrefix(), GlobalIdPrefix.SA);
 		
 		Sample template = sample.copyToTemplate(anyUser);
 		template.setId(6L);

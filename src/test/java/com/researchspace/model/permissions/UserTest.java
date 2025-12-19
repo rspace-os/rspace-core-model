@@ -14,12 +14,11 @@ import com.researchspace.model.User;
 
 public class UserTest {
 	User u1;
-	Group gp1; Group gp2;
+	Group gp1;
 	@Before
 	public void setUp() throws Exception {
 		u1= new User("user1");
 		gp1 =new Group("group1",u1);
-		gp2 =new Group("group2",u1);
 	}
 
 	@After

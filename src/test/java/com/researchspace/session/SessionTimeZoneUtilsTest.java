@@ -44,7 +44,7 @@ public class SessionTimeZoneUtilsTest {
 		Date utc = cal.getTime();
 
 		DateTime local = dateUtiltss.convertToLocalTimeZone(utc);
-		assertTrue(local.getZone().equals(DateTimeZone.forTimeZone(localTz)));
+		assertEquals(local.getZone(), DateTimeZone.forTimeZone(localTz));
 	}
 
 	@Test

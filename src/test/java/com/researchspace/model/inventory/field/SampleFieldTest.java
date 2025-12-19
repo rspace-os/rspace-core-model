@@ -37,10 +37,10 @@ class SampleFieldTest {
 		assertEquals("[\"b\",\"\\\"mr Smith\\\"'s option\",\" pi=3.14\"]", field.getData()); // selected options string as saved in db
 		
 		// option outside definition list is invalid
-		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, () -> field.setSelectedOptions(Arrays.asList("a")));
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, () -> field.setSelectedOptions(List.of("a")));
 		assertEquals("[[\"a\"]] is invalid for field type Choice: Some supplied values are not allowed options", iae.getMessage());
 		// option that differs by trailing space is also invalid
-		iae = assertThrows(IllegalArgumentException.class, () -> field.setSelectedOptions(Arrays.asList("pi=3.14")));
+		iae = assertThrows(IllegalArgumentException.class, () -> field.setSelectedOptions(List.of("pi=3.14")));
 		assertEquals("[[\"pi=3.14\"]] is invalid for field type Choice: Some supplied values are not allowed options", iae.getMessage());
 	}
 	
@@ -63,8 +63,7 @@ class SampleFieldTest {
 	
 	private InventoryChoiceField createChoiceField() {
 		InventoryChoiceFieldDef defn = createAChoiceDefinition();
-		InventoryChoiceField field = new InventoryChoiceField(defn, "choice");
-		return field;
+		return new InventoryChoiceField(defn, "choice");
 	}
 
 	private InventoryChoiceFieldDef createAChoiceDefinition() {
@@ -108,8 +107,7 @@ class SampleFieldTest {
 
 	private InventoryRadioField createRadioField() {
 		InventoryRadioFieldDef defn = createRadioDefn();
-		InventoryRadioField field = new InventoryRadioField(defn, "radio");
-		return field;
+		return new InventoryRadioField(defn, "radio");
 	}
 	
 	private InventoryRadioFieldDef createRadioDefn() {

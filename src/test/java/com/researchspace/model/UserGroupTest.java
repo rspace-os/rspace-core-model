@@ -19,14 +19,13 @@ import com.researchspace.model.record.TestFactory;
 public class UserGroupTest {
 
 	User u,u2;
-	Group g1,g2;
+	Group g1;
 	UserGroup usergroup=null;
 	@Before
 	public void setUp() throws Exception {
 		u = TestFactory.createAnyUser("user");
 		u2 = TestFactory.createAnyUser("u2");
 		g1 = new Group("any");
-		g2 = new Group("any");
 	}
 
 	@After
@@ -55,8 +54,8 @@ public class UserGroupTest {
 		
 		//equality based on user and group
 		usergroup2.setUser(u);
-		assertTrue(usergroup2.equals(usergroup));
-		assertTrue(usergroup2.hashCode()==usergroup.hashCode());
+		assertEquals(usergroup2, usergroup);
+		assertEquals(usergroup2.hashCode(), usergroup.hashCode());
 		
 		//test set operations
 		Set<UserGroup>set = new HashSet<>();
@@ -70,7 +69,7 @@ public class UserGroupTest {
 	public void testEqualsHashCode2() {
 		UserGroup ug1 = new UserGroup();
 		UserGroup ug2 = new UserGroup();
-		assertTrue(ug1.equals(ug2));
+		assertEquals(ug1, ug2);
 		Set<UserGroup>set = new HashSet<>();
 		set.addAll(TransformerUtils.toList(ug1, ug2));
 		assertEquals(1, set.size());

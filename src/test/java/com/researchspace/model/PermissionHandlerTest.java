@@ -16,7 +16,6 @@ public class PermissionHandlerTest {
 		
 		Set<String> permissionStrings = new HashSet<>();
 		permissionStrings.add("FORM:CREATE:");
-		permissionStrings.add("FORM:CREATE:");
 		permissionStrings.add("COMMS:READ:property_name=REQUESTEXTERNALSHARE");
 		permissionStrings.add("COMMS:READ:property_name=REQUESTJOINEXISTINGCOLLABGROUP");
 		

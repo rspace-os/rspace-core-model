@@ -60,6 +60,8 @@ public class DefaultPermissionFactoryTest {
 		Folder folder = TestFactory.createAnAPiInboxFolder( u2);
 		fac.setUpAclForIndividualInboxFolder(folder, pi);
 	}
+
+	@Test
 	public void setUpACLForApiInboxFolderAssertions() {
 		Folder folder = TestFactory.createAnAPiInboxFolder( u2);
 		fac.setUpAclForIndividualInboxFolder(folder, u2);

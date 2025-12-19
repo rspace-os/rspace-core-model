@@ -57,7 +57,7 @@ public class AllToStringMethodsTest {
 			} catch (IllegalStateException e) {
 				logger.debug(className + " threw illegal state exception, skipping", e);
 			} catch (NullPointerException npe) {
-				sb.append(className + "\n");
+				sb.append(className).append("\n");
 			}
 		}
 	}
