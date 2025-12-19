@@ -11,6 +11,7 @@ public enum FormType {
 	/**
 	 * @deprecated - don't use for new forms.
 	 */
+	@Deprecated
 	TEMPLATE,
 
 }

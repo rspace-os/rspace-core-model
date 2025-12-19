@@ -102,9 +102,9 @@ public class ExternalWorkFlowData implements Serializable {
   private Set<ExternalWorkFlowInvocation> externalWorkflowInvocations = new HashSet<>();
   @Builder()
   public ExternalWorkFlowData(
-      @NonNull ExternalService externalService,  @NonNull long rspacedataid,  @NonNull ExternalWorkFlowData.RspaceDataType rspaceDataType,
-      @NonNull long rspacecontainerId,  @NonNull String rspaceContainerName,   @NonNull ExternalWorkFlowData.RspaceContainerType rspaceContainerType,  @NonNull String extName,
-      @NonNull String extId,  @NonNull String extSecondaryId,  @NonNull String extContainerID,  @NonNull String extContainerName,  @NonNull String baseUrl
+      @NonNull ExternalService externalService,  long rspacedataid,  @NonNull ExternalWorkFlowData.RspaceDataType rspaceDataType,
+      long rspacecontainerId,  @NonNull String rspaceContainerName,   @NonNull ExternalWorkFlowData.RspaceContainerType rspaceContainerType,  @NonNull String extName,
+      @NonNull String extId,  String extSecondaryId,  @NonNull String extContainerID,  @NonNull String extContainerName,  @NonNull String baseUrl
       ){
       this.externalService = externalService;
       this.rspacedataid = rspacedataid;

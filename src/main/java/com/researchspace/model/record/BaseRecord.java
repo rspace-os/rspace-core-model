@@ -366,6 +366,19 @@ public abstract class BaseRecord
     }
 
     @Transient
+    public boolean hasSingleParent() {
+        return parents.size() == 1;
+    }
+
+    @Transient
+    public Folder getSingleParent() {
+        if (parents.size() == 1) {
+            return parents.iterator().next().getFolder();
+        }
+        return null;
+    }
+
+    @Transient
     public Optional<Folder> getSharedFolderParent(){
         for(RecordToFolder rf: parents){
             Folder testee = rf.getFolder();
@@ -374,6 +387,24 @@ public abstract class BaseRecord
             }
         }
         return Optional.empty();
+    }
+
+    @Transient
+    public Set<Folder> getFolders() {
+        return getParentFolders();
+    }
+
+    public boolean hasAncestorMatchingPredicate(java.util.function.Predicate<BaseRecord> predicate, boolean includeSelf) {
+        if (includeSelf && predicate.test(this)) {
+            return true;
+        }
+        
+        for (Folder parent : getParentFolders()) {
+            if (predicate.test(parent) || parent.hasAncestorMatchingPredicate(predicate, false)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -499,136 +530,16 @@ public abstract class BaseRecord
         return hasAncestorMatchingPredicate(baseRecord -> baseRecord.hasType(type), includeSelf);
     }
 
-    /**
-     * Boolean test as to whether an ancestor of this object matches a given predicate
-     *
-     * @param predicate
-     * @param includeSelf include this object in type comparison. If <code>false</code>,
-     *                    this object is ignored.
-     * @return <code>true</code> if this object ancestor matches predicate,
-     * <code>false</code> otherwise.
-     */
-    public boolean hasAncestorMatchingPredicate(Predicate<BaseRecord> predicate, boolean includeSelf) {
-        if (includeSelf && predicate.test(this)) {
-            return true;
-        }
-        List<Folder> ancestors = getAllAncestors();
-        for (Folder ancestor : ancestors) {
-            if (predicate.test(ancestor)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns <code>true</code> if there is at least one parent of this object.
-     */
-    public boolean hasParents() {
-        return parents.size() > 0;
-    }
-
-    /**
-     * Returns <code>true</code> if this object has only a single parent.
-     */
-    public boolean hasSingleParent() {
-        return parents.size() == 1;
-    }
-
-    /**
-     * Convenience method to get all folders that this record belongs to
-     */
-    @Transient
-    public Set<Folder> getFolders() {
-        Set<Folder> rc = new HashSet<>();
-        for (RecordToFolder rtf : getParents()) {
-            rc.add(rtf.getFolder());
-        }
-        return rc;
-    }
-
-    /**
-     * @return the single parent, if <code> hasSinglePArent()== true</code>, or
-     * <code>null</code> if there are no parents.
-     * @throws IllegalStateException if has > 1 parent, i.e., if
-     *                               <code> hasSinglePArent()== false</code>
-     */
-    @Transient
-    public Folder getSingleParent() {
-        if (parents.size() > 1) {
-            throw new IllegalStateException("there are " + parents.size() + " parents!");
-        }
-        if (!hasParents()) {
-            return null;
-        }
-        return parents.iterator().next().getFolder();
-    }
-
-    /**
-     * Moves this record <b>from</b> <code>from</code> <b>to</b> <code>to</code>
-     *
-     * @param from
-     * @param to
-     * @param u
-     * @return
-     * @throws IllegalAddChildOperation
-     */
-    public boolean move(Folder from, Folder to, User u) throws IllegalAddChildOperation {
-        return doMove(from, to, u, false);
-    }
-
-    /**
-     * Version of {@link #move(Folder, Folder, User)} method that allows illegal moves out of shared.
-     * This variant should be only called in test setup, to reproduce historical issues like RSDEV-796.
-     */
-    public boolean unsafeMove(Folder from, Folder to, User u) throws IllegalAddChildOperation {
-        return doMove(from, to, u, true);
-    }
-
-    private boolean doMove(Folder from, Folder to, User u, boolean allowUnsafeMove) throws IllegalAddChildOperation {
-        if (from == null || to == null || u == null) {
-            return false;
-        }
-        if (!this.getParentFolders().contains(from)) {
-            return false;
-        }
-        if (from.isNotebook() && !getOwner().equals(from.getOwner())) {
-            return false;
-        }
-        if (!allowUnsafeMove) {
-            if (isFolder() && ((Folder) this).isSystemFolder()) {
-                return false;
-            }
-            if (from.isTopLevelSharedFolder()) {
-                return false;
-            }
-            if (from.isSharedFolder() && !(to.isSharedFolder() || to.isNotebook())) {
-                return false;
-            }
-            if (!from.isSharedFolder() && to.isSharedFolder()) {
-                return false;
-            }
-            if (!from.isSharedFolder() && !from.getOwner().equals(to.getOwner())) {
-                return false; // block move from user's Workspace folder into somebody else's
-            }
-        }
-
-        boolean removed = from.removeChild(this);
-        RecordToFolder added = to.addChild(this, u);
-        return added != null && removed;
-    }
-
-    /**
-     * Boolean test for whether this Record is a descendant of the argument
-     * Record.
-     *
-     * @param record A non-<code>null</code> Record
+/**
+     * Checks whether this record is a descendant of another record.
+     * 
      * @return <code>true</code> if this record is a descendant of the other
      * record, false otherwise or if the records are the same ( as
      * determined by equals()).
      * @deprecated - use {@link #getParentHierarchyForUser(User)} and inspect
      * the returned list of parents.
      */
+    @Deprecated
     @Transient
     public boolean isDescendantOf(BaseRecord record) {
         if (this.equals(record)) {

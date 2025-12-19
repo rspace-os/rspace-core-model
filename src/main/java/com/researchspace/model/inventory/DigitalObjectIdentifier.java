@@ -34,7 +34,7 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id", "type", "identifier", "state", "title", "otherData"})
+@EqualsAndHashCode(callSuper = false, of = {"id", "type", "identifier", "state", "title"})
 @Audited
 public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity implements Serializable {
 

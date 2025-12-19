@@ -12,13 +12,11 @@ import java.util.List;
 @Data
 public class SearchData {
 
-	@NonNull
 	private boolean advancedSearch;
 
 	/**
 	 * true = AND selected for queries, false = OR
 	 */
-	@NonNull
 	private boolean fulfillAll;
 
 	/**

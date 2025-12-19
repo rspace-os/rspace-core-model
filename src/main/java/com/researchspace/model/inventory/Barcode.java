@@ -26,7 +26,7 @@ import org.hibernate.search.annotations.Field;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"id", "barcodeData", "format", "creationDate"})
+@EqualsAndHashCode(callSuper = false, of = {"id", "barcodeData", "format", "creationDate"})
 @Audited
 public class Barcode extends InventoryRecordConnectedEntity implements Serializable {
 
