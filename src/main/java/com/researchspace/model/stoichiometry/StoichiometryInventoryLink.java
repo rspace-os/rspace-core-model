@@ -19,7 +19,6 @@ import com.researchspace.model.inventory.Sample;
 import com.researchspace.model.units.QuantityInfo;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.envers.Audited;
 
 @Entity
