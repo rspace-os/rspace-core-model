@@ -3,6 +3,7 @@ package com.researchspace.model.stoichiometry;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ import org.hibernate.envers.Audited;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "uuid")
 @ToString(exclude = "molecules")
 @Audited
 public class Stoichiometry {
@@ -42,6 +43,13 @@ public class Stoichiometry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  // there's no natural key for ensuring uniqueness before Stoichiometry entities are persisted to the db,
+  // therefore use this UUID. We need to ensure uniqueness in the case where Stoichiometry entities are
+  // exported to another rspace instance before they're persisted.
+  @Builder.Default
+  @Column(unique = true, nullable = false, length = 36)
+  private String uuid = UUID.randomUUID().toString();
 
   @ManyToOne
   @JoinColumn(name = "parent_reaction_id", nullable = true)
