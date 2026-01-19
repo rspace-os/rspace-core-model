@@ -19,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.researchspace.model.RSChemElement;
+import com.researchspace.model.record.Record;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,8 +44,12 @@ public class Stoichiometry {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "parent_reaction_id", nullable = false)
+  @JoinColumn(name = "parent_reaction_id", nullable = true)
   private RSChemElement parentReaction;
+
+  @ManyToOne
+  @JoinColumn(name = "record_id", nullable = false)
+  private Record record;
 
   @Builder.Default
   @OneToMany(
