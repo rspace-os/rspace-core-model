@@ -79,6 +79,9 @@ public class Stoichiometry {
   @PreUpdate
   private void updateTimestamp() {
     this.lastModified = new Date();
+    if (this.uuid == null) {
+      this.uuid = UUID.randomUUID().toString();
+    }
   }
 
   /*
