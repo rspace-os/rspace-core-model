@@ -34,6 +34,9 @@ public class UserRaid {
   @Column(name = "raid_natural_key")
   private String raidIdentifier;
 
+  @Column(name = "raid_title")
+  private String raidTitle;
+
   @Column(name = "raid_server_alias")
   private String raidServerAlias;
 
@@ -44,12 +47,13 @@ public class UserRaid {
   @OneToOne(fetch = FetchType.LAZY, mappedBy = "raid")
   private Group groupAssociated;
 
-  public UserRaid(User owner, Group groupAssociated, String raidServerAlias,
+  public UserRaid(User owner, Group groupAssociated, String raidServerAlias, String raidTitle,
       String raidIdentifier) {
     this.owner = owner;
-    this.raidIdentifier = raidIdentifier;
-    this.raidServerAlias = raidServerAlias;
     this.groupAssociated = groupAssociated;
+    this.raidServerAlias = raidServerAlias;
+    this.raidTitle = raidTitle;
+    this.raidIdentifier = raidIdentifier;
   }
 
 }
