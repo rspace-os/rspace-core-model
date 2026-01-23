@@ -3,6 +3,7 @@ package com.researchspace.model.stoichiometry;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.researchspace.model.RSChemElement;
+import com.researchspace.model.record.Record;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +35,7 @@ import org.hibernate.envers.Audited;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "uuid")
 @ToString(exclude = "molecules")
 @Audited
 public class Stoichiometry {
@@ -42,9 +44,20 @@ public class Stoichiometry {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  // there's no natural key for ensuring uniqueness before Stoichiometry entities are persisted to the db,
+  // therefore use this UUID. We need to ensure uniqueness in the case where Stoichiometry entities are
+  // exported to another rspace instance before they're persisted.
+  @Builder.Default
+  @Column(unique = true, nullable = false, length = 36)
+  private String uuid = UUID.randomUUID().toString();
+
   @ManyToOne
-  @JoinColumn(name = "parent_reaction_id", nullable = false)
+  @JoinColumn(name = "parent_reaction_id", nullable = true)
   private RSChemElement parentReaction;
+
+  @ManyToOne
+  @JoinColumn(name = "record_id", nullable = false)
+  private Record record;
 
   @Builder.Default
   @OneToMany(
@@ -66,6 +79,9 @@ public class Stoichiometry {
   @PreUpdate
   private void updateTimestamp() {
     this.lastModified = new Date();
+    if (this.uuid == null) {
+      this.uuid = UUID.randomUUID().toString();
+    }
   }
 
   /*

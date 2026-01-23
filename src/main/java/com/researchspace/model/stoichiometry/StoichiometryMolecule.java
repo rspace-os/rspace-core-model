@@ -29,7 +29,7 @@ import org.hibernate.envers.Audited;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "rsChemElement"})
 @ToString(exclude = "stoichiometry")
 @Audited
 public class StoichiometryMolecule {
