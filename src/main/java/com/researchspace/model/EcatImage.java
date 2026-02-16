@@ -13,7 +13,7 @@ import org.apache.commons.lang3.Validate;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.researchspace.model.core.GlobalIdentifier;
 import com.researchspace.model.record.DOCUMENT_CATEGORIES;

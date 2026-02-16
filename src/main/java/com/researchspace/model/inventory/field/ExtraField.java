@@ -13,9 +13,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.researchspace.model.audittrail.AuditTrailProperty;
 import com.researchspace.model.core.GlobalIdPrefix;
@@ -74,8 +72,7 @@ public abstract class ExtraField extends InventoryRecordConnectedEntity implemen
 	}
 
 	@Transient
-	@org.hibernate.search.annotations.Field(analyzer = @Analyzer(definition = "structureAnalyzer"),
-			analyze = Analyze.YES, name = "fieldData", store = Store.NO)
+	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData")
 	public String getData() {
 		return getEditInfo().getDescription();
 	}

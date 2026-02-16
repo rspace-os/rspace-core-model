@@ -29,15 +29,9 @@ import org.apache.lucene.analysis.core.StopFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.apache.shiro.crypto.hash.Hash;
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.AnalyzerDef;
-import org.hibernate.search.annotations.CharFilterDef;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.Store;
-import org.hibernate.search.annotations.TokenFilterDef;
-import org.hibernate.search.annotations.TokenizerDef;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import com.researchspace.core.util.SecureStringUtils;
 import com.researchspace.model.Group;
@@ -56,14 +50,6 @@ import com.researchspace.model.field.FieldType;
 @Entity
 @Audited
 @Indexed
-/*
- * ignores HTML tags and parses into words. This definition is not used unless
- * together with an @Analyzer annotation which refers to the definition
- */
-@AnalyzerDef(name = "structureAnalyzer", tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class), filters = {
-		@TokenFilterDef(factory = LowerCaseFilterFactory.class),
-		@TokenFilterDef(factory = StopFilterFactory.class) }, charFilters = {
-				@CharFilterDef(factory = HTMLStripCharFilterFactory.class) })
 public class StructuredDocument extends Record implements TaggableElnRecord {
 
 	/** Default name when creating new Structured Document */
@@ -347,13 +333,13 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
 	}
 
 	@Transient
-	@org.hibernate.search.annotations.Field(analyzer = @Analyzer(definition = "structureAnalyzer"), name = "formName", analyze = Analyze.YES, store = Store.NO)
+	@FullTextField(analyzer = "structureAnalyzer", name = "formName")
 	public String getFormName() {
 		return form.getEditInfo().getName();
 	}
 
 	@Transient
-	@org.hibernate.search.annotations.Field(analyzer = @Analyzer(definition = "structureAnalyzer"), name = "formStableId", analyze = Analyze.YES, store = Store.NO)
+	@FullTextField(analyzer = "structureAnalyzer", name = "formStableId")
 	public String getFormStableId() {
 		return form.getStableID();
 	}
@@ -363,7 +349,7 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
      * This indexes on the name of the template which this record was created from
      * */
     @Transient
-    @org.hibernate.search.annotations.Field(analyzer = @Analyzer(definition = "structureAnalyzer"), name = "templateName", analyze = Analyze.YES, store = Store.NO)
+    @FullTextField(analyzer = "structureAnalyzer", name = "templateName")
     public String getTemplateName() {
 	    return getTemplate() == null ? null : getTemplate().getEditInfo().getName();
     }
@@ -373,7 +359,7 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
      * This indexes on the OID of the template which this record was created from
      * */
     @Transient
-    @org.hibernate.search.annotations.Field(analyzer = @Analyzer(definition = "structureAnalyzer"), name = "templateOid", analyze = Analyze.YES, store = Store.NO)
+    @FullTextField(analyzer = "structureAnalyzer", name = "templateOid")
     public String getTemplateOid() {
         return getTemplate() == null ? null : getTemplate().getOid().toString();
     }
@@ -545,7 +531,7 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
 
 	@Column(length = MAX_TAG_LENGTH)
 	@Size(max = MAX_TAG_LENGTH)
-	@org.hibernate.search.annotations.Field
+	@FullTextField
 	public String getDocTag() {
 		return docTag;
 	}

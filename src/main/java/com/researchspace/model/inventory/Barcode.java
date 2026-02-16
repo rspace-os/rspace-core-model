@@ -16,7 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 /**
  * Basic model used to represent all barcodes added to inventory items
@@ -35,13 +36,13 @@ public class Barcode extends InventoryRecordConnectedEntity implements Serializa
 	private Long id;
 	
 	// indexing barcode content separately 
-	@Field(name = "barcodeData")
+	@KeywordField(name = "barcodeData")
 	private String barcodeData;
 
 	private String format;
 
 	// indexing barcode description together with field data
-	@Field(name = "fieldData") 
+	@FullTextField(name = "fieldData") 
 	private String description;
 
 	private Date creationDate;

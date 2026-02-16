@@ -23,15 +23,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
 import org.apache.lucene.analysis.pattern.PatternReplaceFilterFactory;
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.AnalyzerDef;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.Store;
-import org.hibernate.search.annotations.TokenFilterDef;
-import org.hibernate.search.annotations.TokenizerDef;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.researchspace.model.audittrail.AuditTrailData;
@@ -46,11 +41,6 @@ import com.researchspace.model.record.Record;
 @Entity
 @Audited
 @Indexed
-@AnalyzerDef(name = "axiopeanalyzer", tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class), filters = {
-		@TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
-				@org.hibernate.search.annotations.Parameter(name = "pattern", value = "([^a-zA-Z0-9])"),
-				@org.hibernate.search.annotations.Parameter(name = "replacement", value = ""),
-				@org.hibernate.search.annotations.Parameter(name = "replace", value = "all") }) })
 @Table(name = "ecat_comm")
 @AuditTrailData
 public class EcatComment implements Serializable, IFieldLinkableElement {
@@ -62,17 +52,16 @@ public class EcatComment implements Serializable, IFieldLinkableElement {
 	private Long fieldId;
 	private int sequence;
 
-	@Field(analyze = Analyze.YES, store = Store.NO)
-	@Analyzer(definition = "axiopeanalyzer")
+	@FullTextField(analyzer = "axiopeanalyzer")
 	private String comName;
 
-	@Field(analyze = Analyze.YES, store = Store.NO)
+	@FullTextField
 	private String comDesc;
 
-	@Field(analyze = Analyze.YES, store = Store.NO)
+	@FullTextField
 	private String lastUpdater;
 
-	@Field(analyze = Analyze.YES, store = Store.NO)
+	@FullTextField
 	private String author;
 
 	private Record record;

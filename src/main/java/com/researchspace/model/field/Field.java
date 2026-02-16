@@ -21,9 +21,7 @@ import jakarta.persistence.Transient;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Filter;
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.researchspace.model.EcatMediaFile;
@@ -165,8 +163,7 @@ public abstract class Field extends AbstractField implements Serializable,  Uniq
 	 */
 	@Transient
 	@Lob
-	@org.hibernate.search.annotations.Field(analyzer = @Analyzer(definition = "structureAnalyzer"),
-	    analyze = Analyze.YES, name = "fieldData", store = Store.NO)
+	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData")
 	public String getFieldData() {
 		return getData();
 	}

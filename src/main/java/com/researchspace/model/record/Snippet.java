@@ -5,7 +5,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.researchspace.model.core.GlobalIdPrefix;
 

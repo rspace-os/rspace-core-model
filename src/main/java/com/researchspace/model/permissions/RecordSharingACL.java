@@ -12,10 +12,8 @@ import jakarta.persistence.Transient;
 
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import com.researchspace.model.AbstractUserOrGroupImpl;
 import com.researchspace.model.Group;
@@ -233,9 +231,7 @@ public class RecordSharingACL implements Serializable {
 	 * 
 	 * @return
 	 */
-	@Field(name = "acl", // should be the same
-			analyze = Analyze.YES, store = Store.NO)
-	@Analyzer(definition = "aclAnalyzer")
+	@FullTextField(analyzer = "aclAnalyzer")
 	@Column(length = 2500)
 	public String getAcl() {
 		if (acl == null) {

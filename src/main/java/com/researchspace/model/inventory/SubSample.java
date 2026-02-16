@@ -19,9 +19,9 @@ import jakarta.validation.ConstraintViolationException;
 
 import org.apache.commons.lang.Validate;
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import com.researchspace.model.User;
 import com.researchspace.model.audittrail.AuditDomain;
@@ -202,7 +202,7 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 	}
 
 	@Transient
-	@Field
+	@GenericField
 	public Long getParentSampleId() {
 		if (getSample() != null) {
 			return getSample().getId();

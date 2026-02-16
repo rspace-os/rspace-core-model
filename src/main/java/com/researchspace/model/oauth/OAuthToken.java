@@ -57,7 +57,6 @@ public class OAuthToken implements Serializable, AuthenticationToken {
 	private Date created;
 
 	@Column(nullable = false)
-	@Type(type = "org.hibernate.type.InstantType")
 	private Instant expiryTime;
 
 	/**

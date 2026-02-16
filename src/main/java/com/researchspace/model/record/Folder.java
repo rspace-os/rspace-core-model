@@ -35,8 +35,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 @Entity
 @XmlRootElement
@@ -138,7 +138,7 @@ public class Folder extends BaseRecord implements TaggableElnRecord {
 
 	@Column(length = MAX_TAG_LENGTH)
 	@Size(max = MAX_TAG_LENGTH)
-	@Field
+	@FullTextField
 	public String getDocTag() {
 		return docTag;
 	}

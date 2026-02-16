@@ -60,10 +60,10 @@ import org.apache.shiro.authz.Permission;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
+import org.hibernate.search.engine.backend.types.Projectable;
+import org.hibernate.search.engine.backend.types.Sortable;
 
 /**
  * This class represents the basic "user" object.
@@ -481,7 +481,7 @@ public class User extends AbstractUserOrGroupImpl
 	@AuditTrailProperty(name = "username")
 	@XmlElement(required = true)
 	@XmlID
-	@Field(analyzer = @Analyzer(definition = "structureAnalyzer"), analyze = Analyze.NO, store = Store.NO)
+	@KeywordField(normalizer = "structureAnalyzer", projectable = Projectable.NO, sortable = Sortable.NO)
 	public String getUsername() {
 		return username;
 	}
@@ -553,9 +553,7 @@ public class User extends AbstractUserOrGroupImpl
      * Generates a publicly consumable basic user data object
      */
     public UserBasicInfo toBasicInfo() {
-        UserBasicInfo ubi = new UserBasicInfo();
-        populateBasicInfo(ubi);
-        return ubi;
+        return new UserBasicInfo(getId(), username, firstName, lastName, email, getRolesNamesAsString(), getAffiliation());
     }
 
 	/**
@@ -566,7 +564,13 @@ public class User extends AbstractUserOrGroupImpl
 	 */
 	public UserPublicInfo toPublicInfo() {
 		UserPublicInfo pui = new UserPublicInfo();
-		populateBasicInfo(pui);
+		pui.setId(getId());
+		pui.setUsername(username);
+		pui.setFirstName(firstName);
+		pui.setLastName(lastName);
+		pui.setEmail(email);
+		pui.setRole(getRolesNamesAsString());
+		pui.setAffiliation(getAffiliation());
 		pui.setLastLogin(getLastLogin());
 		pui.setAccountLocked(isAccountLocked());
 		pui.setEnabled(isEnabled());
@@ -581,8 +585,7 @@ public class User extends AbstractUserOrGroupImpl
 		info.setFirstName(firstName);
 		info.setLastName(lastName);
 		info.setEmail(email);
-		List<String> roleList = TransformerUtils.transformToString(getRoles(), "name");
-		info.setRole(StringUtils.join(roleList, ","));
+		info.setRole(getRolesNamesAsString());
 		info.setAffiliation(getAffiliation());
 	}
 

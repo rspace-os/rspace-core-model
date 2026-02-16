@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
 @MappedSuperclass
 @Getter
@@ -57,7 +57,7 @@ public abstract class MovableInventoryRecord extends InventoryRecord {
 	 * @return id of parent container, or null if record is not stored anywhere
 	 */
 	@Transient
-	@Field
+	@GenericField
 	public Long getParentId() {
 		if (getParentContainer() != null) {
 			return getParentContainer().getId();

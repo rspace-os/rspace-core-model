@@ -16,7 +16,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.researchspace.model.User;
 
@@ -38,7 +38,7 @@ public class SubSampleNote implements Serializable {
 	private User createdBy;
 
 	// indexing notes together with field data
-	@Field(name = "fieldData")
+	@FullTextField(name = "fieldData")
 	private String content;
 	
 	private SubSample subSample;

@@ -10,7 +10,7 @@ import jakarta.persistence.Transient;
 import org.apache.commons.io.FilenameUtils;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.researchspace.model.record.ImportOverride;
 import com.researchspace.model.record.RecordInformation;

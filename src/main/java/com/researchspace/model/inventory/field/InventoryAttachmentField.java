@@ -14,7 +14,7 @@ import jakarta.validation.ConstraintViolationException;
 
 import org.apache.commons.lang.Validate;
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import com.researchspace.model.field.FieldType;
 import com.researchspace.model.inventory.InventoryFile;

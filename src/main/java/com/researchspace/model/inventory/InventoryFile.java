@@ -18,7 +18,7 @@ import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.researchspace.model.FileProperty;
 import com.researchspace.model.core.GlobalIdPrefix;
@@ -45,7 +45,7 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 	private Long id;
 	
 	// indexing filename together with field data
-	@Field(name = "fieldData") 
+	@FullTextField(name = "fieldData") 
 	private String fileName;
 	private Date creationDate;
 	private String createdBy;

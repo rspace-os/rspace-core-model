@@ -41,7 +41,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Field;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 @MappedSuperclass
 @Getter
@@ -92,7 +93,7 @@ public abstract class InventoryRecord implements Quantifiable {
 		return getSharingACL().getAclElements().stream().map(ACLElement::getUserOrGrpUniqueName).collect(Collectors.toList()); 
 	}
 
-	@Field(name = "sharedWith")
+	@KeywordField(name = "sharedWith")
 	@Transient
 	public String getSharedWithUniqueNamesString() {
 		if (getSharingACL() == null) {
@@ -155,7 +156,7 @@ public abstract class InventoryRecord implements Quantifiable {
 
 	@Transient
 	@AuditTrailProperty(name = "name")
-	@Field
+	@FullTextField
 	public String getName() {
 		return getEditInfo().getName();
 	}
@@ -186,7 +187,7 @@ public abstract class InventoryRecord implements Quantifiable {
 		setDeletedDate(isDeleted ? new Date() : null);
 	}
 
-	@Field
+	@FullTextField
 	public String getTags() {
 		return tags;
 	}
@@ -197,7 +198,7 @@ public abstract class InventoryRecord implements Quantifiable {
 	}
 	
 	@Transient
-	@Field
+	@FullTextField
 	public String getDescription() {
 		return getEditInfo().getDescription();
 	}

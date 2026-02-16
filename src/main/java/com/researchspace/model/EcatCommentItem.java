@@ -23,11 +23,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import com.researchspace.core.util.DateUtil;
 import com.researchspace.model.core.GlobalIdPrefix;
@@ -40,7 +38,6 @@ import com.researchspace.session.SessionTimeZoneUtils;
 @Audited
 @Table(name = "ecat_comm_item")
 @Indexed
-@Analyzer(definition = "structureAnalyzer")
 @XmlType
 @XmlAccessorType(XmlAccessType.NONE)
 public class EcatCommentItem implements Serializable, IFieldLinkableElement {
@@ -49,11 +46,11 @@ public class EcatCommentItem implements Serializable, IFieldLinkableElement {
 
 	private Long itemId;
 	private Long comId;
-	@Field(analyze = Analyze.YES, store = Store.NO)
+	@FullTextField(analyzer = "structureAnalyzer")
 	private String itemName;
-	@Field(analyze = Analyze.YES, name = "fields.fieldData", store = Store.NO)
+	@FullTextField(analyzer = "structureAnalyzer", name = "fields.fieldData")
 	private String itemContent;
-	@Field(analyze = Analyze.NO, name = "owner.username")
+	@KeywordField(name = "owner.username")
 	private String lastUpdater;
 	private Date createDate;
 	private Date updateDate;

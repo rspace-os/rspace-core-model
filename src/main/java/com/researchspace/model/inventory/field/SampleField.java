@@ -22,9 +22,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.researchspace.model.core.GlobalIdPrefix;
 import com.researchspace.model.core.GlobalIdentifier;
@@ -129,8 +127,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 	}
 
 	@Transient
-	@org.hibernate.search.annotations.Field(analyzer = @Analyzer(definition = "structureAnalyzer"),
-			analyze = Analyze.YES, name = "fieldData", store = Store.NO)
+	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData")
 	public String getFieldData() {
 		return getData();
 	}

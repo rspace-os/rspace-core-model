@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import jakarta.persistence.Lob;
 import com.researchspace.model.RSChemElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,7 +60,7 @@ public class StoichiometryMolecule {
   @Column private String name;
 
   @Column
-  @Type(type = "text")
+  @Lob
   private String smiles;
 
   @Builder.Default @Column private Double coefficient = 1.00;
@@ -79,7 +80,7 @@ public class StoichiometryMolecule {
   private Boolean limitingReagent;
 
   @Column
-  @Type(type = "text")
+  @Lob
   private String notes;
 }
 

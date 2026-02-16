@@ -5,7 +5,7 @@ import jakarta.persistence.Transient;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.envers.Audited;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.researchspace.model.User;
 import com.researchspace.model.audittrail.AuditDomain;

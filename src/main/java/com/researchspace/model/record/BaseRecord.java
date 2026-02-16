@@ -62,11 +62,9 @@ import org.hibernate.LazyInitializationException;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Analyzer;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 /**
  * Base class of Record/Folder types. Holds provenance information and parent
@@ -245,11 +243,7 @@ public abstract class BaseRecord
     @AuditTrailIdentifier
     @Transient
     // include in 'FullText' search
-    @Field(name = "fields.fieldData",
-            // this is to index in lower-case to match the search analyzer, may
-            // need to look into using
-            // different analyzer ( we don't really want to tokenize here)
-            analyze = Analyze.YES, store = Store.NO)
+    @FullTextField(name = "fields.fieldData")
     public String getGlobalIdentifier() {
         return getOid().toString();
     }
@@ -706,7 +700,7 @@ public abstract class BaseRecord
     }
 
     @Transient
-    @Field(analyzer = @Analyzer(definition = "structureAnalyzer"), name = "name", analyze = Analyze.YES, store = Store.NO)
+    @FullTextField(analyzer = "structureAnalyzer", name = "name")
     @AuditTrailProperty(name = "name")
     public String getName() {
         return getEditInfo().getName();
@@ -774,7 +768,7 @@ public abstract class BaseRecord
     }
 
     @Transient
-    @Field(analyzer = @Analyzer(definition = "structureAnalyzer"), name = "fields.fieldData", analyze = Analyze.YES, store = Store.NO)
+    @FullTextField(analyzer = "structureAnalyzer", name = "fields.fieldData")
     public String getDescription() {
         return getEditInfo().getDescription();
     }
@@ -806,7 +800,7 @@ public abstract class BaseRecord
      * Convenience method who works with time stamps
      */
     @Transient
-    @Field(analyzer = @Analyzer(definition = "structureAnalyzer"), name = "creationDate", analyze = Analyze.NO, store = Store.NO)
+    @GenericField(name = "creationDate")
     public Date getCreationDateAsDate() {
         return getEditInfo().getCreationDate();
     }
@@ -848,7 +842,7 @@ public abstract class BaseRecord
      * Convenience method who works with time stamps
      */
     @Transient
-    @Field(analyzer = @Analyzer(definition = "structureAnalyzer"), name = "modifiedDate", analyze = Analyze.NO, store = Store.NO)
+    @GenericField(name = "modifiedDate")
     public Date getModificationDateAsDate() {
         return getEditInfo().getModificationDate();
     }
