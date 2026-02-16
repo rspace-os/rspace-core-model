@@ -1,8 +1,8 @@
 package com.researchspace.model.record;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.search.annotations.Indexed;

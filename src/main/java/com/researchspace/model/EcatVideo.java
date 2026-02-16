@@ -2,8 +2,8 @@ package com.researchspace.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.search.annotations.Indexed;

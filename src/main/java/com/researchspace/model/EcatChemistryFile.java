@@ -1,6 +1,6 @@
 package com.researchspace.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.researchspace.model.record.DOCUMENT_CATEGORIES;
 import com.researchspace.model.record.ImportOverride;
