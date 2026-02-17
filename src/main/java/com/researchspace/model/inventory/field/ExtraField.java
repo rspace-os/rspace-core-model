@@ -13,6 +13,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.search.engine.backend.types.Projectable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.researchspace.model.audittrail.AuditTrailProperty;
@@ -72,7 +73,7 @@ public abstract class ExtraField extends InventoryRecordConnectedEntity implemen
 	}
 
 	@Transient
-	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData")
+	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData", projectable = Projectable.NO)
 	public String getData() {
 		return getEditInfo().getDescription();
 	}
