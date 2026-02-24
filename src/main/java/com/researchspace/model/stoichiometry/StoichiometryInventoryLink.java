@@ -31,6 +31,11 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
   private Long id;
   private StoichiometryMolecule stoichiometryMolecule;
   private QuantityInfo quantity;
+  private boolean stockDeducted = false;
+
+  public void setStockDeducted(boolean stockDeducted) {
+    this.stockDeducted = stockDeducted;
+  }
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +47,11 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
   @JoinColumn(name = "stoichiometry_molecule_id", nullable = false)
   public StoichiometryMolecule getStoichiometryMolecule() {
     return stoichiometryMolecule;
+  }
+
+  @Column(name = "stock_deducted", nullable = false)
+  public boolean isStockDeducted() {
+    return stockDeducted;
   }
 
   @Embedded
