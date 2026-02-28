@@ -63,6 +63,7 @@ public class Stoichiometry {
   @OneToMany(
           mappedBy = "stoichiometry",
           cascade = CascadeType.ALL,
+          orphanRemoval = true,
           fetch = javax.persistence.FetchType.EAGER)
   private List<StoichiometryMolecule> molecules = new ArrayList<>();
 
