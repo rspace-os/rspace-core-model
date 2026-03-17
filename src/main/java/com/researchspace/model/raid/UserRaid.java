@@ -40,6 +40,9 @@ public class UserRaid {
   @Column(name = "raid_server_alias")
   private String raidServerAlias;
 
+  @Column(name = "raid_agency_url")
+  private String raidAgencyUrl;
+
   @ManyToOne
   @JoinColumn(name = "owner_id", referencedColumnName = "id")
   private User owner;
@@ -47,13 +50,28 @@ public class UserRaid {
   @OneToOne(fetch = FetchType.LAZY, mappedBy = "raid")
   private Group groupAssociated;
 
-  public UserRaid(User owner, Group groupAssociated, String raidServerAlias, String raidTitle,
+  public UserRaid(
+      User owner,
+      Group groupAssociated,
+      String raidServerAlias,
+      String raidTitle,
       String raidIdentifier) {
+    this(owner, groupAssociated, raidServerAlias, raidTitle, raidIdentifier, null);
+  }
+
+  public UserRaid(
+      User owner,
+      Group groupAssociated,
+      String raidServerAlias,
+      String raidTitle,
+      String raidIdentifier,
+      String raidAgencyUrl) {
     this.owner = owner;
     this.groupAssociated = groupAssociated;
     this.raidServerAlias = raidServerAlias;
     this.raidTitle = raidTitle;
     this.raidIdentifier = raidIdentifier;
+    this.raidAgencyUrl = raidAgencyUrl;
   }
 
 }

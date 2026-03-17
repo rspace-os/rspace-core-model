@@ -4,8 +4,8 @@ import static org.apache.commons.lang.RandomStringUtils.random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.apache.shiro.codec.Base64;
-import org.apache.shiro.crypto.AesCipherService;
+import org.apache.shiro.lang.codec.Base64;
+import org.apache.shiro.crypto.cipher.AesCipherService;
 import org.junit.jupiter.api.Test;
 
 public class SymmetricTextEncryptorTest {
