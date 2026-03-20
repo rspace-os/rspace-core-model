@@ -16,8 +16,8 @@ public enum NfsAuthenticationType {
 	PUBKEY,
 
 	/**
-	 * if server-configured authentication should be used
+	 * if user doesn't need to explicitly authenticate
 	 */
-	SERVER
+	NONE
 	
 }
