@@ -243,7 +243,7 @@ public abstract class BaseRecord
     @AuditTrailIdentifier
     @Transient
     // include in 'FullText' search
-    @FullTextField(name = "fields.fieldData")
+    @FullTextField(name = "fields_fieldData")
     public String getGlobalIdentifier() {
         return getOid().toString();
     }
@@ -768,7 +768,7 @@ public abstract class BaseRecord
     }
 
     @Transient
-    @FullTextField(analyzer = "structureAnalyzer", name = "fields.fieldData")
+    @FullTextField(analyzer = "structureAnalyzer", name = "fields_fieldData")
     public String getDescription() {
         return getEditInfo().getDescription();
     }

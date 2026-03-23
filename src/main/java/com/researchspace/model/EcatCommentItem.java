@@ -48,9 +48,9 @@ public class EcatCommentItem implements Serializable, IFieldLinkableElement {
 	private Long comId;
 	@FullTextField(analyzer = "structureAnalyzer")
 	private String itemName;
-	@FullTextField(analyzer = "structureAnalyzer", name = "fields.fieldData")
+	@FullTextField(analyzer = "structureAnalyzer", name = "fields_fieldData")
 	private String itemContent;
-	@KeywordField(name = "owner.username")
+	@KeywordField(name = "owner_username")
 	private String lastUpdater;
 	private Date createDate;
 	private Date updateDate;
