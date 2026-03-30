@@ -11,6 +11,9 @@ import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 @MappedSuperclass
 @Getter
@@ -58,6 +61,7 @@ public abstract class MovableInventoryRecord extends InventoryRecord {
 	 */
 	@Transient
 	@GenericField
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "parentLocation")))
 	public Long getParentId() {
 		if (getParentContainer() != null) {
 			return getParentContainer().getId();

@@ -26,7 +26,9 @@ import org.hibernate.envers.Audited;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.researchspace.model.audittrail.AuditTrailData;
@@ -69,7 +71,6 @@ public class EcatComment implements Serializable, IFieldLinkableElement {
 	private Date createDate;
 	private Date updateDate;
 
-	@IndexedEmbedded
 	private List<EcatCommentItem> items;
 
 	/**
@@ -261,6 +262,8 @@ public class EcatComment implements Serializable, IFieldLinkableElement {
 	@JoinColumn(name = "com_id")
 	@XmlElementWrapper
 	@XmlElement(name = "commentItem")
+	@IndexedEmbedded
+	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
 	public List<EcatCommentItem> getItems() {
 		return items;
 	}

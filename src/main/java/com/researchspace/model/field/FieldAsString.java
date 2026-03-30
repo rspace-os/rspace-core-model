@@ -4,6 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 /**
  * Subclasses of this Field class store Field data as a plain String.
@@ -19,6 +22,12 @@ public abstract class FieldAsString extends Field {
 	@Column(name = "data", length = 1000)
 	public String getData() {
 		return data;
+	}
+
+	@Override
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "data")))
+	public String getFieldData() {
+		return super.getFieldData();
 	}
 
 	public void setData(String data) {

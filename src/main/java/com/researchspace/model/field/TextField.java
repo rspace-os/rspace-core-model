@@ -6,6 +6,9 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 @Entity
 @DiscriminatorValue("text")
@@ -32,6 +35,12 @@ public class TextField extends Field {
 	@Override
 	public String getData() {
 		return getRtfData();
+	}
+
+	@Override
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "rtfData")))
+	public String getFieldData() {
+		return super.getFieldData();
 	}
 
 	@Override

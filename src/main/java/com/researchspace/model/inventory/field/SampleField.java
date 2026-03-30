@@ -23,6 +23,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.hibernate.envers.Audited;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 import com.researchspace.model.core.GlobalIdPrefix;
 import com.researchspace.model.core.GlobalIdentifier;
@@ -128,6 +131,7 @@ public abstract class SampleField implements Serializable, ValidatingField, Comp
 
 	@Transient
 	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData")
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "data")))
 	public String getFieldData() {
 		return getData();
 	}

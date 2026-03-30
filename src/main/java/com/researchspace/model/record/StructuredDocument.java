@@ -32,6 +32,9 @@ import org.hibernate.envers.Audited;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 import com.researchspace.core.util.SecureStringUtils;
 import com.researchspace.model.Group;
@@ -334,12 +337,14 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
 
 	@Transient
 	@FullTextField(analyzer = "structureAnalyzer", name = "formName")
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "form")))
 	public String getFormName() {
 		return form.getEditInfo().getName();
 	}
 
 	@Transient
 	@FullTextField(analyzer = "structureAnalyzer", name = "formStableId")
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "form")))
 	public String getFormStableId() {
 		return form.getStableID();
 	}
@@ -350,6 +355,7 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
      * */
     @Transient
     @FullTextField(analyzer = "structureAnalyzer", name = "templateName")
+    @IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "template")))
     public String getTemplateName() {
 	    return getTemplate() == null ? null : getTemplate().getEditInfo().getName();
     }

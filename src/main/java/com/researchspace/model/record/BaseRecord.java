@@ -65,6 +65,10 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
 
 /**
  * Base class of Record/Folder types. Holds provenance information and parent
@@ -243,10 +247,29 @@ public abstract class BaseRecord
     @AuditTrailIdentifier
     @Transient
     // include in 'FullText' search
-    @FullTextField(name = "fields_fieldData")
     public String getGlobalIdentifier() {
         return getOid().toString();
     }
+
+     @Transient
+ @FullTextField(analyzer = "structureAnalyzer", name = "fields_fieldData")
+ @IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "editInfo")))
+ public String getSearchableContent() {
+     // Combine globalIdentifier and description for full-text search
+     String oid = getGlobalIdentifier();
+     String desc = getDescription();
+     StringBuilder sb = new StringBuilder();
+     if (oid != null) {
+         sb.append(oid);
+     }
+     if (desc != null) {
+         if (sb.length() > 0) {
+             sb.append(" ");
+         }
+         sb.append(desc);
+     }
+     return sb.toString();
+ }
 
     @Transient
     protected abstract GlobalIdPrefix getGlobalIdPrefix();
@@ -702,6 +725,7 @@ public abstract class BaseRecord
     @Transient
     @FullTextField(analyzer = "structureAnalyzer", name = "name")
     @AuditTrailProperty(name = "name")
+    @IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "editInfo")))
     public String getName() {
         return getEditInfo().getName();
     }
@@ -759,6 +783,7 @@ public abstract class BaseRecord
     @JoinColumn(nullable = false, name = "owner_id")
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @IndexedEmbedded
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     public User getOwner() {
         return owner;
     }
@@ -768,7 +793,6 @@ public abstract class BaseRecord
     }
 
     @Transient
-    @FullTextField(analyzer = "structureAnalyzer", name = "fields_fieldData")
     public String getDescription() {
         return getEditInfo().getDescription();
     }
@@ -801,6 +825,7 @@ public abstract class BaseRecord
      */
     @Transient
     @GenericField(name = "creationDate")
+    @IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "editInfo")))
     public Date getCreationDateAsDate() {
         return getEditInfo().getCreationDate();
     }
@@ -843,6 +868,7 @@ public abstract class BaseRecord
      */
     @Transient
     @GenericField(name = "modifiedDate")
+    @IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "editInfo")))
     public Date getModificationDateAsDate() {
         return getEditInfo().getModificationDate();
     }

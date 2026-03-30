@@ -38,6 +38,10 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
 
 import com.researchspace.model.User;
 import com.researchspace.model.audittrail.AuditDomain;
@@ -83,7 +87,7 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 	@IndexedEmbedded
 	private List<SampleField> fields = new ArrayList<>();
 	
-	@IndexedEmbedded(prefix = "fields.")
+	@IndexedEmbedded(prefix = "extraFields.")
 	private List<ExtraField> extraFields = new ArrayList<>();
 
 	@IndexedEmbedded
@@ -91,7 +95,7 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 
 	private List<DigitalObjectIdentifier> identifiers = new ArrayList<>();
 
-	@IndexedEmbedded(prefix = "fields.")
+	@IndexedEmbedded(prefix = "files.")
 	private List<InventoryFile> files = new ArrayList<>();
 
 	private SampleSource sampleSource = SampleSource.LAB_CREATED;
@@ -137,6 +141,7 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 	@JoinColumn(nullable = false)
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@IndexedEmbedded
+	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
 	public User getOwner() {
 		return owner;
 	}
@@ -586,6 +591,7 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 
 	@Transient
 	@GenericField
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "STemplate")))
 	public Long getParentTemplateId() {
 		if (getSTemplate() != null) {
 			return getSTemplate().getId();

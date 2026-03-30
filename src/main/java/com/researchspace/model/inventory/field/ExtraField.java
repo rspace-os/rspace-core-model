@@ -15,6 +15,9 @@ import jakarta.persistence.Transient;
 import org.hibernate.envers.Audited;
 import org.hibernate.search.engine.backend.types.Projectable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 import com.researchspace.model.audittrail.AuditTrailProperty;
 import com.researchspace.model.core.GlobalIdPrefix;
@@ -74,6 +77,7 @@ public abstract class ExtraField extends InventoryRecordConnectedEntity implemen
 
 	@Transient
 	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData", projectable = Projectable.NO)
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "editInfo")))
 	public String getData() {
 		return getEditInfo().getDescription();
 	}

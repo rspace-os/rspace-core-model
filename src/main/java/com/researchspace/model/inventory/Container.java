@@ -33,6 +33,8 @@ import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
 
 import com.researchspace.model.FileProperty;
 import com.researchspace.model.User;
@@ -68,7 +70,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 
 	private User owner;
 
-	@IndexedEmbedded(prefix = "fields.")
+	@IndexedEmbedded(prefix = "extraFields.")
 	private List<ExtraField> extraFields = new ArrayList<>();
 
 	@IndexedEmbedded
@@ -76,7 +78,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 
 	private List<DigitalObjectIdentifier> identifiers = new ArrayList<>();
 
-	@IndexedEmbedded(prefix = "fields.")
+	@IndexedEmbedded(prefix = "files.")
 	private List<InventoryFile> files = new ArrayList<>();
 	
 	private FileProperty locationsImageFileProperty;
@@ -193,6 +195,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 	@JoinColumn(nullable = false)
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@IndexedEmbedded
+	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
 	public User getOwner() {
 		return owner;
 	}

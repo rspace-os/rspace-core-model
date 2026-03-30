@@ -22,6 +22,10 @@ import org.hibernate.envers.Audited;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
 
 import com.researchspace.model.User;
 import com.researchspace.model.audittrail.AuditDomain;
@@ -48,7 +52,7 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 
 	private static final long serialVersionUID = 1867269597891360704L;
 
-	@IndexedEmbedded(prefix = "fields.")
+	@IndexedEmbedded(prefix = "extraFields.")
 	private List<ExtraField> extraFields = new ArrayList<>();
 
 	@IndexedEmbedded
@@ -56,10 +60,10 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 
 	private List<DigitalObjectIdentifier> identifiers = new ArrayList<>();
 
-	@IndexedEmbedded(prefix = "fields.")
+	@IndexedEmbedded(prefix = "files.")
 	private List<InventoryFile> files = new ArrayList<>();
 	
-	@IndexedEmbedded(prefix = "fields.")
+	@IndexedEmbedded(prefix = "notes.")
 	private List<SubSampleNote> notes = new ArrayList<>();
 
 	private Sample sample;
@@ -77,6 +81,7 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 	
 	@Transient
 	@IndexedEmbedded
+	@IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW, derivedFrom = @ObjectPath(@PropertyValue(propertyName = "sample")))
 	@Override
 	public User getOwner() {
 		if (getSample() == null) {
