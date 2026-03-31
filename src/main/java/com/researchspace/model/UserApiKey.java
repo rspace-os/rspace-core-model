@@ -59,7 +59,7 @@ public class UserApiKey implements Serializable {
 	}
 
 	@Id()
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	public Long getId() {
 		return id;

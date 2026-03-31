@@ -38,6 +38,7 @@ public class TextField extends Field {
 	}
 
 	@Override
+	@Transient
 	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "rtfData")))
 	public String getFieldData() {
 		return super.getFieldData();

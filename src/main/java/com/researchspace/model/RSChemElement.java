@@ -3,6 +3,7 @@ package com.researchspace.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -128,7 +129,7 @@ public class RSChemElement implements Serializable, IFieldLinkableElement {
 	/**
 	 * File containing preview of the chemical 
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	private FileProperty imageFileProperty;
 

@@ -76,7 +76,7 @@ public class App implements Serializable {
 	private static final long serialVersionUID = -3681076572577308167L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long getId() {
 		return id;
 	}

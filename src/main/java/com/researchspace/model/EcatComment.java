@@ -158,7 +158,7 @@ public class EcatComment implements Serializable, IFieldLinkableElement {
 
 	@Id
 	@Column(name = "com_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getComId() {
 		return comId;
 	}

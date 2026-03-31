@@ -2,6 +2,7 @@ package com.researchspace.model.field;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
@@ -25,6 +26,7 @@ public abstract class FieldAsString extends Field {
 	}
 
 	@Override
+	@Transient
 	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "data")))
 	public String getFieldData() {
 		return super.getFieldData();

@@ -93,7 +93,7 @@ public class EcatCommentItem implements Serializable, IFieldLinkableElement {
 
 	@Id
 	@Column(name = "item_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getItemId() {
 		return itemId;
 	}

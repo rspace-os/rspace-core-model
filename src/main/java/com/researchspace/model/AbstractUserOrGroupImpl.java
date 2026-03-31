@@ -29,12 +29,16 @@ import com.researchspace.model.core.UniquelyIdentifiable;
 import com.researchspace.model.permissions.ConstraintBasedPermission;
 import com.researchspace.model.permissions.ConstraintPermissionResolver;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 /**
  * Contains common behaviour for both Users and Groups
  */
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 /**
  * By default we must explicitly include XML elements
  */
@@ -104,8 +108,10 @@ public abstract class AbstractUserOrGroupImpl implements UserOrGroup, UniquelyId
 	 * @return
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	// or get an exception if using auto
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "uog_gen")
+	@jakarta.persistence.TableGenerator(name = "uog_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val",
+			pkColumnValue = "AbstractUserOrGroupImpl", allocationSize = 1)
 	public Long getId() {
 		return id;
 	}

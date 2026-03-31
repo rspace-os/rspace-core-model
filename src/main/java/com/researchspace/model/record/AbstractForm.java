@@ -62,6 +62,7 @@ import com.researchspace.model.permissions.PermissionType;
  */
 @Entity
 @Audited
+@org.hibernate.annotations.Cache(usage=org.hibernate.annotations.CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name="RSForm", indexes = { @Index(columnList = "systemForm", name = "isSystem"),
 		@Index(columnList = "stableID", name = "stableid") 

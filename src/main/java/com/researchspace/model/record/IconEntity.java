@@ -68,7 +68,7 @@ public class IconEntity implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id = -1L;
 	private Long parentId;// form id
 	// otherwise is long blob -4Gb, too	 big

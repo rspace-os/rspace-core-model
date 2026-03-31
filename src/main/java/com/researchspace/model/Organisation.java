@@ -28,7 +28,7 @@ public class Organisation implements Serializable {
 	public static final int MAX_INDEXABLE_UTF_LENGTH = 191;//RSPAC-932 
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false, unique = true, length = MAX_INDEXABLE_UTF_LENGTH)

@@ -36,7 +36,7 @@ public class AppConfigElementDescriptor implements Serializable {
 	private PropertyDescriptor descriptor;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter(value=AccessLevel.PACKAGE)
 	private Long id;
 	

@@ -53,7 +53,6 @@ import com.researchspace.model.core.UniquelyIdentifiable;
 @Entity
 @Audited
 @Cacheable
-@org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @DiscriminatorValue("RSF")
 public class RSForm  extends AbstractForm implements Serializable, UniquelyIdentifiable, PermissionsAdaptable {
 	/**

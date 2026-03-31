@@ -152,7 +152,10 @@ public abstract class Communication implements Serializable, UniquelyIdentifiabl
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "comm_gen")
+	@jakarta.persistence.TableGenerator(name = "comm_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val",
+			pkColumnValue = "Communication", allocationSize = 1)
 	@XmlAttribute(required = true)
 	public Long getId() {
 		return id;

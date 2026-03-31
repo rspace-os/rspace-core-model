@@ -122,7 +122,7 @@ public class Thumbnail implements Serializable, IFieldLinkableElement {
 	@Deprecated // should be null now, use file propertty instead
 	private ImageBlob imageBlob;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private FileProperty thumbnailFP;
 
 	@Override

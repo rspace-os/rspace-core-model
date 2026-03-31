@@ -109,7 +109,7 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 		return creationDate == null ? null : new Date(creationDate.getTime());
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public FileProperty getFileProperty() {
 		return fileProperty;

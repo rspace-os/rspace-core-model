@@ -2,6 +2,7 @@ package com.researchspace.model.field;
 
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,7 +48,8 @@ public abstract class AbstractField implements Comparable<AbstractField> {
 		return name;
 	}
 	
-	@ManyToOne (optional = false, targetEntity = FieldForm.class)
+	@ManyToOne(optional = false, targetEntity = FieldForm.class,
+			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	public IFieldForm getFieldForm() {
 		return _getFieldForm();
 	}

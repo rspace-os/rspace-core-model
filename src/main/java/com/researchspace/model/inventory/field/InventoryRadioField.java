@@ -39,7 +39,7 @@ public class InventoryRadioField extends SampleField {
 		this(null, "");
 	}
 
-	@ManyToOne(cascade = {CascadeType.MERGE})
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public InventoryRadioFieldDef getRadioDef() {
 		return radioDef;

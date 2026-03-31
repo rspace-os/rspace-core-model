@@ -255,7 +255,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 		refreshActiveAttachedFiles();
 	}
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public FileProperty getLocationsImageFileProperty() {
 		return locationsImageFileProperty;

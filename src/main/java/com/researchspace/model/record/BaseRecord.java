@@ -462,7 +462,7 @@ public abstract class BaseRecord
      * @return a possibly empty but non-null Set of RecordToFolder
      */
     @NotAudited
-    @OneToMany(mappedBy = "record", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.REMOVE,
+    @OneToMany(mappedBy = "record", fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.REMOVE,
             CascadeType.MERGE})
     public Set<RecordToFolder> getParents() {
         return parents;

@@ -339,14 +339,14 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
 	@FullTextField(analyzer = "structureAnalyzer", name = "formName")
 	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "form")))
 	public String getFormName() {
-		return form.getEditInfo().getName();
+		return form != null && form.getEditInfo() != null ? form.getEditInfo().getName() : null;
 	}
 
 	@Transient
 	@FullTextField(analyzer = "structureAnalyzer", name = "formStableId")
 	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "form")))
 	public String getFormStableId() {
-		return form.getStableID();
+		return form != null ? form.getStableID() : null;
 	}
 
 
@@ -366,6 +366,7 @@ public class StructuredDocument extends Record implements TaggableElnRecord {
      * */
     @Transient
     @FullTextField(analyzer = "structureAnalyzer", name = "templateOid")
+    @IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "template")))
     public String getTemplateOid() {
         return getTemplate() == null ? null : getTemplate().getOid().toString();
     }

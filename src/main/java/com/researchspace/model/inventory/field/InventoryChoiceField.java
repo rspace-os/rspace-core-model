@@ -40,7 +40,7 @@ public class InventoryChoiceField extends SampleField {
 		return choiceDef.isMultipleChoice();
 	}
 
-	@ManyToOne(cascade = {CascadeType.MERGE})
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public InventoryChoiceFieldDef getChoiceDef() {
 		return choiceDef;

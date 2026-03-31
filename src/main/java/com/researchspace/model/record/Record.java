@@ -11,6 +11,7 @@ import org.hibernate.envers.Audited;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
@@ -103,7 +104,7 @@ public abstract class Record extends BaseRecord implements Serializable, Uniquel
         return hasType(RecordType.TEMPLATE) && isStructuredDocument();
     }
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     public Record getTempRecord() {
         return tempRecord;
     }

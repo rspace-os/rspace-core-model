@@ -165,8 +165,6 @@ public abstract class Field extends AbstractField implements Serializable,  Uniq
 	 * @return The data in this field as a String.
 	 */
 	@Transient
-	@Lob
-	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData")
 	public String getFieldData() {
 		return getData();
 	}

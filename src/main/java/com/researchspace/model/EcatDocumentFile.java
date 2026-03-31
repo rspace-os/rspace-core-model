@@ -66,7 +66,7 @@ public class EcatDocumentFile extends EcatMediaFile {
 	 * Replacement for storing doc thumbnails - these will be stored in the filestore
 	 * @return
 	 */
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public FileProperty getDocThumbnailFP() {
 		return docThumbnailFP;

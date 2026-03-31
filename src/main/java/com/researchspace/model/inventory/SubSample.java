@@ -208,6 +208,7 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 
 	@Transient
 	@GenericField
+	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "sample")))
 	public Long getParentSampleId() {
 		if (getSample() != null) {
 			return getSample().getId();

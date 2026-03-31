@@ -35,7 +35,7 @@ public class AppConfigElementSet implements Serializable {
 	private static final long serialVersionUID = 6246887101758982270L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter(value = AccessLevel.PACKAGE)
 	private Long id;
 

@@ -2,6 +2,7 @@ package com.researchspace.model.inventory;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.GeneratedValue;
@@ -473,13 +474,13 @@ public abstract class InventoryRecord implements Quantifiable {
 		return getId() != null ? getOid().toString() : null;
 	}
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public FileProperty getImageFileProperty() {
 		return imageFileProperty;
 	}
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public FileProperty getThumbnailFileProperty() {
 		return thumbnailFileProperty;

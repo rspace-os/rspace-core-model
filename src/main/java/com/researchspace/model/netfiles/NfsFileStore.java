@@ -36,7 +36,7 @@ public class NfsFileStore implements Serializable {
 	public NfsFileStore() { }
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
