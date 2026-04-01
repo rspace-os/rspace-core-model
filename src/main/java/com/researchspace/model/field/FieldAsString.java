@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
@@ -27,6 +28,7 @@ public abstract class FieldAsString extends Field {
 
 	@Override
 	@Transient
+	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData")
 	@IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "data")))
 	public String getFieldData() {
 		return super.getFieldData();
