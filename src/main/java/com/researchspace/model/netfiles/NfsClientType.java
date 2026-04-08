@@ -28,6 +28,6 @@ public enum NfsClientType {
 	/**
 	 * AWS S3 client type
 	 */
-	AWS_S3;
+	S3;
 	
 }
