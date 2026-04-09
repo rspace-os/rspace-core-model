@@ -54,4 +54,14 @@ public enum NfsFileSystemOption {
 	 */
 	IRODS_CSNEG,
 
+	/**
+	 * AWS S3 region
+	 */
+	S3_REGION,
+
+	/**
+	 * Name of the AWS S3 bucket
+	 */
+	S3_BUCKET_NAME
+
 }
