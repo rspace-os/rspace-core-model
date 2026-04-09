@@ -1,7 +1,7 @@
 package com.researchspace.model.netfiles;
 
 /**
- * Enum representing types of values that can be put into NfsFileSystem.clientDetails field.
+ * Enum representing types of values that can be put into NfsFileSystem.clientOptions map.
  */
 public enum NfsFileSystemOption {
 	
