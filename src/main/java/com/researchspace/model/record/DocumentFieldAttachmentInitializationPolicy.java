@@ -8,7 +8,7 @@ import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.MovableInventoryRecord;
 import com.researchspace.model.inventory.Sample;
 import com.researchspace.model.inventory.SubSample;
-import com.researchspace.model.inventory.field.SampleField;
+import com.researchspace.model.inventory.field.InventoryEntityField;
 
 /**
  * Decorator for DocumentInitializationPolicy that will initialise a Document's
@@ -75,7 +75,7 @@ public class DocumentFieldAttachmentInitializationPolicy extends DocumentInitial
 	private void initializeParentSample(InventoryRecord invRec) {
 		if (invRec.isSubSample()) {
 			Sample parentSample = ((SubSample) invRec).getSample();
-			for (SampleField sf : parentSample.getActiveFields()) {
+			for (InventoryEntityField sf : parentSample.getActiveFields()) {
 				sf.getAttachedFile();
 			}
 		}

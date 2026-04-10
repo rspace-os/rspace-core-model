@@ -1,9 +1,12 @@
 package com.researchspace.model.inventory;
 
 import com.researchspace.model.EcatMediaFile;
+import com.researchspace.model.FileProperty;
+import com.researchspace.model.core.GlobalIdPrefix;
+import com.researchspace.model.core.GlobalIdentifier;
+import com.researchspace.model.inventory.field.InventoryEntityField;
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,20 +18,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.search.annotations.Field;
-
-import com.researchspace.model.FileProperty;
-import com.researchspace.model.core.GlobalIdPrefix;
-import com.researchspace.model.core.GlobalIdentifier;
-import com.researchspace.model.inventory.field.SampleField;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.search.annotations.Field;
 
 /**
  * Basic model used to represent all files added as inventory attachments
@@ -57,7 +53,7 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 	private boolean deleted;
 
 	private EcatMediaFile mediaFile;
-	private SampleField sampleField;
+	private InventoryEntityField inventoryEntityField;
 	
 	public enum InventoryFileType {
 		GENERAL, CHEMICAL
@@ -125,14 +121,14 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 	}
 
 	@ManyToOne(cascade = CascadeType.MERGE)
-	private SampleField getSampleField() {
-		return sampleField;
+	private InventoryEntityField getInventoryEntityField() {
+		return inventoryEntityField;
 	}
 
 	@Transient
 	@Override
 	public GlobalIdentifier getConnectedRecordOid() {
-		return sampleField != null ? sampleField.getOid() : super.getConnectedRecordOid();
+		return inventoryEntityField != null ? inventoryEntityField.getOid() : super.getConnectedRecordOid();
 	}
 
 	@Transient
@@ -143,7 +139,7 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 	@Transient
 	@Override
 	protected int getNonInventoryRecordParentCount() {
-		return sampleField == null ? 0 : 1;
+		return inventoryEntityField == null ? 0 : 1;
 	}
 	
 	/**

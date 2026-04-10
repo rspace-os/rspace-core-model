@@ -2,6 +2,9 @@
 
 Summary of important or breaking changes.
 
+## 2.22.0 2026-05-15
+- Add new `InstrumentEntity` model and renaming `SampleField` to `InventoryEntityField
+
 ## 2.21.0 2026-03-31
 - Change `connectedUser` and `connectedGroups` to be a `Set` instead of a `List`
 

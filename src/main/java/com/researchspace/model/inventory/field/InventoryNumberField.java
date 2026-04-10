@@ -1,19 +1,17 @@
 package com.researchspace.model.inventory.field;
 
+import com.researchspace.model.field.ErrorList;
+import com.researchspace.model.field.FieldType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.envers.Audited;
 
-import com.researchspace.model.field.ErrorList;
-import com.researchspace.model.field.FieldType;
-
 @Entity
 @Audited
 @DiscriminatorValue("number")
-public class InventoryNumberField extends SampleField {
+public class InventoryNumberField extends InventoryEntityField {
 
 	private static final long serialVersionUID = -8836223099190381195L;
 

@@ -1,26 +1,22 @@
 package com.researchspace.model.inventory.field;
 
+import com.researchspace.model.field.ErrorList;
+import com.researchspace.model.field.FieldType;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-
+import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-
-import com.researchspace.model.field.ErrorList;
-import com.researchspace.model.field.FieldType;
-
-import lombok.Setter;
 
 @Entity
 @Audited
 @DiscriminatorValue("choice")
 @Setter
-public class InventoryChoiceField extends SampleField {
+public class InventoryChoiceField extends InventoryEntityField {
 	
 	private static final long serialVersionUID = -6222866058180609072L;
 

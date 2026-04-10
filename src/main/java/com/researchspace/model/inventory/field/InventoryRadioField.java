@@ -1,30 +1,26 @@
 package com.researchspace.model.inventory.field;
 
+import com.researchspace.model.field.ErrorList;
+import com.researchspace.model.field.FieldType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-
+import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import com.researchspace.model.field.ErrorList;
-import com.researchspace.model.field.FieldType;
-
-import lombok.Setter;
-
 @Entity
 @Audited
 @DiscriminatorValue("radio")
 @Setter
-public class InventoryRadioField extends SampleField {
+public class InventoryRadioField extends InventoryEntityField {
 
 	private static final long serialVersionUID = -5576520929775736727L;
 
