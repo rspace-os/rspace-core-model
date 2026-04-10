@@ -41,6 +41,9 @@ import com.researchspace.model.inventory.BasketItem;
 import com.researchspace.model.inventory.Container;
 import com.researchspace.model.inventory.ContainerLocation;
 import com.researchspace.model.inventory.DigitalObjectIdentifier;
+import com.researchspace.model.inventory.Instrument;
+import com.researchspace.model.inventory.InstrumentEntity;
+import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.Sample;
@@ -52,6 +55,7 @@ import com.researchspace.model.inventory.field.InventoryAttachmentField;
 import com.researchspace.model.inventory.field.InventoryChoiceField;
 import com.researchspace.model.inventory.field.InventoryChoiceFieldDef;
 import com.researchspace.model.inventory.field.InventoryDateField;
+import com.researchspace.model.inventory.field.InventoryEntityField;
 import com.researchspace.model.inventory.field.InventoryNumberField;
 import com.researchspace.model.inventory.field.InventoryRadioField;
 import com.researchspace.model.inventory.field.InventoryRadioFieldDef;
@@ -60,7 +64,6 @@ import com.researchspace.model.inventory.field.InventoryStringField;
 import com.researchspace.model.inventory.field.InventoryTextField;
 import com.researchspace.model.inventory.field.InventoryTimeField;
 import com.researchspace.model.inventory.field.InventoryUriField;
-import com.researchspace.model.inventory.field.SampleField;
 import com.researchspace.model.netfiles.ExternalStorageLocation;
 import com.researchspace.model.netfiles.NfsFileStore;
 import com.researchspace.model.netfiles.NfsFileSystem;
@@ -152,7 +155,7 @@ public abstract class HibernateTest {
   }
 
   protected void saveSampleFieldAttachments(Sample sample) {
-    for (SampleField sf : sample.getActiveFields()) {
+    for (InventoryEntityField sf : sample.getActiveFields()) {
       if (FieldType.ATTACHMENT.equals(sf.getType())) {
         InventoryFile attachedFile = sf.getAttachedFile();
         if (attachedFile != null) {
@@ -192,7 +195,7 @@ public abstract class HibernateTest {
         FieldAttachment.class, ExternalStorageLocation.class, NfsFileSystem.class,
         NfsFileStore.class, Folder.class, Role.class, BaseRecord.class, RSForm.class,
         FieldForm.class, StructuredDocument.class, AbstractUserOrGroupImpl.class, User.class,
-        SampleField.class, InventoryNumberField.class, InventoryStringField.class,
+        InventoryEntityField.class, InventoryNumberField.class, InventoryStringField.class,
         InventoryDateField.class, InventoryTimeField.class, InventoryReferenceField.class,
         InventoryTextField.class, InventoryChoiceField.class, InventoryRadioField.class,
         InventoryAttachmentField.class, AttachmentFieldForm.class, URIFieldForm.class,
@@ -200,7 +203,8 @@ public abstract class HibernateTest {
         Barcode.class, DigitalObjectIdentifier.class, ExtraNumberField.class, ExtraTextField.class,
         SubSampleNote.class, Container.class, ContainerLocation.class, InventoryFile.class,
         InventoryRadioFieldDef.class, InventoryChoiceFieldDef.class, ListOfMaterials.class,
-        MaterialUsage.class, DMPUser.class, Basket.class, BasketItem.class, UserRaid.class};
+        MaterialUsage.class, DMPUser.class, Basket.class, BasketItem.class, UserRaid.class,
+        InstrumentEntity.class, InstrumentTemplate.class, Instrument.class };
   }
 
 }

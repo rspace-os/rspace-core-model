@@ -1,20 +1,18 @@
 package com.researchspace.model.inventory.field;
 
 import com.researchspace.model.field.ErrorList;
+import com.researchspace.model.field.FieldType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-
 import org.hibernate.envers.Audited;
-
-import com.researchspace.model.field.FieldType;
 
 @Entity()
 @DiscriminatorValue("date")
 @Audited
-public class InventoryDateField extends SampleField {
+public class InventoryDateField extends InventoryEntityField {
 
 	private static final long serialVersionUID = 2350588560175243555L;
 

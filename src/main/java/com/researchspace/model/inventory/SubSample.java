@@ -1,12 +1,23 @@
 package com.researchspace.model.inventory;
 
+import com.researchspace.model.User;
+import com.researchspace.model.audittrail.AuditDomain;
+import com.researchspace.model.audittrail.AuditTrailData;
+import com.researchspace.model.core.GlobalIdPrefix;
+import com.researchspace.model.inventory.field.ExtraField;
 import com.researchspace.model.permissions.RecordSharingACL;
+import com.researchspace.model.units.Quantifiable;
+import com.researchspace.model.units.QuantityInfo;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,23 +27,14 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 import javax.validation.ConstraintViolationException;
-
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.Validate;
 import org.hibernate.envers.Audited;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
-
-import com.researchspace.model.User;
-import com.researchspace.model.audittrail.AuditDomain;
-import com.researchspace.model.audittrail.AuditTrailData;
-import com.researchspace.model.core.GlobalIdPrefix;
-import com.researchspace.model.inventory.field.ExtraField;
-import com.researchspace.model.units.QuantityInfo;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Represents RSInventory SubSample.
@@ -44,7 +46,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 @AuditTrailData(auditDomain = AuditDomain.INV_SUBSAMPLE)
 @Indexed
-public class SubSample extends MovableInventoryRecord implements Serializable {
+public class SubSample extends MovableInventoryRecord implements Serializable, Quantifiable {
 
 	private static final long serialVersionUID = 1867269597891360704L;
 
@@ -66,6 +68,8 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 	
 	/* whether subsample was deleted implicitly as a part of sample deletion */
 	private boolean deletedOnSampleDeletion;
+
+	private QuantityInfo quantityInfo;
 
 	public SubSample(Sample sample) {
 		setIconId(sample.getIconId());
@@ -102,15 +106,46 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 		}
 		return getSample().getSharingACL();
 	}
-	
+
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name = "unitId", column = @Column(name = "quantityUnitId")),
+			@AttributeOverride(name = "numericValue", column = @Column(name = "quantityNumericValue", precision = 19, scale = 3))
+	})
+	public QuantityInfo getQuantityInfo() {
+		return quantityInfo;
+	}
+
+	/* marked 'protected' so concrete subclass methods are used by the code outside */
+	protected void setQuantityInfo(QuantityInfo quantityInfo) {
+		if (quantityInfo != null && quantityInfo.getUnitId() != null) {
+			if (BigDecimal.ZERO.compareTo(quantityInfo.getNumericValue()) > 0) {
+				throw new IllegalArgumentException("Trying to set negative record quantity: " + quantityInfo.getNumericValuePlainString());
+			}
+		}
+		this.quantityInfo = quantityInfo;
+	}
+
+	@Override
+	@Transient
+	public Integer getUnitId() {
+		return getQuantityInfo().getUnitId();
+	}
+
+	@Override
+	@Transient
+	public BigDecimal getNumericValue() {
+		return getQuantityInfo().getNumericValue();
+	}
+
 	@Transient
 	public QuantityInfo getQuantity() {
-		return super.getQuantityInfo();
+		return this.getQuantityInfo();
 	}
 	
 	public void setQuantity(QuantityInfo quantityInfo) {
 		Validate.notNull(quantityInfo, "Cannot assign null quantity to SubSample");
-		super.setQuantityInfo(quantityInfo);
+		this.setQuantityInfo(quantityInfo);
 		// when copying, sample will be null
 		if (sample != null) {
 			sample.recalculateTotalQuantity();
@@ -225,6 +260,9 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 	SubSample shallowCopy() {
 		SubSample copy = new SubSample();
 		shallowCopyBasicFields(copy);
+		if (getQuantityInfo() != null) {
+			copy.setQuantityInfo(getQuantityInfo().copy());
+		}
 		return copy;
 	}
 
