@@ -55,6 +55,10 @@ public class ConstraintPermissionResolver implements PermissionResolver {
 		return p;
 	}
 
+	public ConstraintBasedPermission resolvePermission(ACLElement aclElement) {
+		return resolvePermission(aclElement.getPermString());
+	}
+
 	@Override
 	public ConstraintBasedPermission resolvePermission(String permissionString) {
 		String[] parts = permissionString.trim().split(PART_DELIMITER);
