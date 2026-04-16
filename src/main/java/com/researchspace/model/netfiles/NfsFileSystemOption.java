@@ -62,6 +62,11 @@ public enum NfsFileSystemOption {
 	/**
 	 * Name of the AWS S3 bucket
 	 */
-	S3_BUCKET_NAME
+	S3_BUCKET_NAME,
+
+	/**
+	 * Whether S3 client should support pathStyleAccessEnabled option (true/false)
+	 */
+	S3_PATH_STYLE_ACCESS_ENABLED
 
 }
