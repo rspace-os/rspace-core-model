@@ -48,8 +48,12 @@ public abstract class AbstractField implements Comparable<AbstractField> {
 		return name;
 	}
 	
+	// H6: MERGE cascade needed for strict H6 merge behaviour.
+	// PERSIST cascade removed: shallowCopy()-based temp fields carry an already-persisted
+	// (detached) FieldForm, and cascading persist() to a detached entity throws
+	// PersistentObjectException. FieldForms are always explicitly saved before field creation.
 	@ManyToOne(optional = false, targetEntity = FieldForm.class,
-			cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+			cascade = {CascadeType.MERGE})
 	public IFieldForm getFieldForm() {
 		return _getFieldForm();
 	}

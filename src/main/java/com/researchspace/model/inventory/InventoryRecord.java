@@ -42,7 +42,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.search.engine.backend.types.Projectable;
+import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
@@ -150,6 +153,9 @@ public abstract class InventoryRecord implements Quantifiable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
+	// id_sort is used as a tie-breaker in HS7 search queries (score DESC, id_sort ASC)
+	// to ensure deterministic ordering when BM25 scores are equal.
+	@GenericField(name = "id_sort", sortable = Sortable.YES, projectable = Projectable.NO)
 	public Long getId() {
 		return id;
 	}

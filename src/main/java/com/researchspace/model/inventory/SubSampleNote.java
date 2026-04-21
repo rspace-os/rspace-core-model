@@ -37,8 +37,6 @@ public class SubSampleNote implements Serializable {
 	private Long creationDateMillis;
 	private User createdBy;
 
-	// indexing notes together with field data
-	@FullTextField(name = "fieldData")
 	private String content;
 	
 	private SubSample subSample;
@@ -85,10 +83,12 @@ public class SubSampleNote implements Serializable {
 		this.creationDateMillis = millis;
 	}
 	/**
-	 * Content length for subsample note
-	 * @return
+	 * Content length for subsample note.
+	 * @FullTextField is on the getter (not the field) because this entity uses property access
+	 * (@Id on getter). In HS7, field-level annotations are ignored for property-access entities.
 	 */
 	@Column(length = 2000)
+	@FullTextField(name = "fieldData")
 	public String getContent() {
 		return content;
 	}

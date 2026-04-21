@@ -27,6 +27,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 
 @Entity
@@ -52,10 +54,12 @@ public class Stoichiometry {
   private String uuid = UUID.randomUUID().toString();
 
   @ManyToOne
+  @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "parent_reaction_id", nullable = true)
   private RSChemElement parentReaction;
 
   @ManyToOne
+  @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "record_id", nullable = false)
   private Record record;
 

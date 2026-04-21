@@ -21,6 +21,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
@@ -45,6 +47,7 @@ public class StoichiometryMolecule {
   private Stoichiometry stoichiometry;
 
   @OneToOne
+  @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "rs_chem_id", nullable = false)
   private RSChemElement rsChemElement;
 

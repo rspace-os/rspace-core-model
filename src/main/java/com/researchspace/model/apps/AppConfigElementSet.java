@@ -5,9 +5,11 @@ import static org.apache.commons.collections.SetUtils.isEqualSet;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +28,7 @@ import lombok.Setter;
 
 @Entity
 @Data
-@EqualsAndHashCode(of="id")
+@EqualsAndHashCode(of="naturalId")
 public class AppConfigElementSet implements Serializable {
 
 	/**
@@ -38,6 +40,10 @@ public class AppConfigElementSet implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter(value = AccessLevel.PACKAGE)
 	private Long id;
+
+	/** Stable natural key for equals/hashCode; avoids HashSet corruption when id is assigned after insertion. */
+	@Column(unique = true, nullable = false, updatable = false, length = 36)
+	private String naturalId = UUID.randomUUID().toString();
 
 	@OneToMany(mappedBy = "appConfigElementSet", cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.EAGER)
 	private Set<AppConfigElement> configElements = new HashSet<>();

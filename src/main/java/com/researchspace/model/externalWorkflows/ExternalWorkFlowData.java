@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +37,7 @@ public class ExternalWorkFlowData implements Serializable {
    * The service hosting the data
    */
   @NotNull
+  @Enumerated(EnumType.STRING)
   private ExternalService externalService;
   /**
    * the rspace id of the data that was uploaded to the external service
@@ -45,6 +48,7 @@ public class ExternalWorkFlowData implements Serializable {
    * whether this is data local to RSpace or External data
    */
   @NotNull
+  @Enumerated(EnumType.STRING)
   private RspaceDataType rspaceDataType;
 
   /**
@@ -63,6 +67,7 @@ public class ExternalWorkFlowData implements Serializable {
    * the type of RSpace container this data belongs to
    */
   @NotNull
+  @Enumerated(EnumType.STRING)
   private RspaceContainerType rspaceContainerType;
 
   /**
