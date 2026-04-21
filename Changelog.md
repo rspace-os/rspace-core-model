@@ -2,7 +2,10 @@
 
 Summary of important or breaking changes.
 
-## 2.14.0 2025-09-05
+## 2.21.0 2026-03-31
+- Change `connectedUser` and `connectedGroups` to be a `Set` instead of a `List`
+
+- ## 2.14.0 2025-09-05
 - Restructuring core model objects for DMP
 
 ## 2.9.0 2025-04-02

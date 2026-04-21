@@ -192,9 +192,9 @@ public class User extends AbstractUserOrGroupImpl
 	@Setter
 	private UserAuthenticationMethod authenticatedBy;
 	@Setter
-	private List<User> connectedUsers;
+	private Set<User> connectedUsers;
 	@Setter
-	private List<Group> connectedGroups;
+	private Set<Group> connectedGroups;
 
 	/**
 	 * Create a new instance and set the username.
@@ -253,7 +253,7 @@ public class User extends AbstractUserOrGroupImpl
 
 	/**
 	 * Whether user passed as a parameter is a connection of current users.
-	 * Requires prior call to {@link #setConnectedUsers(List)}.
+	 * Requires prior call to {@link #setConnectedUsers(Set)}.
 	 */
 	@Transient
 	public boolean isConnectedToUser(User user) {
@@ -265,7 +265,7 @@ public class User extends AbstractUserOrGroupImpl
 
 	/**
      * Whether current user is somehow connected to a group passed as a parameter.
-     * Requires prior call to {@link #setConnectedGroups(List)}.
+     * Requires prior call to {@link #setConnectedGroups(Set)}.
      */
     @Transient
     public boolean isConnectedToGroup(Group group) {
@@ -456,7 +456,7 @@ public class User extends AbstractUserOrGroupImpl
 	 * Test for whether this user has any PI role or ViewAll LabAdmin in a group
 	 */
 	public boolean hasAnyPiOrLabGroupViewAllRole() {
-		return getGroups().stream().anyMatch(g->hasRoleInGroup(g, RoleInGroup.PI) 
+		return getGroups().stream().anyMatch(g->hasRoleInGroup(g, RoleInGroup.PI)
 				   ||  g.getUserGroupForUser(this).isAdminViewDocsEnabled() );
 	}
 

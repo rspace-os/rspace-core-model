@@ -50,22 +50,8 @@ public class UserRaid {
   @OneToOne(fetch = FetchType.LAZY, mappedBy = "raid")
   private Group groupAssociated;
 
-  public UserRaid(
-      User owner,
-      Group groupAssociated,
-      String raidServerAlias,
-      String raidTitle,
-      String raidIdentifier) {
-    this(owner, groupAssociated, raidServerAlias, raidTitle, raidIdentifier, null);
-  }
-
-  public UserRaid(
-      User owner,
-      Group groupAssociated,
-      String raidServerAlias,
-      String raidTitle,
-      String raidIdentifier,
-      String raidAgencyUrl) {
+  public UserRaid(User owner, Group groupAssociated, String raidServerAlias, String raidTitle,
+      String raidIdentifier, String raidAgencyUrl) {
     this.owner = owner;
     this.groupAssociated = groupAssociated;
     this.raidServerAlias = raidServerAlias;
