@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import com.researchspace.model.field.ErrorList;
 

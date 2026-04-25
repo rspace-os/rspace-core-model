@@ -9,7 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @DiscriminatorValue(FieldType.DATE_TYPE)
