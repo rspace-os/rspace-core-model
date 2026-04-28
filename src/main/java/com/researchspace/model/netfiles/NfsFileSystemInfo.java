@@ -40,6 +40,9 @@ public class NfsFileSystemInfo implements Serializable {
 		if ("SMBJ".equals(clientType)) {
 			options.put(NfsFileSystemOption.SAMBA_SHARE_NAME.toString(), 
 					nfsFileSystem.getClientOption(NfsFileSystemOption.SAMBA_SHARE_NAME));
+		} else if ("S3".equals(clientType)) {
+			options.put(NfsFileSystemOption.S3_BUCKET_NAME.toString(),
+					nfsFileSystem.getClientOption(NfsFileSystemOption.S3_BUCKET_NAME));
 		} else if (nfsFileSystem.fileSystemRequiresUserRootDirs()) {
 			options.put(NfsFileSystemOption.USER_DIRS_REQUIRED.toString(),
 					nfsFileSystem.getClientOption(NfsFileSystemOption.USER_DIRS_REQUIRED));
