@@ -2,6 +2,10 @@
 
 Summary of important or breaking changes.
 
+## 3.0.0 2026-04-29
+- Spring 6 / Hibernate 6 / Jakarta namespace migration
+- Switch to rspace-parent 3.0.0
+
 ## 2.21.0 2026-03-31
 - Change `connectedUser` and `connectedGroups` to be a `Set` instead of a `List`
 
