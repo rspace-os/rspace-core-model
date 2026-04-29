@@ -2,9 +2,6 @@
 
 Summary of important or breaking changes.
 
-## 2.21.2 2026-04-29
-- Added S3 client type support to `NfsFileSystem` and `NfsFileSystemInfo` (exposes `S3_BUCKET_NAME` option)
-
 ## 2.21.0 2026-03-31
 - Change `connectedUser` and `connectedGroups` to be a `Set` instead of a `List`
 
