@@ -34,13 +34,14 @@ public class NfsFileSystemInfo implements Serializable {
 		id = nfsFileSystem.getId();
 		name = nfsFileSystem.getName();
 		url = nfsFileSystem.getUrl();
-		clientType = nfsFileSystem.getClientType().toString();
-		authType = nfsFileSystem.getAuthType().toString();
+		NfsClientType type = nfsFileSystem.getClientType();
+		clientType = type.name();
+		authType = nfsFileSystem.getAuthType().name();
 
-		if ("SMBJ".equals(clientType)) {
+		if (NfsClientType.SMBJ == type) {
 			options.put(NfsFileSystemOption.SAMBA_SHARE_NAME.toString(), 
 					nfsFileSystem.getClientOption(NfsFileSystemOption.SAMBA_SHARE_NAME));
-		} else if ("S3".equals(clientType)) {
+		} else if (NfsClientType.S3 == type) {
 			options.put(NfsFileSystemOption.S3_BUCKET_NAME.toString(),
 					nfsFileSystem.getClientOption(NfsFileSystemOption.S3_BUCKET_NAME));
 		} else if (nfsFileSystem.fileSystemRequiresUserRootDirs()) {
