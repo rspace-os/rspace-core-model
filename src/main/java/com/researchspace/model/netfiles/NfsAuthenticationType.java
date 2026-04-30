@@ -13,19 +13,11 @@ public enum NfsAuthenticationType {
 	/**
 	 * public/private key authentication
 	 */
-	PUBKEY;
-	
-	/**
-	 * Get enum object for linked string value
-	 */
-	public static NfsAuthenticationType fromString(String authTypeString) {
-		if ("password".equals(authTypeString)) {
-			return PASSWORD;
-		}
-		if ("pubKey".equals(authTypeString)) {
-			return PUBKEY;
-		}
-		throw new IllegalArgumentException("unrecognised authentication type: " + authTypeString);
-	}
+	PUBKEY,
 
+	/**
+	 * if user doesn't need to explicitly authenticate
+	 */
+	NONE
+	
 }

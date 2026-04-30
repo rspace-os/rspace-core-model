@@ -1,7 +1,7 @@
 package com.researchspace.model.netfiles;
 
 /**
- * Enum representing types of values that can be put into NfsFileSystem.clientDetails field.
+ * Enum representing option keys used in NfsFileSystem options maps.
  */
 public enum NfsFileSystemOption {
 	
@@ -53,5 +53,20 @@ public enum NfsFileSystemOption {
 	 * iRODS CS negotiation policy
 	 */
 	IRODS_CSNEG,
+
+	/**
+	 * AWS S3 region
+	 */
+	S3_REGION,
+
+	/**
+	 * Name of the AWS S3 bucket
+	 */
+	S3_BUCKET_NAME,
+
+	/**
+	 * Whether S3 client should support pathStyleAccessEnabled option (true/false)
+	 */
+	S3_PATH_STYLE_ACCESS_ENABLED
 
 }
