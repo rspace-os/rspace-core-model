@@ -28,6 +28,18 @@ public class NfsFileSystemInfoTest{
 	}
 
 	@Test
+	public void testCopyConstructorS3IncludesBucketName() {
+		String testClientOptionsString = "S3_BUCKET_NAME=my-test-bucket";
+		NfsFileSystem fileSystem = new NfsFileSystem();
+		fileSystem.setClientOptions(testClientOptionsString);
+		fileSystem.setClientType(NfsClientType.S3);
+		fileSystem.setAuthType(NfsAuthenticationType.PASSWORD);
+		NfsFileSystemInfo testee = new NfsFileSystemInfo(fileSystem);
+		assertEquals("my-test-bucket", testee.getOptions().get("S3_BUCKET_NAME"));
+		assertEquals("S3", testee.getClientType());
+	}
+
+	@Test
 	public void testCopyConstructorUserDoesNotRequiresRootDirs() {
 
 		NfsFileSystem fileSystem = new NfsFileSystem();

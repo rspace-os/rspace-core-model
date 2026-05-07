@@ -23,22 +23,11 @@ public enum NfsClientType {
 	/**
 	 * iRODS client type
 	 */
-	IRODS;
-	
-	/**
-	 * Get enum object for linked string value
-	 */
-	public static NfsClientType fromString(String clientTypeString) {
-		if ("samba".equalsIgnoreCase(clientTypeString)) {
-			return SAMBA;
-		}
-		if ("smbj".equalsIgnoreCase(clientTypeString)) {
-			return SMBJ;
-		}
-		if ("sftp".equalsIgnoreCase(clientTypeString)) {
-			return SFTP;
-		}
-		throw new IllegalArgumentException("unrecognised client type: " + clientTypeString);
-	}
+	IRODS,
 
+	/**
+	 * AWS S3 client type
+	 */
+	S3;
+	
 }
