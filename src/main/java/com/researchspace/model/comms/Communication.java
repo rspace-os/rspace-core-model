@@ -1,7 +1,7 @@
 package com.researchspace.model.comms;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.apache.commons.lang.StringUtils.abbreviate;
+import static org.apache.commons.lang3.StringUtils.abbreviate;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,6 +1,6 @@
 package com.researchspace.model.oauth;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -19,7 +19,6 @@ import org.apache.commons.lang3.Validate;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Type;
 
 import com.researchspace.model.User;
 

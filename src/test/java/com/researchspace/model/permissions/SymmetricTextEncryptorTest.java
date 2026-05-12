@@ -1,6 +1,6 @@
 package com.researchspace.model.permissions;
 
-import static org.apache.commons.lang.RandomStringUtils.random;
+import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,7 +22,6 @@ public class SymmetricTextEncryptorTest {
 		TextEncryptor encryptor = new  SymmetricTextEncryptor(keyString);
 
 		String encrypted = encryptor.encrypt(secretMessage_Shiro1_5_0);
-		assertEquals(expectedEncryptedSecretMessage_Shiro1_5_0, expectedEncryptedSecretMessage_Shiro1_5_0);
 		assertEquals(secretMessage_Shiro1_5_0, encryptor.decrypt(encrypted));
 		
 		String encrypted2 =encryptor.encrypt(secretMessage_Shiro1_5_0);

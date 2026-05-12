@@ -30,7 +30,7 @@ import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -87,7 +87,7 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 	@IndexedEmbedded
 	private List<SampleField> fields = new ArrayList<>();
 	
-	@IndexedEmbedded(prefix = "extraFields.")
+	@IndexedEmbedded(name = "extraFields")
 	private List<ExtraField> extraFields = new ArrayList<>();
 
 	@IndexedEmbedded
@@ -95,7 +95,7 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
 
 	private List<DigitalObjectIdentifier> identifiers = new ArrayList<>();
 
-	@IndexedEmbedded(prefix = "files.")
+	@IndexedEmbedded(name = "files")
 	private List<InventoryFile> files = new ArrayList<>();
 
 	private SampleSource sampleSource = SampleSource.LAB_CREATED;

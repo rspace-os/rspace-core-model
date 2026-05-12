@@ -13,7 +13,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import jakarta.persistence.Lob;
 import com.researchspace.model.RSChemElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +22,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 @Entity
@@ -62,8 +60,7 @@ public class StoichiometryMolecule {
 
   @Column private String name;
 
-  @Column
-  @Lob
+  @Column(columnDefinition = "text")
   private String smiles;
 
   @Builder.Default @Column private Double coefficient = 1.00;
@@ -82,8 +79,7 @@ public class StoichiometryMolecule {
   @Column(name = "limiting_reagent")
   private Boolean limitingReagent;
 
-  @Column
-  @Lob
+  @Column(columnDefinition = "text")
   private String notes;
 }
 

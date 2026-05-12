@@ -27,7 +27,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -70,7 +70,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 
 	private User owner;
 
-	@IndexedEmbedded(prefix = "extraFields.")
+	@IndexedEmbedded(name = "extraFields")
 	private List<ExtraField> extraFields = new ArrayList<>();
 
 	@IndexedEmbedded
@@ -78,7 +78,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 
 	private List<DigitalObjectIdentifier> identifiers = new ArrayList<>();
 
-	@IndexedEmbedded(prefix = "files.")
+	@IndexedEmbedded(name = "files")
 	private List<InventoryFile> files = new ArrayList<>();
 	
 	private FileProperty locationsImageFileProperty;

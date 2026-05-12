@@ -29,8 +29,6 @@ import com.researchspace.model.core.UniquelyIdentifiable;
 import com.researchspace.model.permissions.ConstraintBasedPermission;
 import com.researchspace.model.permissions.ConstraintPermissionResolver;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * Contains common behaviour for both Users and Groups
@@ -38,7 +36,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 /**
  * By default we must explicitly include XML elements
  */

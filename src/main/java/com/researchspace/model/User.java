@@ -54,8 +54,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.shiro.authz.Permission;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -73,6 +73,7 @@ import org.hibernate.search.engine.backend.types.Sortable;
  */
 @Entity
 @Table(name = "User")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @XmlType
 @AuditTrailData(auditDomain = AuditDomain.USER)
 @NoArgsConstructor

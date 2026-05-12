@@ -1,7 +1,7 @@
 package com.researchspace.model.record;
 
-import static org.apache.commons.lang.StringUtils.abbreviate;
-import static org.apache.commons.lang.StringUtils.trim;
+import static org.apache.commons.lang3.StringUtils.abbreviate;
+import static org.apache.commons.lang3.StringUtils.trim;
 
 import com.researchspace.model.inventory.Basket;
 import com.researchspace.model.inventory.DigitalObjectIdentifier;
@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.StringUtils;
 
 import com.researchspace.model.DefaultGroupNamingStrategy;

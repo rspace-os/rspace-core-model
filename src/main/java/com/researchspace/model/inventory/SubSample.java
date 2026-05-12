@@ -17,7 +17,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Transient;
 import jakarta.validation.ConstraintViolationException;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.hibernate.envers.Audited;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
@@ -52,7 +52,7 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 
 	private static final long serialVersionUID = 1867269597891360704L;
 
-	@IndexedEmbedded(prefix = "extraFields.")
+	@IndexedEmbedded(name = "extraFields")
 	private List<ExtraField> extraFields = new ArrayList<>();
 
 	@IndexedEmbedded
@@ -60,10 +60,10 @@ public class SubSample extends MovableInventoryRecord implements Serializable {
 
 	private List<DigitalObjectIdentifier> identifiers = new ArrayList<>();
 
-	@IndexedEmbedded(prefix = "files.")
+	@IndexedEmbedded(name = "files")
 	private List<InventoryFile> files = new ArrayList<>();
-	
-	@IndexedEmbedded(prefix = "notes.")
+
+	@IndexedEmbedded(name = "notes")
 	private List<SubSampleNote> notes = new ArrayList<>();
 
 	private Sample sample;

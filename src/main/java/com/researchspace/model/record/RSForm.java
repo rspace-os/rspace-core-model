@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 
+import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
@@ -53,6 +54,7 @@ import com.researchspace.model.core.UniquelyIdentifiable;
 @Entity
 @Audited
 @Cacheable
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @DiscriminatorValue("RSF")
 public class RSForm  extends AbstractForm implements Serializable, UniquelyIdentifiable, PermissionsAdaptable {
 	/**

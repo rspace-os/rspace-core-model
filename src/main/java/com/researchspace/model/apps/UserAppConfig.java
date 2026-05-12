@@ -18,7 +18,7 @@ import jakarta.persistence.UniqueConstraint;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 import com.researchspace.model.User;
 import com.researchspace.model.permissions.AbstractEntityPermissionAdapter;

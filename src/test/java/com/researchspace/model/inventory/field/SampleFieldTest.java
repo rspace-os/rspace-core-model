@@ -251,7 +251,7 @@ class SampleFieldTest {
 		assertEquals(2, field.getFiles().size());
 		
 		// file parameter validated to be not null
-		assertThrows(IllegalArgumentException.class, () -> field.setAttachedFile(null));
+		assertThrows(NullPointerException.class, () -> field.setAttachedFile(null));
 	}
 	
 	@Test

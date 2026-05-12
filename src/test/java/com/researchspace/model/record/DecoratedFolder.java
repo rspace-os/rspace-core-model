@@ -6,7 +6,7 @@ import java.util.Set;
 
 import jakarta.persistence.Transient;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 import com.researchspace.model.core.GlobalIdPrefix;
 import com.researchspace.model.core.RecordType;
