@@ -20,6 +20,8 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.PermissionResolver;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.researchspace.model.audittrail.AuditTrailIdentifier;
@@ -36,6 +38,7 @@ import com.researchspace.model.permissions.ConstraintPermissionResolver;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 /**
  * By default we must explicitly include XML elements
  */

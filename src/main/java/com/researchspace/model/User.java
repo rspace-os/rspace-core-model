@@ -73,7 +73,6 @@ import org.hibernate.search.engine.backend.types.Sortable;
  */
 @Entity
 @Table(name = "User")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @XmlType
 @AuditTrailData(auditDomain = AuditDomain.USER)
 @NoArgsConstructor

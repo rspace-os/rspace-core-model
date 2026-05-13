@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.researchspace.model.audittrail.AuditTrailIdentifier;
 import java.io.Serializable;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -12,8 +11,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import com.researchspace.model.User;
@@ -53,8 +50,6 @@ import com.researchspace.model.core.UniquelyIdentifiable;
  */
 @Entity
 @Audited
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @DiscriminatorValue("RSF")
 public class RSForm  extends AbstractForm implements Serializable, UniquelyIdentifiable, PermissionsAdaptable {
 	/**
