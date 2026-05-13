@@ -37,7 +37,7 @@ public class ExternalWorkFlowData implements Serializable {
    * The service hosting the data
    */
   @NotNull
-  @Enumerated(EnumType.ORDINAL)
+  @Enumerated(EnumType.STRING)
   private ExternalService externalService;
   /**
    * the rspace id of the data that was uploaded to the external service
@@ -48,7 +48,7 @@ public class ExternalWorkFlowData implements Serializable {
    * whether this is data local to RSpace or External data
    */
   @NotNull
-  @Enumerated(EnumType.ORDINAL)
+  @Enumerated(EnumType.STRING)
   private RspaceDataType rspaceDataType;
 
   /**
@@ -67,7 +67,7 @@ public class ExternalWorkFlowData implements Serializable {
    * the type of RSpace container this data belongs to
    */
   @NotNull
-  @Enumerated(EnumType.ORDINAL)
+  @Enumerated(EnumType.STRING)
   private RspaceContainerType rspaceContainerType;
 
   /**
