@@ -289,7 +289,12 @@ public abstract class InventoryRecord {
 	}
 	
 	protected void verifyFieldNameAllowed(String fieldName) {
-		if (fieldName != null && getReservedFieldNames().contains(fieldName.toLowerCase())) {
+		if (fieldName == null) {
+			return;
+		}
+		boolean clashesWithReserved = getReservedFieldNames().contains(fieldName.toLowerCase());
+		boolean clashesWithDisplayedLabel = getDisplayedFieldNames().contains(fieldName);
+		if (clashesWithReserved || clashesWithDisplayedLabel) {
 			throw new IllegalArgumentException(String.format("'%s' is not a valid name for a field, "
 						+ "as there is a default property with this name.", fieldName));
 		}
