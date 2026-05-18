@@ -135,6 +135,33 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
           .collect(Collectors.toSet()));
 
   /**
+   * UI labels displayed on a live Sample (mirrors {@code SampleModel.fieldNamesInUse} in the React
+   * UI). Used only when {@link #isTemplate()} is false.
+   */
+  static final Set<String> SAMPLE_DISPLAYED_FIELD_NAMES = Collections.unmodifiableSet(
+      Stream.concat(
+              InventoryRecord.BASE_DISPLAYED_FIELD_NAMES.stream(),
+              Stream.of(
+                  "Sample Template",
+                  "Expiry Date",
+                  "Source",
+                  "Storage Temperature",
+                  "Total Quantity",
+                  "Subsamples"))
+          .collect(Collectors.toSet()));
+
+  /**
+   * UI labels displayed on a Sample Template (mirrors {@code TemplateModel.fieldNamesInUse} in the
+   * React UI). Note the UI's TemplateModel does NOT include the Sample-specific labels above
+   * (Sample Template/Expiry Date/etc.); the template view is its own namespace.
+   */
+  static final Set<String> SAMPLE_TEMPLATE_DISPLAYED_FIELD_NAMES = Collections.unmodifiableSet(
+      Stream.concat(
+              InventoryRecord.BASE_DISPLAYED_FIELD_NAMES.stream(),
+              Stream.of("Subsample Alias", "Quantity Units", "Fields", "Samples"))
+          .collect(Collectors.toSet()));
+
+  /**
    * for hibernate, record factory & pagination criteria
    */
   public Sample() {
@@ -678,6 +705,12 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
   @Transient
   public Set<String> getReservedFieldNames() {
     return RESERVED_FIELD_NAMES;
+  }
+
+  @Override
+  @Transient
+  public Set<String> getDisplayedFieldNames() {
+    return isTemplate() ? SAMPLE_TEMPLATE_DISPLAYED_FIELD_NAMES : SAMPLE_DISPLAYED_FIELD_NAMES;
   }
 
   @Override

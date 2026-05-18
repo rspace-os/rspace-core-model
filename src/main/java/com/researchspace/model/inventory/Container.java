@@ -11,10 +11,14 @@ import com.researchspace.model.inventory.field.ExtraField;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -617,5 +621,17 @@ public class Container extends MovableInventoryRecord implements Serializable {
     return copy;
   }
 
+  static final Set<String> CONTAINER_DISPLAYED_FIELD_NAMES =
+      Collections.unmodifiableSet(
+          Stream.concat(
+                  InventoryRecord.BASE_DISPLAYED_FIELD_NAMES.stream(),
+                  Stream.of("Can Store", "Type", "Locations Image", "Grid Dimensions"))
+              .collect(Collectors.toSet()));
+
+  @Override
+  @Transient
+  public Set<String> getDisplayedFieldNames() {
+    return CONTAINER_DISPLAYED_FIELD_NAMES;
+  }
 }
 

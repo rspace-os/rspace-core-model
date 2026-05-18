@@ -95,6 +95,9 @@ public abstract class InventoryRecord {
  	
 	static final Set<String> RESERVED_FIELD_NAMES = Set.of("name", "description", "tags");
 
+	static final Set<String> BASE_DISPLAYED_FIELD_NAMES =
+			Set.of("Name", "Description", "Preview Image", "Tags", "Attachments");
+
 	/**
 	 * Comparator used to order inventory record list by name (asc/desc).
 	 */
@@ -452,6 +455,17 @@ public abstract class InventoryRecord {
 	@Transient
 	public Set<String> getReservedFieldNames() {
 		return RESERVED_FIELD_NAMES;
+	}
+
+	/**
+	 * Returns the set of field names that the UI displays for this record type, in addition to any
+	 * user-defined SampleField/ExtraField names. These mirror the UI's {@code fieldNamesInUse}
+	 * hardcoded labels (case-sensitive Title Case) and are used by the back end to assert that no
+	 * user-provided field name collides with a displayed label.
+	 */
+	@Transient
+	public Set<String> getDisplayedFieldNames() {
+		return BASE_DISPLAYED_FIELD_NAMES;
 	}
 
 	/**
