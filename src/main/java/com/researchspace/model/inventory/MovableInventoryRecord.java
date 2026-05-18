@@ -27,7 +27,7 @@ public abstract class MovableInventoryRecord extends InventoryRecord {
 	private ContainerLocation parentLocation;
 
 	private Container lastNonWorkbenchParent;
-	
+
 	private Instant lastMoveDate;
 
 	/**
@@ -97,7 +97,7 @@ public abstract class MovableInventoryRecord extends InventoryRecord {
 			setParentLocation(null);
 		}
 	}
-	
+
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@OneToOne(cascade = CascadeType.MERGE)
 	public Container getLastNonWorkbenchParent() {

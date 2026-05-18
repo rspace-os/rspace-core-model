@@ -1,5 +1,7 @@
 package com.researchspace.model.inventory.field;
 
+import com.researchspace.model.field.ErrorList;
+import com.researchspace.model.field.FieldType;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,16 +14,13 @@ import jakarta.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.envers.Audited;
 
-import com.researchspace.model.field.ErrorList;
-import com.researchspace.model.field.FieldType;
-
 /**
  * Stores internal  links as a list of RSpace GlobalIds
  */
 @Entity
 @Audited
 @DiscriminatorValue("uri")
-public class InventoryUriField extends SampleField {
+public class InventoryUriField extends InventoryEntityField {
 
 	private static final long serialVersionUID = -9034869390666898322L;
 

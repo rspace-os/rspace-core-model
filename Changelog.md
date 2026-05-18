@@ -6,6 +6,9 @@ Summary of important or breaking changes.
 - Spring 6 / Hibernate 6 / Jakarta namespace migration
 - Switch to rspace-parent 3.0.0
 
+## 2.22.0 2026-05-15
+- Add new `InstrumentEntity` model and renaming `SampleField` to `InventoryEntityField
+
 ## 2.21.0 2026-03-31
 - Change `connectedUser` and `connectedGroups` to be a `Set` instead of a `List`
 

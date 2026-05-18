@@ -4,10 +4,6 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 import com.researchspace.model.field.ErrorList;
 import com.researchspace.model.field.FieldType;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.regex.Pattern;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -17,7 +13,7 @@ import org.hibernate.envers.Audited;
 @Entity
 @DiscriminatorValue("identifier")
 @Audited
-public class InventoryIdentifierField extends SampleField {
+public class InventoryIdentifierField extends InventoryEntityField {
 
   // as per specs on https://www.doi.org/#:~:text=TRY%20RESOLVING%20A%20DOI
   private static final String DOI_REGEX =

@@ -25,17 +25,22 @@ import com.researchspace.model.permissions.ACLElement;
 import com.researchspace.model.permissions.RecordSharingACL;
 import com.researchspace.model.record.EditInfo;
 import com.researchspace.model.record.IActiveUserStrategy;
-import com.researchspace.model.units.Quantifiable;
-import com.researchspace.model.units.QuantityInfo;
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.Embedded;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -56,7 +61,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyVa
 @Setter
 @EqualsAndHashCode(of = {"id", "editInfo"})
 @Audited
-public abstract class InventoryRecord implements Quantifiable {
+public abstract class InventoryRecord {
 	
 	private Long id;
 	private EditInfo editInfo;
@@ -64,7 +69,7 @@ public abstract class InventoryRecord implements Quantifiable {
 	private Date deletedDate;
 
 	private Long iconId = -1L;
-	private QuantityInfo quantityInfo;
+
 	/**
 	 * tags field is redundant as all info is in tagMetaData but the field is present to allow efficient database searches.
 	 */
@@ -89,7 +94,7 @@ public abstract class InventoryRecord implements Quantifiable {
 	private RecordSharingACL sharingACL;
 	
 	public enum InventoryRecordType {
-		SAMPLE, SUBSAMPLE, CONTAINER
+		SAMPLE, SUBSAMPLE, CONTAINER, INSTRUMENT, INSTRUMENT_TEMPLATE
 	}
 
 	@Transient
@@ -283,36 +288,15 @@ public abstract class InventoryRecord implements Quantifiable {
 	public boolean isContainer() {
 		return InventoryRecordType.CONTAINER.equals(getType());
 	}
-	
-	@Embedded
-	@AttributeOverrides({
-		@AttributeOverride(name = "unitId", column = @Column(name = "quantityUnitId")),
-		@AttributeOverride(name = "numericValue", column = @Column(name = "quantityNumericValue", precision = 19, scale = 3))
-	})
-	public QuantityInfo getQuantityInfo() {
-		return quantityInfo;
+
+	@Transient
+	public boolean isInstrument() {
+		return InventoryRecordType.INSTRUMENT.equals(getType());
 	}
 
-	/* marked 'protected' so concrete subclass methods are used by the code outside */
-	protected void setQuantityInfo(QuantityInfo quantityInfo) {
-		if (quantityInfo != null && quantityInfo.getUnitId() != null) {
-			if (BigDecimal.ZERO.compareTo(quantityInfo.getNumericValue()) > 0) {
-				throw new IllegalArgumentException("Trying to set negative record quantity: " + quantityInfo.getNumericValuePlainString());
-			}
-		}
-		this.quantityInfo = quantityInfo;
-	}
-	
-	@Override
 	@Transient
-	public Integer getUnitId() {
-		return getQuantityInfo().getUnitId();
-	}
-
-	@Override
-	@Transient
-	public BigDecimal getNumericValue() {
-		return getQuantityInfo().getNumericValue();
+	public boolean isInstrumentTemplate() {
+		return InventoryRecordType.INSTRUMENT_TEMPLATE.equals(getType());
 	}
 
 	@Transient
@@ -502,21 +486,18 @@ public abstract class InventoryRecord implements Quantifiable {
 	 *
 	 * @param currentUser user to set as a creator and owner of the copy
 	 */
-	abstract InventoryRecord copy(User currentUser);
+	abstract <T extends InventoryRecord> T copy(User currentUser);
 
 	/*
 	 * Copies properties except ID and relations/collections
 	 * subclasses can override. When copy is supported by all subclasses we can make this abstract
 	 */
-	abstract InventoryRecord shallowCopy();
+	abstract <T extends InventoryRecord> T shallowCopy();
 	
 	void shallowCopyBasicFields(InventoryRecord copy) {
 		copy.setEditInfo(getEditInfo().shallowCopy());
 		copy.setTags(getTags());
 		copy.setTagMetaData(getTagMetaData());
-		if(getQuantityInfo()!=null) {
-			copy.setQuantityInfo(getQuantityInfo().copy());
-		}
 		copy.setIconId(getIconId());
 		copy.setDeleted(deleted);
 		copy.setDeletedDate(deletedDate);
@@ -533,7 +514,28 @@ public abstract class InventoryRecord implements Quantifiable {
 			copy.addAttachedFile(invFile.shallowCopy());
 		}
 	}
-	
+
+	static void shallowCopyBasicFields(InventoryRecord origin, InventoryRecord destination) {
+		destination.setEditInfo(origin.getEditInfo().shallowCopy());
+		destination.setTags(origin.getTags());
+		destination.setTagMetaData(origin.getTagMetaData());
+		destination.setIconId(origin.getIconId());
+		destination.setDeleted(origin.deleted);
+		destination.setDeletedDate(origin.deletedDate);
+		destination.setSharingMode(origin.sharingMode);
+		destination.setSharingACL(origin.sharingACL);
+
+		for (ExtraField ef: origin.getActiveExtraFields()) {
+			destination.addExtraField(ef.shallowCopy());
+		}
+		for (Barcode barcode: origin.getActiveBarcodes()) {
+			destination.addBarcode(barcode.shallowCopy());
+		}
+		for (InventoryFile invFile: origin.getAttachedFiles()) {
+			destination.addAttachedFile(invFile.shallowCopy());
+		}
+	}
+
 	String defaultNameCopy(InventoryRecord original) {
 			return original.getName() + "_COPY";
 	}

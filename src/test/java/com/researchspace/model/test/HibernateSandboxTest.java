@@ -4,6 +4,7 @@ import static com.researchspace.core.util.TransformerUtils.toList;
 import static org.apache.commons.collections4.CollectionUtils.isEqualCollection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,6 +29,9 @@ import com.researchspace.model.inventory.Container;
 import com.researchspace.model.inventory.Container.GridLayoutAxisLabelEnum;
 import com.researchspace.model.inventory.ContainerLocation;
 import com.researchspace.model.inventory.DigitalObjectIdentifier;
+import com.researchspace.model.inventory.Instrument;
+import com.researchspace.model.inventory.InstrumentEntity;
+import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord.InventorySharingMode;
 import com.researchspace.model.inventory.Sample;
@@ -40,6 +44,7 @@ import com.researchspace.model.inventory.field.InventoryAttachmentField;
 import com.researchspace.model.inventory.field.InventoryChoiceField;
 import com.researchspace.model.inventory.field.InventoryChoiceFieldDef;
 import com.researchspace.model.inventory.field.InventoryDateField;
+import com.researchspace.model.inventory.field.InventoryEntityField;
 import com.researchspace.model.inventory.field.InventoryNumberField;
 import com.researchspace.model.inventory.field.InventoryRadioField;
 import com.researchspace.model.inventory.field.InventoryRadioFieldDef;
@@ -48,7 +53,6 @@ import com.researchspace.model.inventory.field.InventoryStringField;
 import com.researchspace.model.inventory.field.InventoryTextField;
 import com.researchspace.model.inventory.field.InventoryTimeField;
 import com.researchspace.model.inventory.field.InventoryUriField;
-import com.researchspace.model.inventory.field.SampleField;
 import com.researchspace.model.netfiles.ExternalStorageLocation;
 import com.researchspace.model.netfiles.NfsAuthenticationType;
 import com.researchspace.model.netfiles.NfsClientType;
@@ -73,7 +77,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for model entity creation and behaviour.
+ * Tests for model entity creation and behavior.
  */
 class HibernateSandboxTest extends HibernateTest {
 
@@ -111,7 +115,7 @@ class HibernateSandboxTest extends HibernateTest {
 	
 	@Test
 	void testSampleField() {
-		final int initialFieldCount = dao.count("SampleField").intValue();
+		final int initialFieldCount = dao.count("InventoryEntityField").intValue();
 		final int expectedFieldCount = initialFieldCount +10;
 		
 		User u = createAndSaveAnyUser();
@@ -130,58 +134,58 @@ class HibernateSandboxTest extends HibernateTest {
 				FieldType.TEXT, FieldType.CHOICE, FieldType.RADIO, FieldType.TIME, FieldType.REFERENCE,
 				FieldType.ATTACHMENT,   FieldType.URI);
 		
-		SampleField numberField = new InventoryNumberField("number");
+		InventoryEntityField numberField = new InventoryNumberField("number");
 		sample.addSampleField(numberField);
 			
-		SampleField dateField = new InventoryDateField("date");
+		InventoryEntityField dateField = new InventoryDateField("date");
 		sample.addSampleField(dateField);
 		
-		SampleField stringField = new InventoryStringField("string");
+		InventoryEntityField stringField = new InventoryStringField("string");
 		sample.addSampleField(stringField);
 		
-		SampleField textField = new InventoryTextField("text");
+		InventoryEntityField textField = new InventoryTextField("text");
 		sample.addSampleField(textField);	
 
-		SampleField choiceField = new InventoryChoiceField(cff, "choice");
+		InventoryEntityField choiceField = new InventoryChoiceField(cff, "choice");
 		sample.addSampleField(choiceField);
 		
-		SampleField radioField = new InventoryRadioField(rff, "radio");
+		InventoryEntityField radioField = new InventoryRadioField(rff, "radio");
 		sample.addSampleField(radioField);
 		
-		SampleField timeField = new InventoryTimeField( "time");
+		InventoryEntityField timeField = new InventoryTimeField( "time");
 		sample.addSampleField(timeField);
 		
-		SampleField refField = new InventoryReferenceField( "ref");
+		InventoryEntityField refField = new InventoryReferenceField( "ref");
 		sample.addSampleField(refField);
 		
-		SampleField attachField = new InventoryAttachmentField( "att");
+		InventoryEntityField attachField = new InventoryAttachmentField( "att");
 		sample.addSampleField(attachField);
 	
-		SampleField uriField = new InventoryUriField("uri");
+		InventoryEntityField uriField = new InventoryUriField("uri");
 		sample.addSampleField(uriField);
 		sample = dao.update(sample,Sample.class);
-		assertEquals(expectedFieldCount, dao.count("SampleField"));
-		assertEquals(expectedFieldCount, getAllSampleFields().size());
+		assertEquals(expectedFieldCount, dao.count("InventoryEntityField"));
+		assertEquals(expectedFieldCount, getAllEntityFields().size());
 		
 		
-		List<FieldType> actualTypes = getOrderedFieldTypes(getAllSampleFields(), sample.getId());
+		List<FieldType> actualTypes = getOrderedSampleFieldTypes(getAllEntityFields(), sample.getId());
 		assertTrue(isEqualCollection(actualTypes, expectedFieldOrder));
 		
 		// and sorting is by column order, maintains ordering 
-		List<SampleField> items = getAllSampleFields();
+		List<InventoryEntityField> items = getAllEntityFields();
 		Collections.sort(items);
-		assertTrue(isEqualCollection(getOrderedFieldTypes(items, sample.getId()), expectedFieldOrder));
+		assertTrue(isEqualCollection(getOrderedSampleFieldTypes(items, sample.getId()), expectedFieldOrder));
 		
 	}
 
-	private List<SampleField> getAllSampleFields() {
-		return dao.getAll(SampleField.class, "SampleField");
+	private List<InventoryEntityField> getAllEntityFields() {
+		return dao.getAll(InventoryEntityField.class, "InventoryEntityField");
 	}
 
-	private List<FieldType> getOrderedFieldTypes(List<SampleField> items, Long sampleId) {
-		return getAllSampleFields().stream()
+	private List<FieldType> getOrderedSampleFieldTypes(List<InventoryEntityField> items, Long sampleId) {
+		return getAllEntityFields().stream()
 				.filter(f->f.getSample().getId().equals(sampleId))
-				.map(SampleField::getType)
+				.map(InventoryEntityField::getType)
 				.collect(Collectors.toList());
 	}
 
@@ -221,8 +225,8 @@ class HibernateSandboxTest extends HibernateTest {
 		copy = saveSampleInContainer(copy);
 		assertEquals(complexSample.getActiveFields().size(), copy.getActiveFields().size());
 		for (int i = 0; i< complexSample.getActiveFields().size(); i++) {
-			SampleField origF = complexSample.getActiveFields().get(i);
-			SampleField copyF = copy.getActiveFields().get(i);
+			InventoryEntityField origF = complexSample.getActiveFields().get(i);
+			InventoryEntityField copyF = copy.getActiveFields().get(i);
 			assertEquals(origF.getFieldData(), copyF.getFieldData());
 			assertFalse(origF.getId().equals(copyF.getId()));
 			assertEquals(origF.getColumnIndex(), copyF.getColumnIndex());
@@ -242,6 +246,112 @@ class HibernateSandboxTest extends HibernateTest {
 			dao.update(invFile, InventoryFile.class);
 		}
 		return sample;
+	}
+
+	private Instrument saveInstrumentInContainer(Instrument instrument) {
+		Container container = instrument.getParentContainer();
+		dao.update(container, Container.class);
+		if (instrument.getId() == null) {
+			instrument = dao.save(instrument, Instrument.class);
+		} else {
+			instrument = dao.update(instrument, Instrument.class);
+		}
+
+		for (InventoryFile invFile : instrument.getAttachedFiles()) {
+			dao.update(invFile, InventoryFile.class);
+		}
+		return instrument;
+	}
+
+	@Test
+	@DisplayName("Persist and reload InstrumentTemplate discriminator")
+	void persistInstrumentTemplateDiscriminator() {
+		User user = createAndSaveAnyUser();
+		InstrumentTemplate template = (InstrumentTemplate) TestFactory.createInstrument(user).copyToTemplate(user);
+
+		template = dao.save(template, InstrumentTemplate.class);
+
+		InstrumentEntity loaded = dao.load(template.getId(), InstrumentEntity.class);
+    assertInstanceOf(InstrumentTemplate.class, loaded);
+		assertTrue(loaded.isTemplate());
+		assertEquals(GlobalIdPrefix.NT, loaded.getOid().getPrefix());
+	}
+
+	@Test
+	@DisplayName("Persist instrument template link and linked version")
+	void persistInstrumentTemplateLinkAndVersion() {
+		User user = createAndSaveAnyUser();
+		InstrumentTemplate template = (InstrumentTemplate) TestFactory.createInstrument(user).copyToTemplate(user);
+		template.increaseVersion();
+		template.increaseVersion();
+		template = dao.save(template, InstrumentTemplate.class);
+
+		Container container = rf.createListContainer("instrument parent", user);
+		container = dao.save(container, Container.class);
+
+		Instrument instrument = TestFactory.createInstrumentFromTemplate(user, template);
+		instrument.moveToNewParent(container);
+		instrument = saveInstrumentInContainer(instrument);
+
+		Instrument reloaded = dao.load(instrument.getId(), Instrument.class,
+				loaded -> {
+					loaded.getInstrumentTemplate().getId();
+					loaded.getParentLocation().getId();
+				});
+		assertNotNull(reloaded.getInstrumentTemplate());
+		assertEquals(template.getId(), reloaded.getInstrumentTemplate().getId());
+		assertEquals(template.getVersion(), reloaded.getTemplateLinkedVersion());
+		assertEquals(GlobalIdPrefix.IN, reloaded.getOid().getPrefix());
+	}
+
+	@Test
+	@DisplayName("Persist instrument parent location and container round trip")
+	void persistInstrumentParentLocationRoundTrip() {
+		User user = createAndSaveAnyUser();
+		Instrument instrument = TestFactory.createBasicInstrumentInContainer(user);
+		Container originalParent = instrument.getParentContainer();
+		instrument = saveInstrumentInContainer(instrument);
+
+		Instrument reloaded = dao.load(instrument.getId(), Instrument.class,
+				loaded -> {
+					loaded.getParentLocation().getId();
+					loaded.getParentContainer().getId();
+				});
+		assertNotNull(reloaded.getParentLocation());
+		assertNotNull(reloaded.getParentLocation().getId());
+		assertEquals(originalParent.getId(), reloaded.getParentId());
+		assertEquals(originalParent.getId(), reloaded.getParentContainer().getId());
+		assertTrue(reloaded.isStoredInContainer());
+
+		Container reloadedContainer = dao.load(originalParent.getId(), Container.class,
+				loaded -> loaded.getLocations().size());
+		assertEquals(1, reloadedContainer.getContentCount());
+		assertEquals(instrument.getId(), reloadedContainer.getLocations().get(0).getStoredInstrument().getId());
+	}
+
+	@Test
+	@DisplayName("Managed InstrumentTemplate movement operations stay forbidden after reload")
+	void reloadedInstrumentTemplateMovementNotAllowed() {
+		User user = createAndSaveAnyUser();
+		InstrumentTemplate template = (InstrumentTemplate) TestFactory.createInstrument(user).copyToTemplate(user);
+		template = dao.save(template, InstrumentTemplate.class);
+		Container container = dao.save(rf.createListContainer("instrument container", user), Container.class);
+
+		InstrumentTemplate reloaded = dao.load(template.getId(), InstrumentTemplate.class);
+		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
+				() -> reloaded.moveToNewParent(container));
+		assertEquals("InstrumentTemplate cannot be moved or attached to containers", iae.getMessage());
+
+		iae = assertThrows(IllegalArgumentException.class,
+				() -> reloaded.moveToNewParentWithCoords(container, 1, 1));
+		assertEquals("InstrumentTemplate cannot be moved or attached to containers", iae.getMessage());
+
+		iae = assertThrows(IllegalArgumentException.class,
+				() -> reloaded.moveToNewParentAndLocation(container, new ContainerLocation(container)));
+		assertEquals("InstrumentTemplate cannot be moved or attached to containers", iae.getMessage());
+
+		iae = assertThrows(IllegalArgumentException.class, reloaded::removeFromCurrentParent);
+		assertEquals("InstrumentTemplate cannot be moved or attached to containers", iae.getMessage());
 	}
 
 	@Test()
@@ -389,7 +499,7 @@ class HibernateSandboxTest extends HibernateTest {
 		Sample sample = TestFactory.createBasicSampleWithSubSamples(u, 2);
 		
 		Long initSubSampleCount = dao.count("SubSample");
-		Long initFieldsCount = dao.count("SampleField");
+		Long initFieldsCount = dao.count("InventoryEntityField");
 
 		Sample savedSample = saveSampleInContainer(sample);
 		assertNotNull(savedSample);
@@ -398,7 +508,7 @@ class HibernateSandboxTest extends HibernateTest {
 		
 		Long newSubSampleCount = dao.count("SubSample");
 		assertEquals(initSubSampleCount + 2, newSubSampleCount);
-		Long newFieldsCount = dao.count("SampleField"); // default form has no fields
+		Long newFieldsCount = dao.count("InventoryEntityField"); // default form has no fields
 		assertEquals(initFieldsCount, newFieldsCount);
 		
 		Sample retrievedSample = dao.load(savedSample.getId(), Sample.class);
@@ -535,11 +645,15 @@ class HibernateSandboxTest extends HibernateTest {
 		sample = saveSampleInContainer(sample);
 		SubSample subSample = sample.getSubSamples().get(0);
 
+		// Create an Instrument
+		Instrument instrument = TestFactory.createBasicInstrumentInContainer(user);
+		instrument = saveInstrumentInContainer(instrument);
+
 		/*
 		 *  do a few checks on location with content
 		 */
 		ContainerLocation containerLocation = loadedSubContainer.getParentLocation();
-		assertTrue(containerLocation.getStoredRecord() != null);
+		assertNotNull(containerLocation.getStoredRecord());
 		
 		// try setting subsample where there is already container
 		containerLocation.setStoredSubSample(subSample); 
@@ -552,7 +666,7 @@ class HibernateSandboxTest extends HibernateTest {
 		assertThrows(ConstraintViolationException.class, ()-> dao.save(containerLocation, ContainerLocation.class));
 		
 		/*
-		 *  try updating canStoreSamples/canStoreContainers flags
+		 *  try updating canStoreSamples/canStoreContainers/canStoreInstruments flags
 		 */
 		// one flag can be set to false fine
 		Container onlySamplesContainer = rf.createListContainer("test container", user);
@@ -560,29 +674,38 @@ class HibernateSandboxTest extends HibernateTest {
 		savedContainer = dao.save(onlySamplesContainer, Container.class);
 		assertFalse(savedContainer.isCanStoreContainers());
 		assertTrue(savedContainer.isCanStoreSamples());
-		
-		// both can't be set to false
+		assertTrue(savedContainer.isCanStoreInstruments());
+
+		// both can't be set all of them to false
 		Container noValidContentContainer = rf.createListContainer("test container", user);
 		noValidContentContainer.setCanStoreContainers(false);
 		noValidContentContainer.setCanStoreSamples(false);
+		noValidContentContainer.setCanStoreInstruments(false);
 		ConstraintViolationException cve = assertThrows(ConstraintViolationException.class, ()-> dao.save(noValidContentContainer, Container.class));
-		assertEquals("Container cannot have both canStoreSamples and canStoreContainers set to false", cve.getMessage());
+		assertEquals("Container cannot have all \"canStoreSamples\", \"canStoreContainers\" and "
+				+ "\"canStoreInstruments\" set to false", cve.getMessage());
 		
-		// create container which holds both sample and container
+		// create container which holds both sample, container and instrument
 		Container allContentContainer =  rf.createListContainer("test container", user);
 		allContentContainer.addToNewLocation(savedContainer);
 		allContentContainer.addToNewLocation(subSample);
+		allContentContainer.addToNewLocation(instrument);
 		dao.save(allContentContainer, Container.class);
-		assertEquals(2, allContentContainer.getLocations().size());
+		assertEquals(3, allContentContainer.getLocations().size());
 		
-		// try disabling either canStoreSamples or canStoreContainers flag
+		// try disabling either canStoreSamples or canStoreContainers or canStoreInstruments flag
 		allContentContainer.setCanStoreSamples(false);
 		cve = assertThrows(ConstraintViolationException.class, ()-> dao.save(allContentContainer, Container.class));
-		assertEquals("Container has canStoreSamples set to false, but also has a stored subsample", cve.getMessage());
+		assertEquals("Container has \"canStoreSamples\" set to false, but also has a stored subsample", cve.getMessage());
 		allContentContainer.setCanStoreSamples(true);
 		allContentContainer.setCanStoreContainers(false);
 		cve = assertThrows(ConstraintViolationException.class, ()-> dao.save(allContentContainer, Container.class));
-		assertEquals("Container has canStoreContainers set to false, but also has a stored container", cve.getMessage());
+		assertEquals("Container has \"canStoreContainers\" set to false, but also has a stored container", cve.getMessage());
+		allContentContainer.setCanStoreContainers(true);
+		allContentContainer.setCanStoreInstruments(false);
+		cve = assertThrows(ConstraintViolationException.class, ()-> dao.save(allContentContainer, Container.class));
+		assertEquals("Container has \"canStoreInstruments\" set to false, but also has a stored instrument", cve.getMessage());
+
 	}
 
 	@Test

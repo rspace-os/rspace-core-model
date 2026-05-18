@@ -36,12 +36,14 @@ import com.researchspace.model.field.StringFieldForm;
 import com.researchspace.model.field.TextFieldForm;
 import com.researchspace.model.field.TimeFieldForm;
 import com.researchspace.model.inventory.Container;
+import com.researchspace.model.inventory.Container.ContainerType;
+import com.researchspace.model.inventory.Instrument;
+import com.researchspace.model.inventory.InstrumentEntity;
+import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.Sample;
 import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.SubSampleName;
-import com.researchspace.model.inventory.Container.ContainerType;
-import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.field.ExtraField;
 import com.researchspace.model.inventory.field.ExtraNumberField;
 import com.researchspace.model.inventory.field.ExtraTextField;
@@ -64,480 +66,518 @@ import com.researchspace.model.units.RSUnitDef;
  */
 public class RecordFactory implements IRecordFactory {
 
-	public static final String BASIC_DOCUMENT_FORM_NAME = "Basic Document";
+  public static final String BASIC_DOCUMENT_FORM_NAME = "Basic Document";
 
-	private IActiveUserStrategy modifiedByStrategy = IActiveUserStrategy.NULL;
+  private IActiveUserStrategy modifiedByStrategy = IActiveUserStrategy.NULL;
 
-	public void setModifiedByStrategy(IActiveUserStrategy modifiedByStrategy) {
-		this.modifiedByStrategy = modifiedByStrategy;
-	}
+  public void setModifiedByStrategy(IActiveUserStrategy modifiedByStrategy) {
+    this.modifiedByStrategy = modifiedByStrategy;
+  }
 
-	private void checkArgs(Object... notNullArgs) {
-		Validate.noNullElements(notNullArgs);
-	}
+  private void checkArgs(Object... notNullArgs) {
+    Validate.noNullElements(notNullArgs);
+  }
 
-	public StructuredDocument createStructuredDocument(String name, User createdBy, final RSForm form) {
-		checkArgs(name, createdBy);
-		StructuredDocument rc = new StructuredDocument(form);
-		return addFieldsToStrucDocument(name, createdBy, form, rc);
-	}
-	
-	
-	@Override
-	public StructuredDocument createStructuredDocument(String name, User createdBy, final RSForm form, ImportOverride override) {
-		checkArgs(name, createdBy);
-		StructuredDocument rc = new StructuredDocument(form, override);
-		return addFieldsToStrucDocument(name, createdBy, form, rc);
-	}
+  public StructuredDocument createStructuredDocument(String name, User createdBy,
+      final RSForm form) {
+    checkArgs(name, createdBy);
+    StructuredDocument rc = new StructuredDocument(form);
+    return addFieldsToStrucDocument(name, createdBy, form, rc);
+  }
 
-	private StructuredDocument addFieldsToStrucDocument(String name, User createdBy, final RSForm form, StructuredDocument rc) {
-		for (FieldForm ft : form.getFieldForms()) {
-			Field field = ft.createNewFieldFromForm();
-			rc.addField(field);
-		}
-		rc.addType(RecordType.NORMAL);
-		populateCoreFields(name, createdBy, rc);
-		return rc;
-	}
 
-	public Snippet createSnippet(String name, String content, User createdBy) {
-		checkArgs(name, createdBy);
-		Snippet snippet = new Snippet(content);
-		snippet.addType(RecordType.SNIPPET);
-		populateCoreFields(name, createdBy, snippet);
-		return snippet;
-	}
+  @Override
+  public StructuredDocument createStructuredDocument(String name, User createdBy, final RSForm form,
+      ImportOverride override) {
+    checkArgs(name, createdBy);
+    StructuredDocument rc = new StructuredDocument(form, override);
+    return addFieldsToStrucDocument(name, createdBy, form, rc);
+  }
 
-	public RSForm createExperimentForm(String formName, String desc, User createdBy) {
-		RSForm form = new RSForm(formName, desc, createdBy);
-		form.setCurrent(true);
+  private StructuredDocument addFieldsToStrucDocument(String name, User createdBy,
+      final RSForm form, StructuredDocument rc) {
+    for (FieldForm ft : form.getFieldForms()) {
+      Field field = ft.createNewFieldFromForm();
+      rc.addField(field);
+    }
+    rc.addType(RecordType.NORMAL);
+    populateCoreFields(name, createdBy, rc);
+    return rc;
+  }
 
-		String[] fnames = new String[] { "Method", "Objective", "Procedure", "Results", "Discussion", "Conclusion",
-				"Comment" };
-		int colindx = 0;
-		for (String fName : fnames) {
-			FieldForm fld = new TextFieldForm(fName);
-			fld.setColumnIndex(colindx++);
-			form.addFieldForm(fld);
-		}
-		form.setPublishingState(FormState.PUBLISHED);
-		return form;
-	}
+  public Snippet createSnippet(String name, String content, User createdBy) {
+    checkArgs(name, createdBy);
+    Snippet snippet = new Snippet(content);
+    snippet.addType(RecordType.SNIPPET);
+    populateCoreFields(name, createdBy, snippet);
+    return snippet;
+  }
 
-	@Override
-	public RSForm createFormForSeleniumTests(String formName, String desc, User createdBy) {
-		
-		Calendar formDate = Calendar.getInstance();
-		formDate.set(2020, 0, 8, 0, 55, 15);
-		
-		RSForm seleniumForm = new RSForm(formName, desc, createdBy);
-		seleniumForm.setCurrent(true);
-		DateFieldForm date = new DateFieldForm("MyDate");
-		date.setMaxValue(new Date().getTime());
-		date.setMinValue(0);
-		date.setDefaultDate(formDate.getTimeInMillis());
-		date.setColumnIndex(0);
-		seleniumForm.addFieldForm(date);
+  public RSForm createExperimentForm(String formName, String desc, User createdBy) {
+    RSForm form = new RSForm(formName, desc, createdBy);
+    form.setCurrent(true);
 
-		ChoiceFieldForm cft = new ChoiceFieldForm("MyChoice");
-		cft.setChoiceOptions("fieldChoices=a&fieldChoices=b&fieldChoices=c");
-		cft.setDefaultChoiceOption("fieldSelectedChoices=a&fieldSelectedChoices=c");
-		cft.setColumnIndex(1);
-		seleniumForm.addFieldForm(cft);
+    String[] fnames = new String[]{"Method", "Objective", "Procedure", "Results", "Discussion",
+        "Conclusion",
+        "Comment"};
+    int colindx = 0;
+    for (String fName : fnames) {
+      FieldForm fld = new TextFieldForm(fName);
+      fld.setColumnIndex(colindx++);
+      form.addFieldForm(fld);
+    }
+    form.setPublishingState(FormState.PUBLISHED);
+    return form;
+  }
 
-		NumberFieldForm nft = new NumberFieldForm("MyNumber");
-		nft.setMinNumberValue(0d);
-		nft.setMaxNumberValue(10d);
-		nft.setDefaultNumberValue(5d);
-		nft.setColumnIndex(2);
-		seleniumForm.addFieldForm(nft);
+  @Override
+  public RSForm createFormForSeleniumTests(String formName, String desc, User createdBy) {
 
-		RadioFieldForm rft = new RadioFieldForm("MyRadio");
-		rft.setRadioOption("fieldRadios=a&fieldRadios=b");
-		rft.setDefaultRadioOption("b");
-		rft.setColumnIndex(3);
-		seleniumForm.addFieldForm(rft);
+    Calendar formDate = Calendar.getInstance();
+    formDate.set(2020, 0, 8, 0, 55, 15);
 
-		StringFieldForm sft = new StringFieldForm("MyString");
-		sft.setColumnIndex(4);
-		sft.setDefaultStringValue("string");
-		sft.setIfPassword(false);
-		seleniumForm.addFieldForm(sft);
+    RSForm seleniumForm = new RSForm(formName, desc, createdBy);
+    seleniumForm.setCurrent(true);
+    DateFieldForm date = new DateFieldForm("MyDate");
+    date.setMaxValue(new Date().getTime());
+    date.setMinValue(0);
+    date.setDefaultDate(formDate.getTimeInMillis());
+    date.setColumnIndex(0);
+    seleniumForm.addFieldForm(date);
 
-		TextFieldForm tft = new TextFieldForm("MyText");
-		tft.setColumnIndex(5);
-		tft.setDefaultValue("<p>MyText</p>");
-		seleniumForm.addFieldForm(tft);
+    ChoiceFieldForm cft = new ChoiceFieldForm("MyChoice");
+    cft.setChoiceOptions("fieldChoices=a&fieldChoices=b&fieldChoices=c");
+    cft.setDefaultChoiceOption("fieldSelectedChoices=a&fieldSelectedChoices=c");
+    cft.setColumnIndex(1);
+    seleniumForm.addFieldForm(cft);
 
-		TimeFieldForm timeField = new TimeFieldForm("MyTime");
-		timeField.setColumnIndex(6);
-		timeField.setDefaultTime(formDate.getTimeInMillis());
-		seleniumForm.addFieldForm(timeField);
+    NumberFieldForm nft = new NumberFieldForm("MyNumber");
+    nft.setMinNumberValue(0d);
+    nft.setMaxNumberValue(10d);
+    nft.setDefaultNumberValue(5d);
+    nft.setColumnIndex(2);
+    seleniumForm.addFieldForm(nft);
 
-		seleniumForm.setPublishingState(FormState.PUBLISHED);
-		return seleniumForm;
-	}
+    RadioFieldForm rft = new RadioFieldForm("MyRadio");
+    rft.setRadioOption("fieldRadios=a&fieldRadios=b");
+    rft.setDefaultRadioOption("b");
+    rft.setColumnIndex(3);
+    seleniumForm.addFieldForm(rft);
 
-	private void populateCoreFields(String name, User createdBy, BaseRecord record) {
-		name = abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH);
-		record.setName(name);
-		record.setCreatedBy(createdBy.getUsername());
-		record.setOwner(createdBy);
-		record.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
-	}
+    StringFieldForm sft = new StringFieldForm("MyString");
+    sft.setColumnIndex(4);
+    sft.setDefaultStringValue("string");
+    sft.setIfPassword(false);
+    seleniumForm.addFieldForm(sft);
 
-	public Notebook createNotebook(String name, User createdBy) {
-		checkArgs(name, createdBy);
-		Notebook notebook = new Notebook();
-		return doCreateNotebook(name, createdBy, notebook);
-	}
-	
-	public Notebook createNotebook(String name, User createdBy, ImportOverride importOverride) {
-		checkArgs(name, createdBy);
-		Notebook notebook = new Notebook(importOverride);
-		return doCreateNotebook(name, createdBy, notebook);
-	}
+    TextFieldForm tft = new TextFieldForm("MyText");
+    tft.setColumnIndex(5);
+    tft.setDefaultValue("<p>MyText</p>");
+    seleniumForm.addFieldForm(tft);
 
-	private Notebook doCreateNotebook(String name, User createdBy, Notebook notebook) {
-		populateCoreFields(name, createdBy, notebook);
-		notebook.addType(RecordType.NOTEBOOK);
-		return notebook;
-	}
+    TimeFieldForm timeField = new TimeFieldForm("MyTime");
+    timeField.setColumnIndex(6);
+    timeField.setDefaultTime(formDate.getTimeInMillis());
+    seleniumForm.addFieldForm(timeField);
 
-	public Folder createFolder(String name, User createdBy) {
-		checkArgs(name, createdBy);
-		Folder rc = new Folder();
-		return doCreateFolder(name, createdBy, rc);
-	}
-	
-	public Folder createFolder(String name, User createdBy, ImportOverride override) {
-		checkArgs(name, createdBy);
-		Folder rc = new Folder(override);
-		return doCreateFolder(name, createdBy, rc);
-	}
+    seleniumForm.setPublishingState(FormState.PUBLISHED);
+    return seleniumForm;
+  }
 
-	private Folder doCreateFolder(String name, User createdBy, Folder rc) {
-		populateCoreFields(name, createdBy, rc);
-		rc.addType(RecordType.FOLDER);
-		return rc;
-	}
+  private void populateCoreFields(String name, User createdBy, BaseRecord record) {
+    name = abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH);
+    record.setName(name);
+    record.setCreatedBy(createdBy.getUsername());
+    record.setOwner(createdBy);
+    record.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
+  }
 
-	public Folder createSystemCreatedFolder(String name, User createdBy) {
-		Folder folder = createFolder(name, createdBy);
-		folder.addType(RecordType.SYSTEM);
-		folder.setSystemFolder(true);
-		return folder;
-	}
+  public Notebook createNotebook(String name, User createdBy) {
+    checkArgs(name, createdBy);
+    Notebook notebook = new Notebook();
+    return doCreateNotebook(name, createdBy, notebook);
+  }
 
-	public Folder createRootFolder(String name, User createdBy) {
-		Folder folder = createFolder(name, createdBy);
-		folder.addType(RecordType.ROOT);
-		folder.setSystemFolder(true);
-		return folder;
-	}
+  public Notebook createNotebook(String name, User createdBy, ImportOverride importOverride) {
+    checkArgs(name, createdBy);
+    Notebook notebook = new Notebook(importOverride);
+    return doCreateNotebook(name, createdBy, notebook);
+  }
 
-	@Override
-	public RSForm createNewForm() {
-		RSForm form = new RSForm();
-		form.setCurrent(true);
-		return form;
-	}
-	
-	@Override
-	public RSForm createBasicDocumentForm(User u) {
-		RSForm basicDocForm = new RSForm(BASIC_DOCUMENT_FORM_NAME, "", u);
-		TextFieldForm tft = new TextFieldForm("Data");
-		basicDocForm.addFieldForm(tft);
-		basicDocForm.setPublishingState(FormState.PUBLISHED);
-		basicDocForm.setCurrent(true);
-		basicDocForm.setSystemForm(true);
-		return basicDocForm;
-	}
+  private Notebook doCreateNotebook(String name, User createdBy, Notebook notebook) {
+    populateCoreFields(name, createdBy, notebook);
+    notebook.addType(RecordType.NOTEBOOK);
+    return notebook;
+  }
 
-	@Override
-	public Folder createCommunalGroupFolder(Group grp, User createdBy) {
-		IGroupNamingStrategy namingStrgy = new DefaultGroupNamingStrategy();
-		return createACommunalGroupFolderUsingANamingStrategy(createdBy, ()->namingStrgy.getSharedGroupName(grp));
-	}
+  public Folder createFolder(String name, User createdBy) {
+    checkArgs(name, createdBy);
+    Folder rc = new Folder();
+    return doCreateFolder(name, createdBy, rc);
+  }
 
-	private Folder createACommunalGroupFolderUsingANamingStrategy(User createdBy,
-			Supplier<String> folderNamingStrategy) {
-		Folder folder = createFolder(folderNamingStrategy.get(), createdBy);
-		folder.addType(RecordType.SHARED_GROUP_FOLDER_ROOT);
-		folder.setSystemFolder(true);
-		return folder;
-	}
+  public Folder createFolder(String name, User createdBy, ImportOverride override) {
+    checkArgs(name, createdBy);
+    Folder rc = new Folder(override);
+    return doCreateFolder(name, createdBy, rc);
+  }
 
-	@Override
-	public Folder createCommunalGroupSnippetFolder(Group grp, User createdBy) {
-		IGroupNamingStrategy namingStrgy = new DefaultGroupNamingStrategy();
-		return createACommunalGroupFolderUsingANamingStrategy(createdBy, ()->namingStrgy.getSharedGroupSnippetName(grp));
-	}
+  private Folder doCreateFolder(String name, User createdBy, Folder rc) {
+    populateCoreFields(name, createdBy, rc);
+    rc.addType(RecordType.FOLDER);
+    return rc;
+  }
 
-	public Record createAnyRecord(User user, String name) {
-		StructuredDocument strucDoc = new StructuredDocument();
-		strucDoc.addType(RecordType.NORMAL);
-		populateCoreFields(name, user, strucDoc);
-		return strucDoc;
-	}
+  public Folder createSystemCreatedFolder(String name, User createdBy) {
+    Folder folder = createFolder(name, createdBy);
+    folder.addType(RecordType.SYSTEM);
+    folder.setSystemFolder(true);
+    return folder;
+  }
 
-	public Folder createAnIndividualSharedFolderUsingANamingStrategy(User sharer,
-			Supplier<String> namingStrategy) {
-		Folder folder = createFolder(namingStrategy.get(), sharer);
-		folder.setSystemFolder(true);
-		folder.addType(RecordType.INDIVIDUAL_SHARED_FOLDER_ROOT);
-		return folder;
-	}
-	@Override
-	public Folder createIndividualSharedFolder(User sharer, User sharee) {
-		IGroupNamingStrategy namingStrgy = new DefaultGroupNamingStrategy();
-		return createAnIndividualSharedFolderUsingANamingStrategy(sharer,
-				()->namingStrgy.getIndividualSharedFolderName(sharer, sharee));
-	}
-	@Override
-	public Folder createIndividualSharedSnippetsFolder(User sharer, User sharee) {
-		IGroupNamingStrategy namingStrgy = new DefaultGroupNamingStrategy();
-		return createAnIndividualSharedFolderUsingANamingStrategy(sharer,
-				()->namingStrgy.getIndividualSharedSnippetsFolderName(sharer, sharee));
-	}
+  public Folder createRootFolder(String name, User createdBy) {
+    Folder folder = createFolder(name, createdBy);
+    folder.addType(RecordType.ROOT);
+    folder.setSystemFolder(true);
+    return folder;
+  }
 
-	/**
-	 * Creates a media root folder with correct properties set.
-	 */
-	@Override
-	public Folder createRootMediaFolder(User subject) {
-		Folder mediaFolder = createSystemCreatedFolder(Folder.MEDIAROOT, subject);
-		mediaFolder.addType(RecordType.ROOT_MEDIA);
-		return mediaFolder;
-	}
-	
-	@Override
-	public Folder createApiInboxFolder(User subject) {
-		Folder apiInboxFolder = createSystemCreatedFolder(Folder.API_INBOX_FOLDER_NAME, subject);
-		apiInboxFolder.addType(RecordType.API_INBOX);
-		return apiInboxFolder;
-	}
-	
-	@Override
-	public Folder createImportsFolder(User subject) {
-		Folder importsFolder = createSystemCreatedFolder(Folder.IMPORTS_INBOX_FOLDER_NAME, subject);
-		importsFolder.addType(RecordType.IMPORTS);
-		return importsFolder;
-	}
+  @Override
+  public RSForm createNewForm() {
+    RSForm form = new RSForm();
+    form.setCurrent(true);
+    return form;
+  }
 
-	@Override
-	public Sample createComplexSampleTemplate(String templateName, String desc, User createdBy) {
-		
-		Calendar formDate = Calendar.getInstance();
-		formDate.set(2020, 4, 4, 6, 55, 15);
-		
-		Sample template = createSample(templateName, createdBy);
-		template.setTemplate(true);
-		template.setSubSampleAliases(SubSampleName.ALIQUOT);
-		template.setDescription("A template with all field types");
-		template.setStorageTempMin(QuantityInfo.of(3, RSUnitDef.CELSIUS));
-		template.setStorageTempMax(QuantityInfo.of(10, RSUnitDef.CELSIUS));
-		
-		InventoryNumberField nf = new InventoryNumberField();
-		nf.setName("MyNumber");
-		nf.setFieldData("23");
-		nf.setMandatory(true);
-		template.addSampleField(nf);
-		
-		InventoryDateField df = new InventoryDateField();
-		df.setName("MyDate");
-		df.setFieldData("2020-10-01");
-		template.addSampleField(df);
-		
-		InventoryStringField stringF = new InventoryStringField();
-		stringF.setName("MyString");
-		stringF.setFieldData("Default string value");
-		template.addSampleField(stringF);
-	
-		InventoryTextField textF = new InventoryTextField();
-		textF.setName("MyText");
-		textF.setFieldData("Default text value");
-		template.addSampleField(textF);
+  @Override
+  public RSForm createBasicDocumentForm(User u) {
+    RSForm basicDocForm = new RSForm(BASIC_DOCUMENT_FORM_NAME, "", u);
+    TextFieldForm tft = new TextFieldForm("Data");
+    basicDocForm.addFieldForm(tft);
+    basicDocForm.setPublishingState(FormState.PUBLISHED);
+    basicDocForm.setCurrent(true);
+    basicDocForm.setSystemForm(true);
+    return basicDocForm;
+  }
 
-		InventoryUriField uriF = new InventoryUriField();
-		uriF.setName("MyURL");
-		uriF.setFieldData("https://www.google.com");
-		template.addSampleField(uriF);
-		
-		InventoryReferenceField rff = new InventoryReferenceField();
-		rff.setName("My reference");
-		template.addSampleField(rff);
-		
-		InventoryAttachmentField aff = new InventoryAttachmentField();
-		aff.setName("MyAttachment");
-		template.addSampleField(aff);
+  @Override
+  public Folder createCommunalGroupFolder(Group grp, User createdBy) {
+    IGroupNamingStrategy namingStrgy = new DefaultGroupNamingStrategy();
+    return createACommunalGroupFolderUsingANamingStrategy(createdBy,
+        () -> namingStrgy.getSharedGroupName(grp));
+  }
 
-		InventoryTimeField time = new InventoryTimeField();
-		time.setName("MyTime");
-		time.setFieldData("00:00");
-		template.addSampleField(time);
-		
-		InventoryRadioFieldDef nodefaultsRadioFieldDef = new InventoryRadioFieldDef();
-		nodefaultsRadioFieldDef.setRadioOptionsList(Arrays.asList("option1", "option2"));
-		InventoryRadioField rff2 = new InventoryRadioField(nodefaultsRadioFieldDef, "radioField");
-		template.addSampleField(rff2);	
-		
-		InventoryChoiceFieldDef choiceFieldDef = new InventoryChoiceFieldDef();
-		choiceFieldDef.setChoiceOptionsList(Arrays.asList("optionA", "optionB"));
-		InventoryChoiceField choiceField = new InventoryChoiceField(choiceFieldDef, "choiceField");
-		template.addSampleField(choiceField);
-	
-		return template;
-	}
-	
-	@Override
-	public Sample createSample(String name, User createdBy) {
-		checkArgs(name, createdBy);
+  private Folder createACommunalGroupFolderUsingANamingStrategy(User createdBy,
+      Supplier<String> folderNamingStrategy) {
+    Folder folder = createFolder(folderNamingStrategy.get(), createdBy);
+    folder.addType(RecordType.SHARED_GROUP_FOLDER_ROOT);
+    folder.setSystemFolder(true);
+    return folder;
+  }
 
-		Sample sample = new Sample();
-		sample.setName(abbreviate(trim(name),BaseRecord.DEFAULT_VARCHAR_LENGTH));
-		sample.setCreatedBy(createdBy.getUsername());
-		sample.setOwner(createdBy);
-		sample.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
-		sample.setSubSampleAliases(SubSampleName.ALIQUOT);
-		List<SubSample> defaultSubSampleList = new ArrayList<>();
-		defaultSubSampleList.add(createSubSample(sample.getName(), createdBy, sample));
-		sample.setSubSamples(defaultSubSampleList);
-		sample.setDefaultUnitId(RSUnitDef.MILLI_LITRE.getId());
+  @Override
+  public Folder createCommunalGroupSnippetFolder(Group grp, User createdBy) {
+    IGroupNamingStrategy namingStrgy = new DefaultGroupNamingStrategy();
+    return createACommunalGroupFolderUsingANamingStrategy(createdBy,
+        () -> namingStrgy.getSharedGroupSnippetName(grp));
+  }
 
-		return sample;
-	}
-	
-	@Override
-	public Sample createSample(String name, User createdBy, Sample sampleTemplate) {
+  public Record createAnyRecord(User user, String name) {
+    StructuredDocument strucDoc = new StructuredDocument();
+    strucDoc.addType(RecordType.NORMAL);
+    populateCoreFields(name, user, strucDoc);
+    return strucDoc;
+  }
 
-		checkArgs(name, createdBy);
-		Validate.isTrue(sampleTemplate.isTemplate(), "requires sample to be a template");
-		Sample sample = sampleTemplate.copyFromTemplate(createdBy);
-		sample.setName(name);
-		sample.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
-		
-		List<SubSample> defaultSubSampleList = new ArrayList<>();
-		SubSample defaultSubSample = createSubSample(sample.getName(), createdBy, sample);
-		if (sampleTemplate.getDefaultUnitId() != null) {
-			defaultSubSample.getQuantity().setUnitId(sampleTemplate.getDefaultUnitId());
-		}
-		defaultSubSampleList.add(defaultSubSample);
-		sample.setSubSamples(defaultSubSampleList);
-		
-		return sample;
-	}
+  public Folder createAnIndividualSharedFolderUsingANamingStrategy(User sharer,
+      Supplier<String> namingStrategy) {
+    Folder folder = createFolder(namingStrategy.get(), sharer);
+    folder.setSystemFolder(true);
+    folder.addType(RecordType.INDIVIDUAL_SHARED_FOLDER_ROOT);
+    return folder;
+  }
 
-	@Override
-	public SubSample createSubSample(String name, User createdBy, Sample sample) {
-		checkArgs(name, createdBy);
+  @Override
+  public Folder createIndividualSharedFolder(User sharer, User sharee) {
+    IGroupNamingStrategy namingStrgy = new DefaultGroupNamingStrategy();
+    return createAnIndividualSharedFolderUsingANamingStrategy(sharer,
+        () -> namingStrgy.getIndividualSharedFolderName(sharer, sharee));
+  }
 
-		SubSample subSample = new SubSample(sample);
-		subSample.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
-		subSample.setCreatedBy(createdBy.getUsername());
-		subSample.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
-		subSample.setQuantity(getDefaultQuantityForNewSubSample(sample));
-		return subSample;
-	}
+  @Override
+  public Folder createIndividualSharedSnippetsFolder(User sharer, User sharee) {
+    IGroupNamingStrategy namingStrgy = new DefaultGroupNamingStrategy();
+    return createAnIndividualSharedFolderUsingANamingStrategy(sharer,
+        () -> namingStrgy.getIndividualSharedSnippetsFolderName(sharer, sharee));
+  }
 
-	private QuantityInfo getDefaultQuantityForNewSubSample(Sample sample) {
-		RSUnitDef subSampleUnit;
-		if (sample.getSTemplate() != null && sample.getSTemplate().getDefaultUnitId() != null) {
-			subSampleUnit = RSUnitDef.getUnitById(sample.getSTemplate().getDefaultUnitId());
-		} else if (sample.getQuantityInfo() != null) {
-			subSampleUnit = RSUnitDef.getUnitById(sample.getQuantityInfo().getUnitId());
-		} else {
-			subSampleUnit = RSUnitDef.MILLI_LITRE; // default for basic sample
-		}
-		return QuantityInfo.of(BigDecimal.ONE, subSampleUnit);
-	}
+  /**
+   * Creates a media root folder with correct properties set.
+   */
+  @Override
+  public Folder createRootMediaFolder(User subject) {
+    Folder mediaFolder = createSystemCreatedFolder(Folder.MEDIAROOT, subject);
+    mediaFolder.addType(RecordType.ROOT_MEDIA);
+    return mediaFolder;
+  }
 
-	@Override
-	public Container createListContainer(String name, User createdBy) {
-		checkArgs(name, createdBy);
-		
-		Container container = Container.createListContainer(true, true);
-		container.setName(name);
-		container.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
-		container.setCreatedBy(createdBy.getUsername());
-		container.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
-		container.setOwner(createdBy);
+  @Override
+  public Folder createApiInboxFolder(User subject) {
+    Folder apiInboxFolder = createSystemCreatedFolder(Folder.API_INBOX_FOLDER_NAME, subject);
+    apiInboxFolder.addType(RecordType.API_INBOX);
+    return apiInboxFolder;
+  }
 
-		return container;
-	}
+  @Override
+  public Folder createImportsFolder(User subject) {
+    Folder importsFolder = createSystemCreatedFolder(Folder.IMPORTS_INBOX_FOLDER_NAME, subject);
+    importsFolder.addType(RecordType.IMPORTS);
+    return importsFolder;
+  }
 
-	@Override
-	public Container createWorkbench(User owner) {
-		checkArgs(owner);
-		
-		Container workbench = new Container(ContainerType.WORKBENCH);
-		workbench.setName("WB " + owner.getUsername());
-		workbench.setCreatedBy(owner.getUsername());
-		workbench.setModifiedBy(owner.getUsername());
-		workbench.setOwner(owner);
+  @Override
+  public Sample createComplexSampleTemplate(String templateName, String desc, User createdBy) {
 
-		return workbench;
-	}
+    Calendar formDate = Calendar.getInstance();
+    formDate.set(2020, 4, 4, 6, 55, 15);
 
-	@Override
-	public ExtraField createExtraField(String name, FieldType type, User createdBy, InventoryRecord invRec) {
-		checkArgs(type, createdBy, invRec);
+    Sample template = createSample(templateName, createdBy);
+    template.setTemplate(true);
+    template.setSubSampleAliases(SubSampleName.ALIQUOT);
+    template.setDescription("A template with all field types");
+    template.setStorageTempMin(QuantityInfo.of(3, RSUnitDef.CELSIUS));
+    template.setStorageTempMax(QuantityInfo.of(10, RSUnitDef.CELSIUS));
 
-		ExtraField extraField = createExtraField(type);
-		extraField.setInventoryRecord(invRec);
-		
-		if (StringUtils.isNotBlank(name)) {
-			extraField.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
-		}
-		extraField.setCreatedBy(createdBy.getUsername());
-		extraField.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
-		
-		return extraField;
-	}
+    InventoryNumberField nf = new InventoryNumberField();
+    nf.setName("MyNumber");
+    nf.setFieldData("23");
+    nf.setMandatory(true);
+    template.addSampleField(nf);
 
-	@Override
-	public ExtraField createExtraField(FieldType type) {
-		checkArgs(type);
-		if (FieldType.TEXT.equals(type)) {
-			return new ExtraTextField();
-		} 
-		if (FieldType.NUMBER.equals(type)) {
-			return new ExtraNumberField();
-		}
-		throw new IllegalArgumentException("asked for extra field of unsupported type: " + type.toString());
-	}
+    InventoryDateField df = new InventoryDateField();
+    df.setName("MyDate");
+    df.setFieldData("2020-10-01");
+    template.addSampleField(df);
 
-	@Override
-	public ListOfMaterials createListOfMaterials(String name, Field field) {
-		ListOfMaterials lom = new ListOfMaterials();
-		lom.setName(name);
-		field.addListOfMaterials(lom);
-		return lom;
-	}
+    InventoryStringField stringF = new InventoryStringField();
+    stringF.setName("MyString");
+    stringF.setFieldData("Default string value");
+    template.addSampleField(stringF);
 
-	@Override
-	public MaterialUsage createMaterialUsage(ListOfMaterials parentLom, InventoryRecord invRec, QuantityInfo usedQuantity) {
-		return new MaterialUsage(parentLom, invRec, usedQuantity);
-	}
+    InventoryTextField textF = new InventoryTextField();
+    textF.setName("MyText");
+    textF.setFieldData("Default text value");
+    template.addSampleField(textF);
 
-	@Override
-	public Basket createBasket(String name, User owner) {
-		Basket basket = new Basket();
-		basket.setName(name);
-		basket.setOwner(owner);
-		return basket;
-	}
-	
-	@Override
-	public InventoryFile createInventoryFile(String fileName, FileProperty fileProperty, User createdBy) {
-		InventoryFile inventoryFile = new InventoryFile(fileName, fileProperty);
-		inventoryFile.setCreatedBy(createdBy.getUsername());
-		return inventoryFile;
-	}
+    InventoryUriField uriF = new InventoryUriField();
+    uriF.setName("MyURL");
+    uriF.setFieldData("https://www.google.com");
+    template.addSampleField(uriF);
 
-	@Override
-	public DigitalObjectIdentifier createDoiIdentifier(String identifier) {
-		return new DigitalObjectIdentifier(identifier, null);
-	}
-	
+    InventoryReferenceField rff = new InventoryReferenceField();
+    rff.setName("My reference");
+    template.addSampleField(rff);
+
+    InventoryAttachmentField aff = new InventoryAttachmentField();
+    aff.setName("MyAttachment");
+    template.addSampleField(aff);
+
+    InventoryTimeField time = new InventoryTimeField();
+    time.setName("MyTime");
+    time.setFieldData("00:00");
+    template.addSampleField(time);
+
+    InventoryRadioFieldDef nodefaultsRadioFieldDef = new InventoryRadioFieldDef();
+    nodefaultsRadioFieldDef.setRadioOptionsList(Arrays.asList("option1", "option2"));
+    InventoryRadioField rff2 = new InventoryRadioField(nodefaultsRadioFieldDef, "radioField");
+    template.addSampleField(rff2);
+
+    InventoryChoiceFieldDef choiceFieldDef = new InventoryChoiceFieldDef();
+    choiceFieldDef.setChoiceOptionsList(Arrays.asList("optionA", "optionB"));
+    InventoryChoiceField choiceField = new InventoryChoiceField(choiceFieldDef, "choiceField");
+    template.addSampleField(choiceField);
+
+    return template;
+  }
+
+  @Override
+  public Sample createSample(String name, User createdBy) {
+    checkArgs(name, createdBy);
+
+    Sample sample = new Sample();
+    sample.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
+    sample.setCreatedBy(createdBy.getUsername());
+    sample.setOwner(createdBy);
+    sample.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
+    sample.setSubSampleAliases(SubSampleName.ALIQUOT);
+    List<SubSample> defaultSubSampleList = new ArrayList<>();
+    defaultSubSampleList.add(createSubSample(sample.getName(), createdBy, sample));
+    sample.setSubSamples(defaultSubSampleList);
+    sample.setDefaultUnitId(RSUnitDef.MILLI_LITRE.getId());
+
+    return sample;
+  }
+
+
+  @Override
+  public Instrument createInstrument(String name, User createdBy,
+      InstrumentEntity instrumentTemplate) {
+    checkArgs(name, createdBy);
+    Instrument instrument = createInstrument(name, createdBy);
+    if (instrumentTemplate != null) {
+      Validate.isTrue(instrumentTemplate.isTemplate(), "requires an instrument template");
+      //TODO[nik]: implement this on RSDEV-1059
+      return null;
+    }
+    return instrument;
+  }
+
+
+  private Instrument createInstrument(String name, User createdBy) {
+    checkArgs(name, createdBy);
+    Instrument instrument = new Instrument();
+    instrument.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
+    instrument.setCreatedBy(createdBy.getUsername());
+    instrument.setOwner(createdBy);
+    instrument.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
+
+    return instrument;
+  }
+
+
+  @Override
+  public Sample createSample(String name, User createdBy, Sample sampleTemplate) {
+    checkArgs(name, createdBy);
+    Validate.isTrue(sampleTemplate.isTemplate(), "requires sample to be a template");
+    Sample sample = sampleTemplate.copyFromTemplate(createdBy);
+    sample.setName(name);
+    sample.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
+
+    List<SubSample> defaultSubSampleList = new ArrayList<>();
+    SubSample defaultSubSample = createSubSample(sample.getName(), createdBy, sample);
+    if (sampleTemplate.getDefaultUnitId() != null) {
+      defaultSubSample.getQuantity().setUnitId(sampleTemplate.getDefaultUnitId());
+    }
+    defaultSubSampleList.add(defaultSubSample);
+    sample.setSubSamples(defaultSubSampleList);
+
+    return sample;
+  }
+
+  @Override
+  public SubSample createSubSample(String name, User createdBy, Sample sample) {
+    checkArgs(name, createdBy);
+
+    SubSample subSample = new SubSample(sample);
+    subSample.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
+    subSample.setCreatedBy(createdBy.getUsername());
+    subSample.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
+    subSample.setQuantity(getDefaultQuantityForNewSubSample(sample));
+    return subSample;
+  }
+
+  private QuantityInfo getDefaultQuantityForNewSubSample(Sample sample) {
+    RSUnitDef subSampleUnit;
+    if (sample.getSTemplate() != null && sample.getSTemplate().getDefaultUnitId() != null) {
+      subSampleUnit = RSUnitDef.getUnitById(sample.getSTemplate().getDefaultUnitId());
+    } else if (sample.getQuantityInfo() != null) {
+      subSampleUnit = RSUnitDef.getUnitById(sample.getQuantityInfo().getUnitId());
+    } else {
+      subSampleUnit = RSUnitDef.MILLI_LITRE; // default for basic sample
+    }
+    return QuantityInfo.of(BigDecimal.ONE, subSampleUnit);
+  }
+
+  @Override
+  public Container createListContainer(String name, User createdBy) {
+    checkArgs(name, createdBy);
+
+    Container container = Container.createListContainer(true, true, true);
+    container.setName(name);
+    container.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
+    container.setCreatedBy(createdBy.getUsername());
+    container.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
+    container.setOwner(createdBy);
+
+    return container;
+  }
+
+  @Override
+  public Container createWorkbench(User owner) {
+    checkArgs(owner);
+
+    Container workbench = new Container(ContainerType.WORKBENCH);
+    workbench.setName("WB " + owner.getUsername());
+    workbench.setCreatedBy(owner.getUsername());
+    workbench.setModifiedBy(owner.getUsername());
+    workbench.setOwner(owner);
+
+    return workbench;
+  }
+
+  @Override
+  public ExtraField createExtraField(String name, FieldType type, User createdBy,
+      InventoryRecord invRec) {
+    checkArgs(type, createdBy, invRec);
+
+    ExtraField extraField = createExtraField(type);
+    extraField.setInventoryRecord(invRec);
+
+    if (StringUtils.isNotBlank(name)) {
+      extraField.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
+    }
+    extraField.setCreatedBy(createdBy.getUsername());
+    extraField.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
+
+    return extraField;
+  }
+
+  @Override
+  public ExtraField createExtraField(FieldType type) {
+    checkArgs(type);
+    if (FieldType.TEXT.equals(type)) {
+      return new ExtraTextField();
+    }
+    if (FieldType.NUMBER.equals(type)) {
+      return new ExtraNumberField();
+    }
+    throw new IllegalArgumentException(
+        "asked for extra field of unsupported type: " + type.toString());
+  }
+
+  @Override
+  public ListOfMaterials createListOfMaterials(String name, Field field) {
+    ListOfMaterials lom = new ListOfMaterials();
+    lom.setName(name);
+    field.addListOfMaterials(lom);
+    return lom;
+  }
+
+  @Override
+  public MaterialUsage createMaterialUsage(ListOfMaterials parentLom, InventoryRecord invRec,
+      QuantityInfo usedQuantity) {
+    return new MaterialUsage(parentLom, invRec, usedQuantity);
+  }
+
+  @Override
+  public Basket createBasket(String name, User owner) {
+    Basket basket = new Basket();
+    basket.setName(name);
+    basket.setOwner(owner);
+    return basket;
+  }
+
+  @Override
+  public InventoryFile createInventoryFile(String fileName, FileProperty fileProperty,
+      User createdBy) {
+    InventoryFile inventoryFile = new InventoryFile(fileName, fileProperty);
+    inventoryFile.setCreatedBy(createdBy.getUsername());
+    return inventoryFile;
+  }
+
+  @Override
+  public DigitalObjectIdentifier createDoiIdentifier(String identifier) {
+    return new DigitalObjectIdentifier(identifier, null);
+  }
+
 }

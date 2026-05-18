@@ -1,16 +1,15 @@
 package com.researchspace.model.inventory.field;
 
+import com.researchspace.model.field.FieldType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 import org.hibernate.envers.Audited;
 
-import com.researchspace.model.field.FieldType;
-
 @Entity
 @DiscriminatorValue("text")
 @Audited
-public class InventoryTextField extends SampleField {
+public class InventoryTextField extends InventoryEntityField {
 
 	private static final long serialVersionUID = -1757280226055607179L;
 

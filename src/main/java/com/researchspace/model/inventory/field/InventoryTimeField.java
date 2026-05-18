@@ -1,7 +1,7 @@
 package com.researchspace.model.inventory.field;
 
 import com.researchspace.model.field.ErrorList;
-
+import com.researchspace.model.field.FieldType;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -11,12 +11,10 @@ import jakarta.persistence.Entity;
 
 import org.hibernate.envers.Audited;
 
-import com.researchspace.model.field.FieldType;
-
 @Entity
 @DiscriminatorValue("time")
 @Audited
-public class InventoryTimeField extends SampleField {
+public class InventoryTimeField extends InventoryEntityField {
 
 	private static final long serialVersionUID = 8709980361506172103L;
 

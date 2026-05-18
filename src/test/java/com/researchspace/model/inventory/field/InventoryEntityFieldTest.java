@@ -5,20 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.Sample;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.researchspace.model.inventory.InventoryFile;
-
-class SampleFieldTest {
+class InventoryEntityFieldTest {
 
 	@Test
 	void choiceField() {
@@ -375,7 +373,7 @@ class SampleFieldTest {
 	void mandatoryStringFieldRejectsBlankValue(String value) {
 		Sample parentSample = new Sample();
 		InventoryStringField field = new InventoryStringField("string");
-		field.setSample(parentSample);
+		field.setInventoryRecord(parentSample);
 		field.setMandatory(false);
 		assertFalse(field.validate(value).hasErrorMessages());
 

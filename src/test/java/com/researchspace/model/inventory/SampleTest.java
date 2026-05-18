@@ -8,28 +8,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.researchspace.model.inventory.DigitalObjectIdentifier.IdentifierOtherProperty;
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import com.researchspace.core.testutil.ModelTestUtils;
 import com.researchspace.core.util.TransformerUtils;
 import com.researchspace.model.User;
 import com.researchspace.model.core.GlobalIdPrefix;
+import com.researchspace.model.inventory.DigitalObjectIdentifier.IdentifierOtherProperty;
+import com.researchspace.model.inventory.field.InventoryEntityField;
 import com.researchspace.model.inventory.field.InventoryNumberField;
 import com.researchspace.model.inventory.field.InventoryRadioField;
 import com.researchspace.model.inventory.field.InventoryRadioFieldDef;
 import com.researchspace.model.inventory.field.InventoryTextField;
-import com.researchspace.model.inventory.field.SampleField;
 import com.researchspace.model.record.TestFactory;
 import com.researchspace.model.units.QuantityInfo;
 import com.researchspace.model.units.RSUnitDef;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class SampleTest {
 	
@@ -257,10 +255,10 @@ public class SampleTest {
 		assertEquals(0, template.getCurrMaxColIndex());
 		
 		// add two fields
-		SampleField numberField = new InventoryNumberField("number");
+		InventoryEntityField numberField = new InventoryNumberField("number");
 		numberField.setId(1L);
 		template.addSampleField(numberField);
-		SampleField textField = new InventoryTextField("text");
+		InventoryEntityField textField = new InventoryTextField("text");
 		textField.setId(2L);
 		template.addSampleField(textField);
 		

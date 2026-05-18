@@ -1,5 +1,7 @@
 package com.researchspace.model.inventory.field;
 
+import com.researchspace.model.field.FieldType;
+import com.researchspace.model.inventory.InventoryFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,24 +13,23 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Transient;
 import jakarta.validation.ConstraintViolationException;
-
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.apache.commons.lang3.Validate;
 import org.hibernate.envers.Audited;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
-import com.researchspace.model.field.FieldType;
-import com.researchspace.model.inventory.InventoryFile;
-
-import lombok.AccessLevel;
-import lombok.Setter;
-
 @Entity
 @Audited
 @DiscriminatorValue("attachment")
-public class InventoryAttachmentField extends SampleField {
+public class InventoryAttachmentField extends InventoryEntityField {
 
 	private static final long serialVersionUID = -5815246533648394407L;
 
+	/**
+	 * All files ever connected to that Inventory Entity field, deleted or not.
+	 * There should be at most one non-deleted file there.
+	 */
 	@Setter(AccessLevel.PRIVATE)
 	@IndexedEmbedded
 	private List<InventoryFile> files = new ArrayList<>();
@@ -41,20 +42,16 @@ public class InventoryAttachmentField extends SampleField {
 		super(FieldType.ATTACHMENT, name);
 	}
 
-	/**
-	 * All files ever connected to that sample field, deleted or not.
-	 * There should be at most one non-deleted file there.
-	 */
-	@OneToMany(mappedBy = "sampleField", cascade = CascadeType.ALL, orphanRemoval = true)
-	List<InventoryFile> getFiles() {
-		return files;
-	}
-	
 	@Transient
 	public String getData() {
 		return super.getData();
 	}
-	
+
+	@OneToMany(mappedBy = "inventoryEntityField", cascade = CascadeType.ALL, orphanRemoval = true)
+	public List<InventoryFile> getFiles() {
+		return files;
+	}
+
 	/**
 	 * @return non-deleted attached file, or null
 	 */
@@ -74,7 +71,7 @@ public class InventoryAttachmentField extends SampleField {
 		}
 		
 		files.add(newFile);
-		newFile.setSampleField(this);
+		newFile.setInventoryEntityField(this);
 	}
 	
 	@Override

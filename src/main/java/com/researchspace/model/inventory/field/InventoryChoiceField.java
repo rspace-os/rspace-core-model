@@ -7,7 +7,6 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
-
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -20,7 +19,7 @@ import lombok.Setter;
 @Audited
 @DiscriminatorValue("choice")
 @Setter
-public class InventoryChoiceField extends SampleField {
+public class InventoryChoiceField extends InventoryEntityField {
 	
 	private static final long serialVersionUID = -6222866058180609072L;
 
