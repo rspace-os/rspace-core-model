@@ -18,7 +18,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -129,18 +128,9 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
   private QuantityInfo quantityInfo;
 
   static final Set<String> RESERVED_FIELD_NAMES = Collections.unmodifiableSet(
-      Stream.concat(
+      Stream.of(
               InventoryRecord.RESERVED_FIELD_NAMES.stream(),
-              Arrays.asList("source", "expiry date").stream())
-          .collect(Collectors.toSet()));
-
-  /**
-   * UI labels displayed on a live Sample (mirrors {@code SampleModel.fieldNamesInUse} in the React
-   * UI). Used only when {@link #isTemplate()} is false.
-   */
-  static final Set<String> SAMPLE_DISPLAYED_FIELD_NAMES = Collections.unmodifiableSet(
-      Stream.concat(
-              InventoryRecord.BASE_DISPLAYED_FIELD_NAMES.stream(),
+              Stream.of("source", "expiry date"),
               Stream.of(
                   "Sample Template",
                   "Expiry Date",
@@ -148,17 +138,20 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
                   "Storage Temperature",
                   "Total Quantity",
                   "Subsamples"))
+          .flatMap(s -> s)
           .collect(Collectors.toSet()));
 
   /**
-   * UI labels displayed on a Sample Template (mirrors {@code TemplateModel.fieldNamesInUse} in the
-   * React UI). Note the UI's TemplateModel does NOT include the Sample-specific labels above
-   * (Sample Template/Expiry Date/etc.); the template view is its own namespace.
+   * Reserved names for a Sample Template. Mirrors {@code TemplateModel.fieldNamesInUse} in the
+   * React UI: the template view is its own namespace and does NOT include the live-Sample labels
+   * (Sample Template / Expiry Date / etc.).
    */
-  static final Set<String> SAMPLE_TEMPLATE_DISPLAYED_FIELD_NAMES = Collections.unmodifiableSet(
-      Stream.concat(
-              InventoryRecord.BASE_DISPLAYED_FIELD_NAMES.stream(),
+  static final Set<String> SAMPLE_TEMPLATE_RESERVED_FIELD_NAMES = Collections.unmodifiableSet(
+      Stream.of(
+              InventoryRecord.RESERVED_FIELD_NAMES.stream(),
+              Stream.of("source", "expiry date"),
               Stream.of("Subsample Alias", "Quantity Units", "Fields", "Samples"))
+          .flatMap(s -> s)
           .collect(Collectors.toSet()));
 
   /**
@@ -704,13 +697,7 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
   @Override
   @Transient
   public Set<String> getReservedFieldNames() {
-    return RESERVED_FIELD_NAMES;
-  }
-
-  @Override
-  @Transient
-  public Set<String> getDisplayedFieldNames() {
-    return isTemplate() ? SAMPLE_TEMPLATE_DISPLAYED_FIELD_NAMES : SAMPLE_DISPLAYED_FIELD_NAMES;
+    return isTemplate() ? SAMPLE_TEMPLATE_RESERVED_FIELD_NAMES : RESERVED_FIELD_NAMES;
   }
 
   @Override

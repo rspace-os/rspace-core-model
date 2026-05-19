@@ -621,17 +621,17 @@ public class Container extends MovableInventoryRecord implements Serializable {
     return copy;
   }
 
-  static final Set<String> CONTAINER_DISPLAYED_FIELD_NAMES =
+  static final Set<String> RESERVED_FIELD_NAMES =
       Collections.unmodifiableSet(
           Stream.concat(
-                  InventoryRecord.BASE_DISPLAYED_FIELD_NAMES.stream(),
+                  InventoryRecord.RESERVED_FIELD_NAMES.stream(),
                   Stream.of("Can Store", "Type", "Locations Image", "Grid Dimensions"))
               .collect(Collectors.toSet()));
 
   @Override
   @Transient
-  public Set<String> getDisplayedFieldNames() {
-    return CONTAINER_DISPLAYED_FIELD_NAMES;
+  public Set<String> getReservedFieldNames() {
+    return RESERVED_FIELD_NAMES;
   }
 }
 

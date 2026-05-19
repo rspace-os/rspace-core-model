@@ -319,17 +319,17 @@ public class SubSample extends MovableInventoryRecord implements Serializable, Q
 		}
 	}
 
-	static final Set<String> SUBSAMPLE_DISPLAYED_FIELD_NAMES =
+	static final Set<String> RESERVED_FIELD_NAMES =
 			Collections.unmodifiableSet(
 					Stream.concat(
-									InventoryRecord.BASE_DISPLAYED_FIELD_NAMES.stream(),
+									InventoryRecord.RESERVED_FIELD_NAMES.stream(),
 									Stream.of("Quantity", "Sample", "Notes"))
 							.collect(Collectors.toSet()));
 
 	@Override
 	@Transient
-	public Set<String> getDisplayedFieldNames() {
-		return SUBSAMPLE_DISPLAYED_FIELD_NAMES;
+	public Set<String> getReservedFieldNames() {
+		return RESERVED_FIELD_NAMES;
 	}
 
 }

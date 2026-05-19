@@ -9,71 +9,79 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
-class InventoryRecordDisplayedFieldNamesTest {
+class InventoryRecordReservedFieldNamesTest {
 
-  private static final Set<String> BASE =
-      Set.of("Name", "Description", "Preview Image", "Tags", "Attachments");
+  private static final Set<String> BASE_RESERVED =
+      Set.of(
+          "name", "description", "tags",
+          "Name", "Description", "Preview Image", "Tags", "Attachments");
 
   @Test
-  void containerDisplayedFieldNames() {
+  void containerReservedFieldNames() {
     Container container = new Container(Container.ContainerType.LIST);
     assertEquals(
-        union(BASE, "Can Store", "Type", "Locations Image", "Grid Dimensions"),
-        container.getDisplayedFieldNames());
+        union(BASE_RESERVED, "Can Store", "Type", "Locations Image", "Grid Dimensions"),
+        container.getReservedFieldNames());
   }
 
   @Test
-  void subSampleDisplayedFieldNames() {
+  void subSampleReservedFieldNames() {
     SubSample subSample = new SubSample();
     assertEquals(
-        union(BASE, "Quantity", "Sample", "Notes"),
-        subSample.getDisplayedFieldNames());
+        union(BASE_RESERVED, "Quantity", "Sample", "Notes"),
+        subSample.getReservedFieldNames());
   }
 
   @Test
-  void sampleDisplayedFieldNames() {
+  void sampleReservedFieldNames() {
     Sample sample = new Sample();
     assertEquals(
         union(
-            BASE,
+            BASE_RESERVED,
+            "source",
+            "expiry date",
             "Sample Template",
             "Expiry Date",
             "Source",
             "Storage Temperature",
             "Total Quantity",
             "Subsamples"),
-        sample.getDisplayedFieldNames());
+        sample.getReservedFieldNames());
   }
 
   @Test
-  void sampleTemplateDisplayedFieldNames() {
+  void sampleTemplateReservedFieldNames() {
     Sample template = new Sample();
     template.setTemplate(true);
     assertEquals(
-        union(BASE, "Subsample Alias", "Quantity Units", "Fields", "Samples"),
-        template.getDisplayedFieldNames());
+        union(
+            BASE_RESERVED,
+            "source",
+            "expiry date",
+            "Subsample Alias",
+            "Quantity Units",
+            "Fields",
+            "Samples"),
+        template.getReservedFieldNames());
   }
 
   @Test
-  void instrumentDisplayedFieldNames() {
+  void instrumentReservedFieldNames() {
     Instrument instrument = new Instrument();
-    assertEquals(BASE, instrument.getDisplayedFieldNames());
+    assertEquals(BASE_RESERVED, instrument.getReservedFieldNames());
   }
 
   @Test
-  void instrumentTemplateDisplayedFieldNames() {
+  void instrumentTemplateReservedFieldNames() {
     InstrumentTemplate instrumentTemplate = new InstrumentTemplate();
-    assertEquals(BASE, instrumentTemplate.getDisplayedFieldNames());
+    assertEquals(BASE_RESERVED, instrumentTemplate.getReservedFieldNames());
   }
-
-  // RSDEV-1066: verifyFieldNameAllowed must reject names that collide with a displayed label
-  // (case-sensitive, in addition to the existing case-insensitive reserved-name check).
 
   @Test
   void containerAddExtraFieldRejectsDisplayedLabel() {
     Container container = new Container(Container.ContainerType.LIST);
     ExtraTextField field = new ExtraTextField();
-    field.setName("Type"); // Container's displayed-label set includes "Type"
+    field.setName("Type");
 
     IllegalArgumentException iae =
         assertThrows(IllegalArgumentException.class, () -> container.addExtraField(field));
@@ -86,7 +94,7 @@ class InventoryRecordDisplayedFieldNamesTest {
   void subSampleAddExtraFieldRejectsDisplayedLabel() {
     SubSample subSample = new SubSample();
     ExtraTextField field = new ExtraTextField();
-    field.setName("Notes"); // SubSample's displayed-label set includes "Notes"
+    field.setName("Notes");
 
     assertThrows(IllegalArgumentException.class, () -> subSample.addExtraField(field));
   }
@@ -95,31 +103,29 @@ class InventoryRecordDisplayedFieldNamesTest {
   void sampleAddExtraFieldRejectsBaseDisplayedLabel() {
     Sample sample = new Sample();
     ExtraTextField field = new ExtraTextField();
-    field.setName("Preview Image"); // base displayed-label set includes "Preview Image"
+    field.setName("Preview Image");
 
     assertThrows(IllegalArgumentException.class, () -> sample.addExtraField(field));
   }
 
   @Test
   void verifyFieldNameAllowedKeepsExistingReservedNameRejection() {
-    // The reserved-name (lowercase, case-insensitive) check still fires for legacy cases.
     Container container = new Container(Container.ContainerType.LIST);
     ExtraTextField field = new ExtraTextField();
-    field.setName("description"); // lowercase form of legacy reserved name
+    field.setName("description");
 
     assertThrows(IllegalArgumentException.class, () -> container.addExtraField(field));
   }
 
   @Test
   void verifyFieldNameAllowedIsCaseSensitiveForDisplayedLabels() {
-    // The displayed-labels check is case-sensitive (mirrors UI's `new Set` semantics). A
-    // lower-cased form of an extra-only displayed label (one not also in the lowercase reserved
-    // set) is allowed by this method.
+    // Title-Case-only displayed labels (e.g. "Type") are NOT lowercased into the set, so a
+    // lower-case form of an extra-only displayed label is still allowed.
     Container container = new Container(Container.ContainerType.LIST);
     ExtraTextField field = new ExtraTextField();
-    field.setName("type"); // lowercase — not in displayed labels (which are Title Case)
+    field.setName("type");
 
-    container.addExtraField(field); // should not throw
+    container.addExtraField(field);
   }
 
   private static Set<String> union(Set<String> base, String... extras) {
