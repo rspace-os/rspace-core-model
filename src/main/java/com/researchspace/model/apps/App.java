@@ -171,8 +171,7 @@ public class App implements Serializable {
 	@Transient
 	public boolean isRepositoryApp (){
 		return APP_DATAVERSE.equals(name) || APP_DSPACE.equals(name) || APP_FIGSHARE.equals(name)
-				|| APP_DRYAD.equals(name) || APP_ZENODO.equals(name) || APP_DIGITAL_COMMONS_DATA.equals(name)
-				|| APP_DMPASSISTANT.equals(name);
+				|| APP_DRYAD.equals(name) || APP_ZENODO.equals(name) || APP_DIGITAL_COMMONS_DATA.equals(name);
 	}
 
 	/**
