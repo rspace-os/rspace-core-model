@@ -29,6 +29,7 @@ public class App implements Serializable {
 	public static final String APP_DRYAD = "app.dryad";
 	public static final String APP_ZENODO = "app.zenodo";
 	public static final String APP_DIGITAL_COMMONS_DATA = "app.digitalCommonsData";
+	public static final String APP_DMPASSISTANT = "app.dmpassistant";
 	public static final String APP_GHANGOUTSCHAT = "app.ghangoutschat";
 
 	@OneToMany(mappedBy = "app", cascade = CascadeType.ALL)
@@ -170,7 +171,8 @@ public class App implements Serializable {
 	@Transient
 	public boolean isRepositoryApp (){
 		return APP_DATAVERSE.equals(name) || APP_DSPACE.equals(name) || APP_FIGSHARE.equals(name)
-				|| APP_DRYAD.equals(name) || APP_ZENODO.equals(name) || APP_DIGITAL_COMMONS_DATA.equals(name);
+				|| APP_DRYAD.equals(name) || APP_ZENODO.equals(name) || APP_DIGITAL_COMMONS_DATA.equals(name)
+				|| APP_DMPASSISTANT.equals(name);
 	}
 
 	/**
