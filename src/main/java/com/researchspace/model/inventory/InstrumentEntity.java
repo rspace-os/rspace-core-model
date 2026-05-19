@@ -28,8 +28,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
 
 /**
  * Represents RSpace Inventory InstrumentEntity (that is Instrument or InstrumentTemplate)
@@ -147,6 +149,7 @@ public abstract class InstrumentEntity extends MovableInventoryRecord implements
   @JoinColumn(nullable = false)
   @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
   @IndexedEmbedded
+  @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
   public User getOwner() {
     return owner;
   }

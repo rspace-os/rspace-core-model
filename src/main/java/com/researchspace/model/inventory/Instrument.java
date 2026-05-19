@@ -19,6 +19,9 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexingDependency;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.ObjectPath;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.PropertyValue;
 
 /**
  * Represents RSpace Inventory Instrument
@@ -107,6 +110,7 @@ public class Instrument extends InstrumentEntity {
 
   @Transient
   @GenericField
+  @IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "instrumentTemplate")))
   public Long getParentTemplateId() {
     if (getInstrumentTemplate() != null) {
       return getInstrumentTemplate().getId();
