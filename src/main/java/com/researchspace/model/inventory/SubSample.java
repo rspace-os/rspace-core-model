@@ -323,7 +323,7 @@ public class SubSample extends MovableInventoryRecord implements Serializable, Q
 			Collections.unmodifiableSet(
 					Stream.concat(
 									InventoryRecord.RESERVED_FIELD_NAMES.stream(),
-									Stream.of("Quantity", "Sample", "Notes"))
+									Stream.of("quantity", "sample", "notes"))
 							.collect(Collectors.toSet()));
 
 	@Override

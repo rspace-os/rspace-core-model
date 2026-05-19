@@ -625,7 +625,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
       Collections.unmodifiableSet(
           Stream.concat(
                   InventoryRecord.RESERVED_FIELD_NAMES.stream(),
-                  Stream.of("Can Store", "Type", "Locations Image", "Grid Dimensions"))
+                  Stream.of("can store", "type", "locations image", "grid dimensions"))
               .collect(Collectors.toSet()));
 
   @Override

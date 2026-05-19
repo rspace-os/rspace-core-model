@@ -8,19 +8,19 @@ import com.researchspace.model.inventory.field.ExtraTextField;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class InventoryRecordReservedFieldNamesTest {
 
   private static final Set<String> BASE_RESERVED =
-      Set.of(
-          "name", "description", "tags",
-          "Name", "Description", "Preview Image", "Tags", "Attachments");
+      Set.of("name", "description", "tags", "preview image", "attachments");
 
   @Test
   void containerReservedFieldNames() {
     Container container = new Container(Container.ContainerType.LIST);
     assertEquals(
-        union(BASE_RESERVED, "Can Store", "Type", "Locations Image", "Grid Dimensions"),
+        union(BASE_RESERVED, "can store", "type", "locations image", "grid dimensions"),
         container.getReservedFieldNames());
   }
 
@@ -28,7 +28,7 @@ class InventoryRecordReservedFieldNamesTest {
   void subSampleReservedFieldNames() {
     SubSample subSample = new SubSample();
     assertEquals(
-        union(BASE_RESERVED, "Quantity", "Sample", "Notes"),
+        union(BASE_RESERVED, "quantity", "sample", "notes"),
         subSample.getReservedFieldNames());
   }
 
@@ -40,12 +40,10 @@ class InventoryRecordReservedFieldNamesTest {
             BASE_RESERVED,
             "source",
             "expiry date",
-            "Sample Template",
-            "Expiry Date",
-            "Source",
-            "Storage Temperature",
-            "Total Quantity",
-            "Subsamples"),
+            "sample template",
+            "storage temperature",
+            "total quantity",
+            "subsamples"),
         sample.getReservedFieldNames());
   }
 
@@ -58,10 +56,10 @@ class InventoryRecordReservedFieldNamesTest {
             BASE_RESERVED,
             "source",
             "expiry date",
-            "Subsample Alias",
-            "Quantity Units",
-            "Fields",
-            "Samples"),
+            "subsample alias",
+            "quantity units",
+            "fields",
+            "samples"),
         template.getReservedFieldNames());
   }
 
@@ -75,6 +73,24 @@ class InventoryRecordReservedFieldNamesTest {
   void instrumentTemplateReservedFieldNames() {
     InstrumentTemplate instrumentTemplate = new InstrumentTemplate();
     assertEquals(BASE_RESERVED, instrumentTemplate.getReservedFieldNames());
+  }
+
+  @Test
+  void allReservedNamesAreStoredLowercase() {
+    Set<String> allSets = new HashSet<>();
+    allSets.addAll(new Container(Container.ContainerType.LIST).getReservedFieldNames());
+    allSets.addAll(new SubSample().getReservedFieldNames());
+    allSets.addAll(new Sample().getReservedFieldNames());
+    Sample template = new Sample();
+    template.setTemplate(true);
+    allSets.addAll(template.getReservedFieldNames());
+    allSets.addAll(new Instrument().getReservedFieldNames());
+    allSets.addAll(new InstrumentTemplate().getReservedFieldNames());
+
+    for (String name : allSets) {
+      assertEquals(name.toLowerCase(), name,
+          "Reserved name '" + name + "' should be stored lowercase");
+    }
   }
 
   @Test
@@ -117,15 +133,45 @@ class InventoryRecordReservedFieldNamesTest {
     assertThrows(IllegalArgumentException.class, () -> container.addExtraField(field));
   }
 
-  @Test
-  void verifyFieldNameAllowedIsCaseSensitiveForDisplayedLabels() {
-    // Title-Case-only displayed labels (e.g. "Type") are NOT lowercased into the set, so a
-    // lower-case form of an extra-only displayed label is still allowed.
+  @ParameterizedTest
+  @ValueSource(strings = {"Type", "type", "TYPE", "tYpE", "tyPE"})
+  void containerRejectsTypeInAnyCase(String fieldName) {
     Container container = new Container(Container.ContainerType.LIST);
     ExtraTextField field = new ExtraTextField();
-    field.setName("type");
+    field.setName(fieldName);
 
-    container.addExtraField(field);
+    assertThrows(IllegalArgumentException.class, () -> container.addExtraField(field));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"Preview Image", "preview image", "PREVIEW IMAGE", "Preview IMAGE"})
+  void sampleRejectsBaseLabelInAnyCase(String fieldName) {
+    Sample sample = new Sample();
+    ExtraTextField field = new ExtraTextField();
+    field.setName(fieldName);
+
+    assertThrows(IllegalArgumentException.class, () -> sample.addExtraField(field));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"Name", "NAME", "nAmE", "Description", "DESCRIPTION", "Tags", "TAGS"})
+  void containerRejectsLegacyReservedInAnyCase(String fieldName) {
+    Container container = new Container(Container.ContainerType.LIST);
+    ExtraTextField field = new ExtraTextField();
+    field.setName(fieldName);
+
+    assertThrows(IllegalArgumentException.class, () -> container.addExtraField(field));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"Subsample Alias", "subsample alias", "SUBSAMPLE ALIAS", "Quantity Units"})
+  void sampleTemplateRejectsTemplateLabelInAnyCase(String fieldName) {
+    Sample template = new Sample();
+    template.setTemplate(true);
+    ExtraTextField field = new ExtraTextField();
+    field.setName(fieldName);
+
+    assertThrows(IllegalArgumentException.class, () -> template.addExtraField(field));
   }
 
   private static Set<String> union(Set<String> base, String... extras) {

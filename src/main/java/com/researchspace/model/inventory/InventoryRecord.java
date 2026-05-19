@@ -93,9 +93,8 @@ public abstract class InventoryRecord {
 		return getSharingACL().getAclElements().stream().map(ACLElement::getUserOrGrpUniqueName).collect(Collectors.joining(","));
 	}
  	
-	static final Set<String> RESERVED_FIELD_NAMES = Set.of(
-			"name", "description", "tags",
-			"Name", "Description", "Preview Image", "Tags", "Attachments");
+	static final Set<String> RESERVED_FIELD_NAMES =
+			Set.of("name", "description", "tags", "preview image", "attachments");
 
 	/**
 	 * Comparator used to order inventory record list by name (asc/desc).
@@ -291,8 +290,7 @@ public abstract class InventoryRecord {
 		if (fieldName == null) {
 			return;
 		}
-		Set<String> reserved = getReservedFieldNames();
-		if (reserved.contains(fieldName) || reserved.contains(fieldName.toLowerCase())) {
+		if (getReservedFieldNames().contains(fieldName.toLowerCase())) {
 			throw new IllegalArgumentException(String.format("'%s' is not a valid name for a field, "
 						+ "as there is a default property with this name.", fieldName));
 		}
@@ -457,9 +455,8 @@ public abstract class InventoryRecord {
 
 	/**
 	 * The complete set of field names that are not allowed for user-defined SampleField/ExtraField
-	 * names on this record type. Combines legacy lowercase reserved names (matched
-	 * case-insensitively) with the UI's {@code fieldNamesInUse} hardcoded labels (matched
-	 * case-sensitively, Title Case). See {@link #verifyFieldNameAllowed(String)} for the comparison.
+	 * names on this record type. All entries are stored lowercase; comparison is case-insensitive
+	 * (see {@link #verifyFieldNameAllowed(String)}).
 	 */
 	@Transient
 	public Set<String> getReservedFieldNames() {

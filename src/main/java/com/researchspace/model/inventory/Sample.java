@@ -128,30 +128,32 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
   private QuantityInfo quantityInfo;
 
   static final Set<String> RESERVED_FIELD_NAMES = Collections.unmodifiableSet(
-      Stream.of(
+      Stream.concat(
               InventoryRecord.RESERVED_FIELD_NAMES.stream(),
-              Stream.of("source", "expiry date"),
               Stream.of(
-                  "Sample Template",
-                  "Expiry Date",
-                  "Source",
-                  "Storage Temperature",
-                  "Total Quantity",
-                  "Subsamples"))
-          .flatMap(s -> s)
+                  "source",
+                  "expiry date",
+                  "sample template",
+                  "storage temperature",
+                  "total quantity",
+                  "subsamples"))
           .collect(Collectors.toSet()));
 
   /**
    * Reserved names for a Sample Template. Mirrors {@code TemplateModel.fieldNamesInUse} in the
    * React UI: the template view is its own namespace and does NOT include the live-Sample labels
-   * (Sample Template / Expiry Date / etc.).
+   * (sample template / expiry date / etc.).
    */
   static final Set<String> SAMPLE_TEMPLATE_RESERVED_FIELD_NAMES = Collections.unmodifiableSet(
-      Stream.of(
+      Stream.concat(
               InventoryRecord.RESERVED_FIELD_NAMES.stream(),
-              Stream.of("source", "expiry date"),
-              Stream.of("Subsample Alias", "Quantity Units", "Fields", "Samples"))
-          .flatMap(s -> s)
+              Stream.of(
+                  "source",
+                  "expiry date",
+                  "subsample alias",
+                  "quantity units",
+                  "fields",
+                  "samples"))
           .collect(Collectors.toSet()));
 
   /**
