@@ -552,24 +552,20 @@ public class User extends AbstractUserOrGroupImpl
      * Generates a publicly consumable basic user data object
      */
     public UserBasicInfo toBasicInfo() {
-        return new UserBasicInfo(getId(), username, firstName, lastName, email, getRolesNamesAsString(), getAffiliation());
+        UserBasicInfo ubi = new UserBasicInfo();
+        populateBasicInfo(ubi);
+        return ubi;
     }
 
 	/**
 	 * Generates a publicly consumable user data lacking any sensitive security
 	 * info
-	 * 
+	 *
 	 * @return
 	 */
 	public UserPublicInfo toPublicInfo() {
 		UserPublicInfo pui = new UserPublicInfo();
-		pui.setId(getId());
-		pui.setUsername(username);
-		pui.setFirstName(firstName);
-		pui.setLastName(lastName);
-		pui.setEmail(email);
-		pui.setRole(getRolesNamesAsString());
-		pui.setAffiliation(getAffiliation());
+		populateBasicInfo(pui);
 		pui.setLastLogin(getLastLogin());
 		pui.setAccountLocked(isAccountLocked());
 		pui.setEnabled(isEnabled());
@@ -584,7 +580,8 @@ public class User extends AbstractUserOrGroupImpl
 		info.setFirstName(firstName);
 		info.setLastName(lastName);
 		info.setEmail(email);
-		info.setRole(getRolesNamesAsString());
+		List<String> roleList = TransformerUtils.transformToString(getRoles(), "name");
+		info.setRole(StringUtils.join(roleList, ","));
 		info.setAffiliation(getAffiliation());
 	}
 
