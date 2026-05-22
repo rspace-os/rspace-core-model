@@ -11,7 +11,7 @@ import com.researchspace.model.inventory.Basket;
 import com.researchspace.model.inventory.Container;
 import com.researchspace.model.inventory.DigitalObjectIdentifier;
 import com.researchspace.model.inventory.Instrument;
-import com.researchspace.model.inventory.InstrumentEntity;
+import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.Sample;
@@ -161,7 +161,7 @@ public interface IRecordFactory {
    * @param name      instrument name
    * @param createdBy creator and owner of the instrument
    */
-  Instrument createInstrument(String name, User createdBy, InstrumentEntity instrumentTemplate);
+  Instrument createInstrument(String name, User createdBy, InstrumentTemplate instrumentTemplate);
 
 
   Container createListContainer(String name, User createdBy);
