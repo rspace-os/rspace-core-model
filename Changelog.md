@@ -2,6 +2,9 @@
 
 Summary of important or breaking changes.
 
+## 2.24.0 2026-05-15
+- Add new `Instrument Templates` end points
+
 ## 2.22.0 2026-05-15
 - Add new `InstrumentEntity` model and renaming `SampleField` to `InventoryEntityField
 
