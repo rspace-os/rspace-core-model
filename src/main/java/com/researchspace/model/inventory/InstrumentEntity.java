@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import jakarta.persistence.CascadeType;
@@ -249,13 +248,6 @@ public abstract class InstrumentEntity extends MovableInventoryRecord implements
     refreshActiveFields();
     return copiedField;
   }
-
-  @Override
-  @Transient
-  public Set<String> getReservedFieldNames() {
-    return Set.of();
-  }
-
 
   @Transient
   public abstract boolean isTemplate();

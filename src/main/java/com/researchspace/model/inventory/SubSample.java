@@ -11,9 +11,12 @@ import com.researchspace.model.units.QuantityInfo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
-
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CascadeType;
@@ -312,14 +315,27 @@ public class SubSample extends MovableInventoryRecord implements Serializable, Q
 	@PrePersist
 	@PreUpdate
 	public void validateBeforeSave() {
-		if (getSample() == null) { 
+		if (getSample() == null) {
 			throw new ConstraintViolationException("Cannot save SubSample that has no connected Sample", null);
 		}
-		
+
 		/* subsamples have to be stored somewhere, with a few exceptions */
 		if (getParentLocation() == null && !getSample().isTemplate() && !isDeleted()) {
 			throw new ConstraintViolationException("Cannot save SubSample as it's not stored inside any container", null);
 		}
 	}
-	
+
+	static final Set<String> RESERVED_FIELD_NAMES =
+			Collections.unmodifiableSet(
+					Stream.concat(
+									InventoryRecord.RESERVED_FIELD_NAMES.stream(),
+									Stream.of("quantity", "sample", "notes"))
+							.collect(Collectors.toSet()));
+
+	@Override
+	@Transient
+	public Set<String> getReservedFieldNames() {
+		return RESERVED_FIELD_NAMES;
+	}
+
 }

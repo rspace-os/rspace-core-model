@@ -11,11 +11,14 @@ import com.researchspace.model.inventory.field.ExtraField;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
-
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -79,7 +82,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 
 	@IndexedEmbedded(name = "files")
 	private List<InventoryFile> files = new ArrayList<>();
-	
+
 	private FileProperty locationsImageFileProperty;
 
   private List<ContainerLocation> locations = new ArrayList<>();
@@ -204,7 +207,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 	public GridLayoutAxisLabelEnum getGridLayoutRowsLabelType() {
 		return gridLayoutRowsLabelType;
 	}
-	
+
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -268,7 +271,7 @@ public class Container extends MovableInventoryRecord implements Serializable {
 		this.files = files;
 		refreshActiveAttachedFiles();
 	}
-	
+
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public FileProperty getLocationsImageFileProperty() {
@@ -621,5 +624,17 @@ public class Container extends MovableInventoryRecord implements Serializable {
     return copy;
   }
 
+  static final Set<String> RESERVED_FIELD_NAMES =
+      Collections.unmodifiableSet(
+          Stream.concat(
+                  InventoryRecord.RESERVED_FIELD_NAMES.stream(),
+                  Stream.of("can store", "type", "locations image", "grid dimensions"))
+              .collect(Collectors.toSet()));
+
+  @Override
+  @Transient
+  public Set<String> getReservedFieldNames() {
+    return RESERVED_FIELD_NAMES;
+  }
 }
 
