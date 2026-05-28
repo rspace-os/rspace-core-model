@@ -12,12 +12,10 @@ import org.hibernate.envers.Audited;
 import com.researchspace.model.field.FieldType;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Audited
-@Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @DiscriminatorValue("link")
@@ -29,12 +27,20 @@ public class ExtraLinkField extends ExtraField {
 	private static final long serialVersionUID = 1L;
 	private static final String DEFAULT_NAME = "Link";
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "link_id", unique = true)
+	// Annotations placed on getter (not field) because the ExtraField hierarchy
+	// uses PROPERTY access (@Id is on getId()). With field-level annotations
+	// Hibernate ignores @JoinColumn and falls back to the property name as the
+	// column name (yielding `link` instead of `link_id`).
 	private InventoryLink link;
 
 	public ExtraLinkField() {
 		setName(DEFAULT_NAME);
+	}
+
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "link_id", unique = true)
+	public InventoryLink getLink() {
+		return link;
 	}
 
 	@Transient
