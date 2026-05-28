@@ -36,7 +36,12 @@ public class NfsFileSystem implements Serializable {
 	private LinkedHashMap<String, String> authOptions = new LinkedHashMap<>();
 
 	private boolean disabled; // is the system available for users
-	
+
+	// per-filesystem ACLs, only consulted when authType == NONE (server-wide creds);
+	// value '*' means everyone, NULL/empty means nobody, otherwise comma-separated usernames.
+	private String readWhitelist;
+	private String writeWhitelist;
+
 	public NfsFileSystem() { }
 
 	@Id
@@ -117,6 +122,22 @@ public class NfsFileSystem implements Serializable {
 	@Transient
 	public boolean isEnabled() {
 		return !disabled;
+	}
+
+	public String getReadWhitelist() {
+		return readWhitelist;
+	}
+
+	public void setReadWhitelist(String readWhitelist) {
+		this.readWhitelist = readWhitelist;
+	}
+
+	public String getWriteWhitelist() {
+		return writeWhitelist;
+	}
+
+	public void setWriteWhitelist(String writeWhitelist) {
+		this.writeWhitelist = writeWhitelist;
 	}
 	
 	// for managing client options

@@ -1,6 +1,7 @@
 package com.researchspace.model.netfiles;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
@@ -39,6 +40,19 @@ public class NfsFileSystemTest {
 		testClientOptionsString = "USER_DIRS_REQUIRED=false";
 		fileSystem.setClientOptions(testClientOptionsString);
 		assertEquals(false, fileSystem.fileSystemRequiresUserRootDirs());
+	}
+
+	@Test
+	public void whitelistAccessorsRoundTrip() {
+
+		NfsFileSystem fileSystem = new NfsFileSystem();
+		assertNull(fileSystem.getReadWhitelist());
+		assertNull(fileSystem.getWriteWhitelist());
+
+		fileSystem.setReadWhitelist("*");
+		fileSystem.setWriteWhitelist("alice,bob");
+		assertEquals("*", fileSystem.getReadWhitelist());
+		assertEquals("alice,bob", fileSystem.getWriteWhitelist());
 	}
 
 	@Test
