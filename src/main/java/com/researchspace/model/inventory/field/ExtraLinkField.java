@@ -21,6 +21,9 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @DiscriminatorValue("link")
+/**
+ * Represents an extra field of type 'link' in inventory items. Links to another InventoryItem.
+ */
 public class ExtraLinkField extends ExtraField {
 
 	private static final long serialVersionUID = 1L;
