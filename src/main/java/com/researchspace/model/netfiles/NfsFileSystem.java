@@ -1,5 +1,6 @@
 package com.researchspace.model.netfiles;
 
+import lombok.Setter;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
@@ -17,9 +18,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Entity class storing external net file system details 
+ * Entity class storing external net file system details
  */
 @Entity
+@Setter
 @org.hibernate.annotations.Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class NfsFileSystem implements Serializable {
 	
@@ -51,24 +53,12 @@ public class NfsFileSystem implements Serializable {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getUrl() {
 		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	@Enumerated(EnumType.STRING)
@@ -81,15 +71,11 @@ public class NfsFileSystem implements Serializable {
 		return "true".equals(getClientOption(NfsFileSystemOption.USER_DIRS_REQUIRED));
 	}
 
-	public void setClientType(NfsClientType clientType) {
-		this.clientType = clientType;
-	}
-
 	@Lob
 	public String getClientOptions() {
 		return convertOptionsMapToString(clientOptions);
 	}
-	
+
 	public void setClientOptions(String clientOptionsString) {
 		putOptionsFromStringToMap(clientOptions, clientOptionsString);
 	}
@@ -97,10 +83,6 @@ public class NfsFileSystem implements Serializable {
 	@Enumerated(EnumType.STRING)
 	public NfsAuthenticationType getAuthType() {
 		return authType;
-	}
-
-	public void setAuthType(NfsAuthenticationType authType) {
-		this.authType = authType;
 	}
 
 	@Lob
@@ -111,13 +93,9 @@ public class NfsFileSystem implements Serializable {
 	public void setAuthOptions(String authOptionsString) {
 		putOptionsFromStringToMap(authOptions, authOptionsString);
 	}
-	
+
 	public boolean isDisabled() {
 		return disabled;
-	}
-
-	public void setDisabled(boolean isDisabled) {
-		this.disabled = isDisabled;
 	}
 
 	@Transient
@@ -130,17 +108,9 @@ public class NfsFileSystem implements Serializable {
 		return readWhitelist;
 	}
 
-	public void setReadWhitelist(String readWhitelist) {
-		this.readWhitelist = readWhitelist;
-	}
-
 	@Column(length = 4000)
 	public String getWriteWhitelist() {
 		return writeWhitelist;
-	}
-
-	public void setWriteWhitelist(String writeWhitelist) {
-		this.writeWhitelist = writeWhitelist;
 	}
 	
 	// for managing client options
