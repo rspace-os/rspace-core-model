@@ -24,8 +24,6 @@ public class NfsFileStoreInfo implements Serializable {
 
 	private NfsFileSystemInfo fileSystem;
 
-	// (optional) per-user permissions snapshot, populated by the service layer for the request's
-	// user. Null when the listing is built without a user context.
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private NfsUserPermissions userPermissions;
 

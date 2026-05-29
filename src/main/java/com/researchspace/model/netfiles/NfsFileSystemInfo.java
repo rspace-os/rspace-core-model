@@ -31,8 +31,6 @@ public class NfsFileSystemInfo implements Serializable {
 	// (optional) if user is logged into the File System the field may store the username
 	private String loggedAs;
 
-	// (optional) per-user permissions snapshot, populated by the service layer for the request's
-	// user. Null when the listing is built without a user context.
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private NfsUserPermissions userPermissions;
 

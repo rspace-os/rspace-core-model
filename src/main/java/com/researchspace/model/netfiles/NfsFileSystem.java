@@ -2,6 +2,7 @@ package com.researchspace.model.netfiles;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -124,6 +125,7 @@ public class NfsFileSystem implements Serializable {
 		return !disabled;
 	}
 
+	@Column(length = 4000)
 	public String getReadWhitelist() {
 		return readWhitelist;
 	}
@@ -132,6 +134,7 @@ public class NfsFileSystem implements Serializable {
 		this.readWhitelist = readWhitelist;
 	}
 
+	@Column(length = 4000)
 	public String getWriteWhitelist() {
 		return writeWhitelist;
 	}

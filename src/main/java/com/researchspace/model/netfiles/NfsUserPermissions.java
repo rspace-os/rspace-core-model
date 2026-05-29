@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Per-user, per-filesystem permissions snapshot exposed on filesystem and filestore listing
- * responses. Populated by the service layer for the request's user.
- */
+/** Per-user, per-filesystem permissions snapshot exposed on listing responses. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
