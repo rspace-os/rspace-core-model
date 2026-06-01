@@ -1,5 +1,6 @@
 package com.researchspace.model.netfiles;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 
 import lombok.Data;
@@ -22,7 +23,10 @@ public class NfsFileStoreInfo implements Serializable {
 	private String path;
 
 	private NfsFileSystemInfo fileSystem;
-	
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private NfsUserPermissions userPermissions;
+
 	public NfsFileStoreInfo(NfsFileStore nfsFileStore) {
 		NfsFileSystem fileSystem = nfsFileStore.getFileSystem();
 		if (fileSystem != null) {
