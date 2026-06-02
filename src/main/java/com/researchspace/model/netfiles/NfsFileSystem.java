@@ -42,8 +42,8 @@ public class NfsFileSystem implements Serializable {
 
 	// per-filesystem ACLs, only consulted when authType == NONE (server-wide creds);
 	// value '*' means everyone, NULL/empty means nobody, otherwise comma-separated usernames.
-	private String readWhitelist;
-	private String writeWhitelist;
+	private String readAllowlist;
+	private String writeAllowlist;
 
 	public NfsFileSystem() { }
 
@@ -104,13 +104,13 @@ public class NfsFileSystem implements Serializable {
 	}
 
 	@Column(length = 4000)
-	public String getReadWhitelist() {
-		return readWhitelist;
+	public String getReadAllowlist() {
+		return readAllowlist;
 	}
 
 	@Column(length = 4000)
-	public String getWriteWhitelist() {
-		return writeWhitelist;
+	public String getWriteAllowlist() {
+		return writeAllowlist;
 	}
 	
 	// for managing client options
