@@ -47,6 +47,15 @@ public class InventoryLink implements Serializable {
 	@Column(name = "version_pin")
 	private Long versionPin;
 
+	/**
+	 * The Envers revision (REV) this link's pin resolved to, captured at pin time. Null means the
+	 * link is "latest" and resolves dynamically to the newest revision in the target's audit table.
+	 * Paired with {@link #versionPin}: versionPin is the user-facing version for display, this is the
+	 * exact audit-row key used to load the snapshot.
+	 */
+	@Column(name = "target_revision_id")
+	private Long targetRevisionId;
+
 	@Column(name = "relation_type", nullable = false, length = 64)
 	private String relationType;
 
