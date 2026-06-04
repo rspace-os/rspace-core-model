@@ -110,6 +110,8 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
         return new InventoryUriField();
       case FieldType.IDENTIFIER_TYPE:
         return new InventoryIdentifierField();
+      case FieldType.LINK_TYPE:
+        return new InventoryLinkField();
       default:
         throw new IllegalArgumentException(String.format("Unsupported field type %s", fieldType));
     }
