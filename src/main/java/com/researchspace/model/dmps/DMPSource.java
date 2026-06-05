@@ -5,5 +5,6 @@ public enum DMPSource {
   DMP_TOOL,
   DMP_ONLINE,
   ARGOS,
-  DSW
+  DSW,
+  DMP_ASSISTANT
 }
