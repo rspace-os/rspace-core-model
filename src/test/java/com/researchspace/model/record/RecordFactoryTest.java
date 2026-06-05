@@ -3,17 +3,19 @@ package com.researchspace.model.record;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 import com.researchspace.model.Group;
 import com.researchspace.model.Role;
 import com.researchspace.model.User;
 import com.researchspace.model.core.RecordType;
+import com.researchspace.model.inventory.Instrument;
+import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.Sample;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
 public class RecordFactoryTest {
@@ -107,5 +109,35 @@ public class RecordFactoryTest {
 		assertEquals(1, sample.getActiveSubSamples().size());
 		assertEquals(0, sample.getActiveFields().size());
 	}
-	
+
+	@Test
+	public void testCreateInstrumentWithoutTemplate() {
+		Instrument instrument = factoryAPI.createInstrument("test instrument", user, null);
+		assertNotNull(instrument);
+		assertEquals("test instrument", instrument.getName());
+		assertEquals(user, instrument.getOwner());
+		assertEquals(user.getUsername(), instrument.getCreatedBy());
+		assertEquals(user.getUsername(), instrument.getModifiedBy());
+		assertNull(instrument.getInstrumentTemplate());
+		assertNull(instrument.getTemplateLinkedVersion());
+		assertEquals(0, instrument.getActiveFields().size());
+	}
+
+	@Test
+	public void testCreateInstrumentFromTemplate() {
+		Instrument baseInstrument = factoryAPI.createInstrument("base", user, null);
+		InstrumentTemplate template = (InstrumentTemplate) baseInstrument.copyToTemplate(user);
+
+		Instrument fromTemplate = factoryAPI.createInstrument("derived", otherUser, template);
+
+		assertNotNull(fromTemplate);
+		assertEquals("derived", fromTemplate.getName());
+		assertEquals(otherUser, fromTemplate.getOwner());
+		assertEquals(otherUser.getUsername(), fromTemplate.getCreatedBy());
+		assertEquals(otherUser.getUsername(), fromTemplate.getModifiedBy());
+		assertEquals(template, fromTemplate.getInstrumentTemplate());
+		assertEquals(template.getVersion(), fromTemplate.getTemplateLinkedVersion());
+	}
+
+
 }
