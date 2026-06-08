@@ -29,6 +29,7 @@ public class App implements Serializable {
 	public static final String APP_DRYAD = "app.dryad";
 	public static final String APP_ZENODO = "app.zenodo";
 	public static final String APP_DIGITAL_COMMONS_DATA = "app.digitalCommonsData";
+	public static final String APP_DMP_ASSISTANT = "app.dmpassistant";
 	public static final String APP_GHANGOUTSCHAT = "app.ghangoutschat";
 
 	@OneToMany(mappedBy = "app", cascade = CascadeType.ALL)

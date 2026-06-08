@@ -38,7 +38,7 @@ import com.researchspace.model.field.TimeFieldForm;
 import com.researchspace.model.inventory.Container;
 import com.researchspace.model.inventory.Container.ContainerType;
 import com.researchspace.model.inventory.Instrument;
-import com.researchspace.model.inventory.InstrumentEntity;
+import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.Sample;
@@ -421,14 +421,14 @@ public class RecordFactory implements IRecordFactory {
 
   @Override
   public Instrument createInstrument(String name, User createdBy,
-      InstrumentEntity instrumentTemplate) {
+      InstrumentTemplate instrumentTemplate) {
     checkArgs(name, createdBy);
-    Instrument instrument = createInstrument(name, createdBy);
-    if (instrumentTemplate != null) {
-      Validate.isTrue(instrumentTemplate.isTemplate(), "requires an instrument template");
-      //TODO[nik]: implement this on RSDEV-1059
-      return null;
+    if (instrumentTemplate == null) {
+      return createInstrument(name, createdBy);
     }
+    Instrument instrument = (Instrument) instrumentTemplate.copyFromTemplate(createdBy);
+    instrument.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
+    instrument.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
     return instrument;
   }
 

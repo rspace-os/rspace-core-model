@@ -53,6 +53,13 @@ public class Stoichiometry {
   @Column(unique = true, nullable = false, length = 36)
   private String uuid = UUID.randomUUID().toString();
 
+  // SELECT, not the default JOIN: the eager `molecules` collection below is join-fetched, and the
+  // owning Record has its own eagerly-reachable folder-membership collection (RecordToFolder). If
+  // these to-one associations were join-fetched in the same query, that collection would join too
+  // and produce a `molecules x folderMemberships` Cartesian product, so once the document is shared
+  // (and therefore lives in more than one folder) every molecule row is returned duplicated. Loading
+  // these to-one associations via a separate select keeps them out of the molecules join. The
+  // persisted rows are unaffected; this only governs how the eager graph is read back.
   @ManyToOne
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "parent_reaction_id", nullable = true)
