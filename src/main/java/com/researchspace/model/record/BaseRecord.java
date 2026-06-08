@@ -150,7 +150,6 @@ public abstract class BaseRecord
     private boolean signed = false;
     private boolean witnessed = false;
     private Long iconId = -1L;
-    private OfflineWorkStatus offlineWorkStatus;
     private SharedStatus sharedStatus = SharedStatus.UNSHARED;
     private FavoritesStatus favoriteStatus;
 
@@ -1220,31 +1219,6 @@ public abstract class BaseRecord
     }
 
     /**
-     * @return offline status of the record in context of given user
-     */
-    @Transient
-    public OfflineWorkStatus getOfflineWorkStatus() {
-        return offlineWorkStatus;
-    }
-
-    /**
-     * this need to be called by code that knows which user is browsing the
-     * record
-     */
-    public void setOfflineWorkStatus(OfflineWorkStatus status) {
-        this.offlineWorkStatus = status;
-    }
-
-    /**
-     * @return is record selected for offline work in context of given user
-     */
-    @Transient
-    public boolean isSelectedForOfflineWork() {
-        return OfflineWorkStatus.USER_VIEW.equals(offlineWorkStatus)
-                || OfflineWorkStatus.USER_EDIT.equals(offlineWorkStatus);
-    }
-
-    /**
      * A temporary property used for display in the UI. This is *not* persisted
      * with the record, sharing status is maintained by
      * {@link RecordGroupSharing} class.
@@ -1397,13 +1371,6 @@ public abstract class BaseRecord
          * Not shared, private to an individual (and their PI, if in a group).
          */
         UNSHARED
-    }
-
-    /**
-     * Constants defining the status of a record with regard to offline editing.
-     */
-    public enum OfflineWorkStatus {
-        USER_VIEW, USER_EDIT, OTHER_EDIT, OTHER_VIEW, NOT_OFFLINE, NOT_APPLICABLE
     }
 
     /**
