@@ -747,8 +747,13 @@ public class Sample extends InventoryRecord implements Serializable, UniquelyIde
     for (InventoryEntityField templateField : getSTemplate().getActiveFields()) {
       if (!getFieldByTemplateFieldId(templateField.getId()).isPresent()) {
         InventoryEntityField addedField = copyAndAddSampleField(templateField);
-        /* fields added through update to latest template version shouldn't have pre-set value */
-        addedField.setFieldData(null);
+        /*
+         * Fields added by update-to-latest-template-version start with no value. Clear via setData,
+         * not setFieldData, so we skip mandatory validation here: an existing sample cannot supply a
+         * value during a bulk template update, so a newly added mandatory field (e.g. a mandatory
+         * Link) is allowed to start empty and is enforced on the next per-sample edit/save.
+         */
+        addedField.setData(null);
         sampleUpdated = true;
       }
     }
