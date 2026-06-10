@@ -5,7 +5,6 @@ import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -39,7 +38,7 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
     return id;
   }
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @OneToOne
   @JoinColumn(name = "stoichiometry_molecule_id", nullable = false)
   public StoichiometryMolecule getStoichiometryMolecule() {
     return stoichiometryMolecule;

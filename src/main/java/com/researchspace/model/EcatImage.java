@@ -51,7 +51,7 @@ public class EcatImage extends EcatMediaFile implements Serializable {
 	 * RSPAC-2191 - new mechanism for storing working images
 	 * @return
 	 */
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public FileProperty getWorkingImageFP() {
 		return workingImageFP;
@@ -65,7 +65,7 @@ public class EcatImage extends EcatMediaFile implements Serializable {
 	 * RSPAC-2191 - new mechanism for storing thumbnails
 	 * @return
 	 */
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	public FileProperty getThumbnailImageFP() {
 		return thumbnailImageFP;
