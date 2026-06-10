@@ -1,6 +1,7 @@
 package com.researchspace.model.inventory.field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -47,6 +48,35 @@ public class InventoryLinkFieldTest {
     assertEquals(Long.valueOf(99), copy.getLink().getTargetRevisionId());
     // deletion state must survive the clone (same path as InventoryLink.shallowCopy())
     assertTrue(copy.getLink().isDeleted());
+  }
+
+  @Test
+  public void mandatoryValidationRequiresNonBlankTargetGlobalIdAndRelationType() {
+    InventoryLinkField field = new InventoryLinkField();
+
+    // no link at all -> not valid
+    assertFalse(field.isValidValueForMandatoryField(null));
+
+    InventoryLink link = new InventoryLink();
+    field.setLink(link);
+
+    // link with neither target nor relation type -> not valid
+    assertFalse(field.isValidValueForMandatoryField(null));
+
+    // blank target (whitespace only) is not a real target -> not valid
+    link.setTargetGlobalId("   ");
+    link.setRelationType("References");
+    assertFalse(field.isValidValueForMandatoryField(null));
+
+    // target present but blank relation type -> not valid: relation_type is NOT NULL, so this
+    // would otherwise fail at flush with a low-level DB constraint violation
+    link.setTargetGlobalId("SA10");
+    link.setRelationType("");
+    assertFalse(field.isValidValueForMandatoryField(null));
+
+    // both present and non-blank -> valid
+    link.setRelationType("References");
+    assertTrue(field.isValidValueForMandatoryField(null));
   }
 
   @Test

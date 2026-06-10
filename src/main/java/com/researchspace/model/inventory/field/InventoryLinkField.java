@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import lombok.Setter;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.envers.Audited;
 
 /**
@@ -54,11 +55,19 @@ public class InventoryLinkField extends InventoryEntityField {
     return allowedRelationTypes;
   }
 
-  /** A mandatory link field requires a populated link target, not data-column content. */
+  /**
+   * A mandatory link field requires a populated link target and relation type, not data-column
+   * content. Both are checked with a blank (null/empty/whitespace) test: targetGlobalId because a
+   * blank target is not a real reference, and relationType because it is mapped NOT NULL on {@link
+   * InventoryLink}. Without these checks a blank value passes validation and then fails at flush
+   * with a low-level DB constraint violation rather than a clear validation message.
+   */
   @Override
   @Transient
   public boolean isValidValueForMandatoryField(String fieldData) {
-    return link != null && link.getTargetGlobalId() != null;
+    return link != null
+        && StringUtils.isNotBlank(link.getTargetGlobalId())
+        && StringUtils.isNotBlank(link.getRelationType());
   }
 
   @Override
