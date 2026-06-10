@@ -80,6 +80,22 @@ public class InventoryLinkFieldTest {
   }
 
   @Test
+  public void clearValueClearsLinkAssociation() {
+    InventoryLinkField field = new InventoryLinkField();
+    InventoryLink link = new InventoryLink();
+    link.setTargetGlobalId("SA10");
+    link.setRelationType("References");
+    field.setLink(link);
+
+    field.clearValue();
+
+    // the link field holds its value in the association, not the data column, so clearing the
+    // value must drop the link too (otherwise a template's link leaks into a newly added field)
+    assertNull(field.getLink());
+    assertNull(field.getData());
+  }
+
+  @Test
   public void shallowCopyLeavesLinkNullWhenSourceHasNoLink() {
     InventoryLinkField field = new InventoryLinkField();
     field.setName("Related items");

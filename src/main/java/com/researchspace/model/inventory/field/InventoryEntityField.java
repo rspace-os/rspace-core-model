@@ -201,6 +201,16 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
   }
 
   /**
+   * Clears this field's value without running validation, used when a field is added to an existing
+   * sample during a template-version update and must start empty. The default clears the shared
+   * {@code data} column; field types that hold their value in an association (e.g.
+   * {@link InventoryLinkField}) override this to clear that association too.
+   */
+  public void clearValue() {
+    setData(null);
+  }
+
+  /**
    * Boolean flag to check if field supports storing data as list of options, e.g. as radio or
    * choice fields does.
    */

@@ -70,6 +70,13 @@ public class InventoryLinkField extends InventoryEntityField {
         && StringUtils.isNotBlank(link.getRelationType());
   }
 
+  /** Also clears the link association, where this field type holds its value (not the data column). */
+  @Override
+  public void clearValue() {
+    super.clearValue();
+    setLink(null);
+  }
+
   @Override
   public InventoryLinkField shallowCopy() {
     InventoryLinkField copy = new InventoryLinkField();
