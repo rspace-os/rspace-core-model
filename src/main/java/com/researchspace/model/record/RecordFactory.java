@@ -33,6 +33,7 @@ import com.researchspace.model.inventory.Sample;
 import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.SubSampleName;
 import com.researchspace.model.inventory.field.ExtraField;
+import com.researchspace.model.inventory.field.ExtraLinkField;
 import com.researchspace.model.inventory.field.ExtraNumberField;
 import com.researchspace.model.inventory.field.ExtraTextField;
 import com.researchspace.model.inventory.field.InventoryAttachmentField;
@@ -538,6 +539,9 @@ public class RecordFactory implements IRecordFactory {
     }
     if (FieldType.NUMBER.equals(type)) {
       return new ExtraNumberField();
+    }
+    if (FieldType.LINK.equals(type)) {
+      return new ExtraLinkField();
     }
     throw new IllegalArgumentException(
         "asked for extra field of unsupported type: " + type.toString());

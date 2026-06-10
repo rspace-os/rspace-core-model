@@ -14,14 +14,14 @@ import com.researchspace.model.field.FieldType;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
+/**
+ * Represents an extra field of type 'link' in inventory items. Links to another InventoryItem.
+ */
 @Entity
 @Audited
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @DiscriminatorValue("link")
-/**
- * Represents an extra field of type 'link' in inventory items. Links to another InventoryItem.
- */
 public class ExtraLinkField extends ExtraField {
 
 	private static final long serialVersionUID = 1L;
@@ -58,6 +58,9 @@ public class ExtraLinkField extends ExtraField {
 	public ExtraLinkField shallowCopy() {
 		ExtraLinkField copy = new ExtraLinkField();
 		copyProperties(copy);
+		if (link != null) {
+			copy.setLink(link.shallowCopy());
+		}
 		return copy;
 	}
 

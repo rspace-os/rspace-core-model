@@ -3,6 +3,7 @@ package com.researchspace.model.inventory.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,6 +40,32 @@ class InventoryLinkTest {
 		InventoryLink link = new InventoryLink();
 		link.setTargetGlobalId("SA123");
 		assertNull(link.getVersionPin());
+	}
+
+	@Test
+	void shallowCopyCopiesPayloadButNotIdentityOrTimestamps() {
+		InventoryLink original = new InventoryLink();
+		original.setId(7L);
+		original.setTargetGlobalId("SA123v3");
+		original.setTargetPrefix(GlobalIdPrefix.SA);
+		original.setTargetDbId(123L);
+		original.setVersionPin(3L);
+		original.setTargetRevisionId(55L);
+		original.setRelationType("IsCalibratedBy");
+		original.prePersist();
+
+		InventoryLink copy = original.shallowCopy();
+
+		assertNotSame(original, copy);
+		assertNull(copy.getId());
+		assertNull(copy.getCreatedAt());
+		assertNull(copy.getModifiedAt());
+		assertEquals("SA123v3", copy.getTargetGlobalId());
+		assertEquals(GlobalIdPrefix.SA, copy.getTargetPrefix());
+		assertEquals(123L, copy.getTargetDbId());
+		assertEquals(3L, copy.getVersionPin());
+		assertEquals(55L, copy.getTargetRevisionId());
+		assertEquals("IsCalibratedBy", copy.getRelationType());
 	}
 
 	@Test

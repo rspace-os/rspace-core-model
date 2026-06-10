@@ -51,6 +51,38 @@ class ExtraLinkFieldTest {
 	}
 
 	@Test
+	void shallowCopyCopiesLinkAssociationAsIndependentInstance() {
+		ExtraLinkField original = new ExtraLinkField();
+		InventoryLink link = new InventoryLink();
+		link.setId(7L);
+		link.setTargetGlobalId("SA123v3");
+		link.setTargetPrefix(GlobalIdPrefix.SA);
+		link.setTargetDbId(123L);
+		link.setVersionPin(3L);
+		link.setTargetRevisionId(99L);
+		link.setRelationType("IsCalibratedBy");
+		original.setLink(link);
+
+		ExtraLinkField copy = original.shallowCopy();
+
+		assertNotNull(copy.getLink());
+		assertNotSame(original.getLink(), copy.getLink());
+		assertNull(copy.getLink().getId());
+		assertEquals("SA123v3", copy.getLink().getTargetGlobalId());
+		assertEquals(GlobalIdPrefix.SA, copy.getLink().getTargetPrefix());
+		assertEquals(123L, copy.getLink().getTargetDbId());
+		assertEquals(3L, copy.getLink().getVersionPin());
+		assertEquals(99L, copy.getLink().getTargetRevisionId());
+		assertEquals("IsCalibratedBy", copy.getLink().getRelationType());
+	}
+
+	@Test
+	void shallowCopyWithNullLinkProducesNullLink() {
+		ExtraLinkField original = new ExtraLinkField();
+		assertNull(original.shallowCopy().getLink());
+	}
+
+	@Test
 	void linkAssociationRoundTrips() {
 		ExtraLinkField field = new ExtraLinkField();
 		InventoryLink link = new InventoryLink();
