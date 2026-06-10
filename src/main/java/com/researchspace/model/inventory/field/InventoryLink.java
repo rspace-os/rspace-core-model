@@ -83,9 +83,9 @@ public class InventoryLink implements Serializable {
 	}
 
 	/**
-	 * Creates a new, unpersisted copy of this link carrying the same target identity, version pin and
-	 * relation type. The copy has a null id and no timestamps (those are set on persist), so it can be
-	 * attached to a copied field without sharing this managed instance.
+	 * Creates a new, unpersisted copy of this link carrying the same target identity, version pin,
+	 * relation type and deletion state. The copy has a null id and no timestamps (those are set on
+	 * persist), so it can be attached to a copied field without sharing this managed instance.
 	 */
 	public InventoryLink shallowCopy() {
 		InventoryLink copy = new InventoryLink();
@@ -95,6 +95,7 @@ public class InventoryLink implements Serializable {
 		copy.setVersionPin(versionPin);
 		copy.setTargetRevisionId(targetRevisionId);
 		copy.setRelationType(relationType);
+		copy.setDeleted(deleted);
 		return copy;
 	}
 

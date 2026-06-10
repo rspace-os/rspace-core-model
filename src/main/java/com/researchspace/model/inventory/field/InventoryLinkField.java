@@ -66,25 +66,12 @@ public class InventoryLinkField extends InventoryEntityField {
     InventoryLinkField copy = new InventoryLinkField();
     copy.setAllowedRelationTypes(getAllowedRelationTypes());
     if (link != null) {
-      copy.setLink(copyLink(link));
+      // shallowCopy() deep-copies into a brand-new unsaved row (no id, timestamps set on persist),
+      // so a sample instantiated from a template never shares the template field's link row. Both
+      // clone paths delegate here so they cannot diverge (e.g. on the deleted flag).
+      copy.setLink(link.shallowCopy());
     }
     copyFields(copy);
-    return copy;
-  }
-
-  /**
-   * Deep-copies the link into a brand-new unsaved row (no id, timestamps set on persist), so a
-   * sample instantiated from a template never shares the template field's link row.
-   */
-  private static InventoryLink copyLink(InventoryLink src) {
-    InventoryLink copy = new InventoryLink();
-    copy.setTargetGlobalId(src.getTargetGlobalId());
-    copy.setTargetPrefix(src.getTargetPrefix());
-    copy.setTargetDbId(src.getTargetDbId());
-    copy.setVersionPin(src.getVersionPin());
-    copy.setTargetRevisionId(src.getTargetRevisionId());
-    copy.setRelationType(src.getRelationType());
-    copy.setDeleted(src.isDeleted());
     return copy;
   }
 }

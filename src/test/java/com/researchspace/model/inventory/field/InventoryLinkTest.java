@@ -69,6 +69,18 @@ class InventoryLinkTest {
 	}
 
 	@Test
+	void shallowCopyPreservesDeletedFlag() {
+		InventoryLink original = new InventoryLink();
+		original.setTargetGlobalId("SA123");
+		original.setTargetPrefix(GlobalIdPrefix.SA);
+		original.setTargetDbId(123L);
+		original.setRelationType("References");
+		original.setDeleted(true);
+
+		assertTrue(original.shallowCopy().isDeleted());
+	}
+
+	@Test
 	void prePersistSetsCreatedAtAndModifiedAt() {
 		InventoryLink link = new InventoryLink();
 		assertNull(link.getCreatedAt());

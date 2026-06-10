@@ -30,6 +30,7 @@ public class InventoryLinkFieldTest {
     link.setRelationType("References");
     link.setVersionPin(3L);
     link.setTargetRevisionId(99L);
+    link.setDeleted(true);
     field.setLink(link);
 
     InventoryLinkField copy = field.shallowCopy();
@@ -44,6 +45,8 @@ public class InventoryLinkFieldTest {
     assertEquals("References", copy.getLink().getRelationType());
     assertEquals(Long.valueOf(3), copy.getLink().getVersionPin());
     assertEquals(Long.valueOf(99), copy.getLink().getTargetRevisionId());
+    // deletion state must survive the clone (same path as InventoryLink.shallowCopy())
+    assertTrue(copy.getLink().isDeleted());
   }
 
   @Test
