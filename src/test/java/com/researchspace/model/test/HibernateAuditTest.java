@@ -1,11 +1,18 @@
 package com.researchspace.model.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
+import com.researchspace.model.audit.AuditedEntity;
+import com.researchspace.model.inventory.Container;
 import com.researchspace.model.inventory.DigitalObjectIdentifier;
+import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleTemplate;
+import com.researchspace.model.inventory.SubSample;
+import com.researchspace.model.inventory.field.ExtraTextField;
+import com.researchspace.model.record.TestFactory;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.envers.AuditReader;
@@ -15,13 +22,6 @@ import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.junit.jupiter.api.Test;
-
-import com.researchspace.model.audit.AuditedEntity;
-import com.researchspace.model.inventory.Container;
-import com.researchspace.model.inventory.Sample;
-import com.researchspace.model.inventory.SubSample;
-import com.researchspace.model.inventory.field.ExtraTextField;
-import com.researchspace.model.record.TestFactory;
 
 /**
  * Tests audit tables. 
@@ -109,6 +109,51 @@ class HibernateAuditTest extends HibernateTest {
 	private void saveSampleInContainer(Sample sample) {
 		dao.save(sample.getSubSamples().get(0).getParentContainer(), Container.class);
 		sample = dao.save(sample, Sample.class);
+	}
+
+	@Test
+	public void searchSampleTemplateHistory() {
+
+		// save new sample template
+		SampleTemplate template = rf.createSampleTemplate("template uniquename", testUser);
+		template = dao.save(template, SampleTemplate.class);
+
+		// update template name
+		template.setName("updated template name");
+		template = dao.update(template, SampleTemplate.class);
+
+		Long templateId = template.getId();
+
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = sf.getCurrentSession();
+			transaction = session.getTransaction();
+			transaction.begin();
+
+			List<AuditedEntity<SampleTemplate>> templateHistory = getRevisionsForObject(SampleTemplate.class, templateId);
+			assertEquals(2, templateHistory.size());
+			assertInstanceOf(SampleTemplate.class, templateHistory.get(0).getEntity());
+			assertInstanceOf(SampleTemplate.class, templateHistory.get(1).getEntity());
+			assertEquals("template uniquename", templateHistory.get(0).getEntity().getName());
+			assertEquals("updated template name", templateHistory.get(1).getEntity().getName());
+
+			// Envers filters revisions by discriminator: no Sample revisions exist for the template id
+			List<AuditedEntity<Sample>> sampleHistory = getRevisionsForObject(Sample.class, templateId);
+			assertEquals(0, sampleHistory.size());
+
+			transaction.commit();
+
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			throw e;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
 	}
 
 	@Test

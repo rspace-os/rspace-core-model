@@ -49,8 +49,7 @@ class InventoryRecordReservedFieldNamesTest {
 
   @Test
   void sampleTemplateReservedFieldNames() {
-    Sample template = new Sample();
-    template.setTemplate(true);
+    SampleTemplate template = new SampleTemplate();
     assertEquals(
         union(
             BASE_RESERVED,
@@ -81,8 +80,7 @@ class InventoryRecordReservedFieldNamesTest {
     allSets.addAll(new Container(Container.ContainerType.LIST).getReservedFieldNames());
     allSets.addAll(new SubSample().getReservedFieldNames());
     allSets.addAll(new Sample().getReservedFieldNames());
-    Sample template = new Sample();
-    template.setTemplate(true);
+    SampleTemplate template = new SampleTemplate();
     allSets.addAll(template.getReservedFieldNames());
     allSets.addAll(new Instrument().getReservedFieldNames());
     allSets.addAll(new InstrumentTemplate().getReservedFieldNames());
@@ -166,8 +164,7 @@ class InventoryRecordReservedFieldNamesTest {
   @ParameterizedTest
   @ValueSource(strings = {"Subsample Alias", "subsample alias", "SUBSAMPLE ALIAS", "Quantity Units"})
   void sampleTemplateRejectsTemplateLabelInAnyCase(String fieldName) {
-    Sample template = new Sample();
-    template.setTemplate(true);
+    SampleTemplate template = new SampleTemplate();
     ExtraTextField field = new ExtraTextField();
     field.setName(fieldName);
 
