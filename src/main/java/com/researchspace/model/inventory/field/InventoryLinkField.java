@@ -70,6 +70,19 @@ public class InventoryLinkField extends InventoryEntityField {
         && StringUtils.isNotBlank(link.getRelationType());
   }
 
+  /**
+   * A link is legitimately left unfilled when existing samples are synced to a template version that
+   * newly marks the link mandatory; it is populated by a later, separate link update (where {@link
+   * #isValidValueForMandatoryField} does enforce a real target + relation type). So an empty
+   * mandatory link must not abort the bulk "update samples to latest template version" run, unlike a
+   * data-column field, which would still require a value.
+   */
+  @Override
+  @Transient
+  protected boolean requiresValueWhenBecomingMandatoryOnTemplateUpdate() {
+    return false;
+  }
+
   /** Also clears the link association, where this field type holds its value (not the data column). */
   @Override
   public void clearValue() {

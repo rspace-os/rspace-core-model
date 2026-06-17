@@ -80,6 +80,28 @@ public class InventoryLinkFieldTest {
   }
 
   @Test
+  public void becomingMandatoryDuringTemplateUpdateDoesNotRejectAnEmptyLink() {
+    // A sample's link field synced to a template version that newly marks the link mandatory must
+    // not abort the "update samples to latest template version" run just because the link is still
+    // empty: a mandatory link is legitimately filled by a later, separate link update. (A
+    // data-column field in the same situation does still throw - see InventoryEntityFieldTest.)
+    InventoryLinkField templateField = new InventoryLinkField();
+    templateField.setName("related");
+    templateField.setMandatory(true);
+
+    InventoryLinkField field = new InventoryLinkField();
+    field.setName("related");
+    field.setTemplateField(templateField);
+
+    // the empty link is still reported "not yet valid" for an actual submission ...
+    assertFalse(field.isValidValueForMandatoryField(null));
+    // ... but syncing to the now-mandatory template definition must not throw
+    boolean updated = field.updateToLatestTemplateDefinition();
+    assertTrue(updated);
+    assertTrue(field.isMandatory());
+  }
+
+  @Test
   public void clearValueClearsLinkAssociation() {
     InventoryLinkField field = new InventoryLinkField();
     InventoryLink link = new InventoryLink();
