@@ -2,6 +2,13 @@
 
 Summary of important or breaking changes.
 
+## 2.28.0 2026-06-11
+- Amended the existing IdentifierType.DATACITE_IGSN to be IdentifierType.IGSN_DATACITE
+- Added new IdentifierType.PIDINST_DATACITE and IdentifierType.PIDINST_B2INST
+
+## 2.27.0 2026-06-11
+- Restructuring core model to allow inventory linking
+
 ## 2.26.0 2026-06-11
 - Removed models related to calendar creation.
 - Removed the description and external link fields from UserProfile.
