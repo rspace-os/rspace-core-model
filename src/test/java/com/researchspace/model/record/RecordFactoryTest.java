@@ -10,9 +10,12 @@ import com.researchspace.model.Group;
 import com.researchspace.model.Role;
 import com.researchspace.model.User;
 import com.researchspace.model.core.RecordType;
+import com.researchspace.model.field.FieldType;
 import com.researchspace.model.inventory.Instrument;
 import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.field.ExtraField;
+import com.researchspace.model.inventory.field.ExtraLinkField;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +34,13 @@ public class RecordFactoryTest {
 
 	@After
 	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void createExtraFieldLinkReturnsExtraLinkField() {
+		ExtraField field = factoryAPI.createExtraField(FieldType.LINK);
+		assertTrue(field instanceof ExtraLinkField);
+		assertEquals(FieldType.LINK, field.getType());
 	}
 
 	@Test

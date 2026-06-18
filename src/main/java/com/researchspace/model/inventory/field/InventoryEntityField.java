@@ -110,6 +110,8 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
         return new InventoryUriField();
       case FieldType.IDENTIFIER_TYPE:
         return new InventoryIdentifierField();
+      case FieldType.LINK_TYPE:
+        return new InventoryLinkField();
       default:
         throw new IllegalArgumentException(String.format("Unsupported field type %s", fieldType));
     }
@@ -199,6 +201,16 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
   }
 
   /**
+   * Clears this field's value without running validation, used when a field is added to an existing
+   * sample during a template-version update and must start empty. The default clears the shared
+   * {@code data} column; field types that hold their value in an association (e.g.
+   * {@link InventoryLinkField}) override this to clear that association too.
+   */
+  public void clearValue() {
+    setData(null);
+  }
+
+  /**
    * Boolean flag to check if field supports storing data as list of options, e.g. as radio or
    * choice fields does.
    */
@@ -274,6 +286,20 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
   @Transient
   public boolean isValidValueForMandatoryField(String fieldData) {
     return StringUtils.isNotBlank(fieldData);
+  }
+
+  /**
+   * Whether a field that newly becomes mandatory during an "update samples/instruments to latest
+   * template version" run must already hold a value, failing {@link
+   * #updateToLatestTemplateDefinition()} when it does not. True for fields whose value lives in the
+   * data column. {@link InventoryLinkField} overrides this to false: a mandatory link is
+   * legitimately left unfilled by such a bulk update and is populated by a later, separate link
+   * update, so it must not abort the sync (the link target is still enforced when the sample is
+   * actually edited and saved).
+   */
+  @Transient
+  protected boolean requiresValueWhenBecomingMandatoryOnTemplateUpdate() {
+    return true;
   }
 
   public abstract InventoryEntityField shallowCopy();
@@ -352,7 +378,8 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
     }
     if (isMandatory() != templateField.isMandatory()) {
       setMandatory(templateField.isMandatory());
-      if (!isValidValueForMandatoryField(getFieldData())) {
+      if (requiresValueWhenBecomingMandatoryOnTemplateUpdate()
+          && !isValidValueForMandatoryField(getFieldData())) {
         throw new IllegalStateException("Field [" + getName() + "] is empty, but "
             + "is mandatory in latest template field definition");
       }

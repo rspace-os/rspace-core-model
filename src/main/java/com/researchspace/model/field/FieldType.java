@@ -9,7 +9,7 @@ public enum FieldType {
 
 	NUMBER("Number"), STRING("String"), TEXT("Text"), RADIO("Radio"),
 	CHOICE("Choice"), DATE("Date"), TIME("Time"), REFERENCE("Reference"), ATTACHMENT("Attachment"),
-	URI("Uri"), IDENTIFIER("Identifier");
+	URI("Uri"), IDENTIFIER("Identifier"), LINK("Link");
 
 	private String type;
 	public static final String NUMBER_TYPE = "Number";
@@ -23,6 +23,7 @@ public enum FieldType {
 	public static final String ATTACHMENT_TYPE = "Attachment";
 	public static final String URI_TYPE = "Uri";
 	public static final String IDENTIFIER_TYPE = "Identifier";
+	public static final String LINK_TYPE = "Link";
 
 	/**
 	 * Gets the field type for an input String or <code>null</code> if the argument
@@ -59,6 +60,8 @@ public enum FieldType {
 			return URI;
 		case IDENTIFIER_TYPE:
 			return IDENTIFIER;
+		case LINK_TYPE:
+			return LINK;
 		default:
 			return null;
 		}
