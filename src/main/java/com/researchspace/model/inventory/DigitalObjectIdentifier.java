@@ -1,8 +1,16 @@
 
 package com.researchspace.model.inventory;
 
+import com.researchspace.core.util.JacksonUtil;
+import com.researchspace.core.util.SecureStringUtils;
 import com.researchspace.model.User;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,12 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import com.researchspace.core.util.JacksonUtil;
-import com.researchspace.core.util.SecureStringUtils;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -40,13 +42,16 @@ public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity impl
 
 	private static final long serialVersionUID = 1015505407767178312L;
 
+	/* mapped ORDINAL to the INT 'type' column: only ever append values, never reorder or remove */
 	public enum IdentifierType {
-		DATACITE_IGSN
+		IGSN_DATACITE,
+		PIDINST_DATACITE,
+		PIDINST_B2INST
 	}
 	
 	private Long id;
 	
-	private IdentifierType type = IdentifierType.DATACITE_IGSN; // only one supported right now
+	private IdentifierType type = IdentifierType.IGSN_DATACITE; // default type, kept for backwards compatibility
 
 	private String identifier;
 	
@@ -82,6 +87,11 @@ public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity impl
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	public Long getId() {
 		return id;
+	}
+
+	@Enumerated(EnumType.ORDINAL)
+	public IdentifierType getType() {
+		return type;
 	}
 
 	@ManyToOne

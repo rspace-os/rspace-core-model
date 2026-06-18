@@ -900,7 +900,7 @@ class HibernateSandboxTest extends HibernateTest {
 		assertEquals(1, sample.getActiveIdentifiers().size());
 		DigitalObjectIdentifier savedIgsn = sample.getActiveIdentifiers().get(0);
 		assertNotNull(savedIgsn.getId());
-		assertEquals(DigitalObjectIdentifier.IdentifierType.DATACITE_IGSN, savedIgsn.getType());
+		assertEquals(DigitalObjectIdentifier.IdentifierType.IGSN_DATACITE, savedIgsn.getType());
 		assertNull(savedIgsn.getOtherData(DigitalObjectIdentifier.IdentifierOtherProperty.PUBLISHER));
 	}	
 	
