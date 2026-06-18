@@ -45,8 +45,8 @@ public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity impl
 	/* mapped ORDINAL to the INT 'type' column: only ever append values, never reorder or remove */
 	public enum IdentifierType {
 		IGSN_DATACITE,
-		PDINST_DATACITE,
-		PDINST_B2INST
+		PIDINST_DATACITE,
+		PIDINST_B2INST
 	}
 	
 	private Long id;

@@ -17,8 +17,8 @@ public class DigitalObjectIdentifierTest {
 	@Test
 	public void identifierTypeOrdinalsAreStable() {
 		assertEquals(0, IdentifierType.IGSN_DATACITE.ordinal());
-		assertEquals(1, IdentifierType.PDINST_DATACITE.ordinal());
-		assertEquals(2, IdentifierType.PDINST_B2INST.ordinal());
+		assertEquals(1, IdentifierType.PIDINST_DATACITE.ordinal());
+		assertEquals(2, IdentifierType.PIDINST_B2INST.ordinal());
 		assertEquals(3, IdentifierType.values().length);
 	}
 
