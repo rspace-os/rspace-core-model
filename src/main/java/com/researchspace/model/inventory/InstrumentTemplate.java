@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.annotations.Indexed;
 
 /**
  * Represents RSpace Inventory Instrument Template
@@ -19,6 +20,7 @@ import org.hibernate.envers.Audited;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+@Indexed
 public class InstrumentTemplate extends InstrumentEntity {
 
   private static final String TEMPLATE_MOVE_NOT_ALLOWED =
