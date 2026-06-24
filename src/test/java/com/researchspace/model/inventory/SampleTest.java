@@ -47,6 +47,9 @@ public class SampleTest {
 		assertNotNull(sample.getCreationDate());
 		assertNotNull(sample.getSampleSource());
 		assertFalse(sample.isDeleted());
+		assertEquals(InventoryRecord.InventoryRecordType.SAMPLE, sample.getType());
+		assertTrue(sample.isSample());
+		assertFalse(sample.isSampleTemplate());
 		assertEquals(1, sample.getAttachedFiles().size());
 		assertEquals(1, sample.getActiveBarcodes().size());
 		assertEquals(1, sample.getActiveSubSamplesCount());
@@ -78,7 +81,7 @@ public class SampleTest {
 				"activeExtraFields", "extraFields", "activeBarcodes", "barcodes", "activeIdentifiers", "identifiers",
 				"sample", "editInfo", "attachedFiles", "files");
 		ModelTestUtils.assertCopiedFieldsAreEqual(copy, sample, toIgnore,
-				TransformerUtils.toList(Sample.class, InventoryRecord.class));
+				TransformerUtils.toList(Sample.class, SampleEntity.class, InventoryRecord.class));
 		assertNull(copy.getGlobalIdentifier());
 		assertNotNull(copy.getImageFileProperty());
 		assertNotNull(copy.getThumbnailFileProperty());
@@ -103,7 +106,7 @@ public class SampleTest {
 		assertTrue(sample.getGlobalIdentifier().startsWith("SA"));
 		assertEquals(sample.getOid().getPrefix(), GlobalIdPrefix.SA);
 		
-		Sample template = sample.copyToTemplate(anyUser);
+		SampleTemplate template = sample.copyToTemplate(anyUser);
 		template.setId(6L);
 		assertTrue(template.getGlobalIdentifier().startsWith("IT"));
 		assertTrue(template.getOid().getPrefix().equals(GlobalIdPrefix.IT));
@@ -113,7 +116,7 @@ public class SampleTest {
 
 	@Test
 	public void subSampleAlias() {
-		Sample template = sample.copyToTemplate(anyUser);
+		SampleTemplate template = sample.copyToTemplate(anyUser);
 		template.setSubSampleAliases("alias", " aliases ");
 		assertEquals("alias", template.getSubSampleAlias());
 		assertEquals("aliases", template.getSubSampleAliasPlural()); // trimmed
@@ -155,7 +158,7 @@ public class SampleTest {
 	@Test
 	@DisplayName("Make template from sample")
 	public void copyToTemplate() {
-		Sample template = sample.copyToTemplate(anyUser);
+		SampleTemplate template = sample.copyToTemplate(anyUser);
 		assertTrue(template.isTemplate());
 		
 		// can assign a sample template fine 
@@ -164,10 +167,11 @@ public class SampleTest {
 		// can copy a sample, but can't sample from as if it was a template 
 		Sample justACopy = sample.copy(anyUser);
 		assertFalse(justACopy.isTemplate());
-		assertThrows(IllegalArgumentException.class, ()-> justACopy.copyFromTemplate(anyUser));
+		IllegalStateException ise = assertThrows(IllegalStateException.class, ()-> justACopy.copyFromTemplate(anyUser));
+		assertEquals("Only a SampleTemplate can be used to copy from a template", ise.getMessage());
 		
 		// can copy a template
-		Sample newTemplate = justACopy.copyToTemplate(anyUser);
+		SampleTemplate newTemplate = justACopy.copyToTemplate(anyUser);
 		assertTrue(newTemplate.isTemplate());
 	}
 	
@@ -175,7 +179,7 @@ public class SampleTest {
 	@DisplayName("Make sample from template")
 	public void copyFromTemplate() {
 		//make a template
-		Sample template = sample.copyToTemplate(anyUser);
+		SampleTemplate template = sample.copyToTemplate(anyUser);
 
 		Sample newSample = template.copyFromTemplate(anyUser);
 		assertFalse(newSample.isTemplate());
@@ -189,7 +193,7 @@ public class SampleTest {
 	@DisplayName("Update sample to latest template definition")
 	public void updateSampleToLatestTemplateDefinition() {
 		// make a template, and a new sample out of it
-		Sample template = sample.copyToTemplate(anyUser);
+		SampleTemplate template = sample.copyToTemplate(anyUser);
 		Sample newSample = template.copyFromTemplate(anyUser);
 		assertEquals(SubSampleName.ALIQUOT.getDisplayName(), newSample.getSubSampleAlias());
 		assertEquals(0, newSample.getActiveFields().size());
@@ -235,8 +239,8 @@ public class SampleTest {
 	@Test
 	public void checkTemplateOperations() throws Exception {
 		// make a template
-		Sample template = sample.copyToTemplate(anyUser);
-		
+		SampleTemplate template = sample.copyToTemplate(anyUser);
+
 		// try attaching a file to workbench
 		IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, 
 				() -> template.addAttachedFile(new InventoryFile(null, null)));
@@ -247,7 +251,7 @@ public class SampleTest {
 	@DisplayName("Delete sample template field")
 	public void deleteSampleTemplateField() {
 		
-		Sample template = sample.copyToTemplate(anyUser);
+		SampleTemplate template = sample.copyToTemplate(anyUser);
 
 		// no fields to start with
 		assertEquals(0, template.getFields().size());

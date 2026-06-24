@@ -1,12 +1,10 @@
 package com.researchspace.model.stoichiometry;
 
+import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.InventoryRecordConnectedEntity;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,9 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.ConstraintViolationException;
-
-import com.researchspace.model.inventory.Sample;
-import com.researchspace.model.units.QuantityInfo;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -52,11 +47,11 @@ public class StoichiometryInventoryLink extends InventoryRecordConnectedEntity {
   @Override
   public void validateBeforeSave() {
     super.validateBeforeSave();
-    if (getInventoryRecord() instanceof Sample){
-      Sample sample = (Sample) getInventoryRecord();
-      if(sample.isTemplate()){
-        throw new ConstraintViolationException("Cannot link stoichiometry to sample template", null);
-      }
+    // isSampleTemplate() rather than instanceof: a lazily-loaded reference is a proxy typed to
+    // the abstract root (never the concrete subclass), but virtual dispatch reaches the real type
+    InventoryRecord invRec = getInventoryRecord();
+    if (invRec != null && invRec.isSampleTemplate()) {
+      throw new ConstraintViolationException("Cannot link stoichiometry to sample template", null);
     }
   }
 }

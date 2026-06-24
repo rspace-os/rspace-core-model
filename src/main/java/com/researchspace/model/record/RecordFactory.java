@@ -30,6 +30,8 @@ import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleEntity;
+import com.researchspace.model.inventory.SampleTemplate;
 import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.SubSampleName;
 import com.researchspace.model.inventory.field.ExtraField;
@@ -335,15 +337,14 @@ public class RecordFactory implements IRecordFactory {
   }
 
   @Override
-  public Sample createComplexSampleTemplate(String templateName, String desc, User createdBy) {
+  public SampleTemplate createComplexSampleTemplate(String templateName, String desc, User createdBy) {
 
     Calendar formDate = Calendar.getInstance();
     formDate.set(2020, 4, 4, 6, 55, 15);
 
-    Sample template = createSample(templateName, createdBy);
-    template.setTemplate(true);
+    SampleTemplate template = createSampleTemplate(templateName, createdBy);
     template.setSubSampleAliases(SubSampleName.ALIQUOT);
-    template.setDescription("A template with all field types");
+    template.setDescription(desc);
     template.setStorageTempMin(QuantityInfo.of(3, RSUnitDef.CELSIUS));
     template.setStorageTempMax(QuantityInfo.of(10, RSUnitDef.CELSIUS));
 
@@ -417,6 +418,24 @@ public class RecordFactory implements IRecordFactory {
     return sample;
   }
 
+  @Override
+  public SampleTemplate createSampleTemplate(String name, User createdBy) {
+    checkArgs(name, createdBy);
+
+    SampleTemplate template = new SampleTemplate();
+    template.setName(abbreviate(trim(name), BaseRecord.DEFAULT_VARCHAR_LENGTH));
+    template.setCreatedBy(createdBy.getUsername());
+    template.setOwner(createdBy);
+    template.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
+    template.setSubSampleAliases(SubSampleName.ALIQUOT);
+    List<SubSample> defaultSubSampleList = new ArrayList<>();
+    defaultSubSampleList.add(createSubSample(template.getName(), createdBy, template));
+    template.setSubSamples(defaultSubSampleList);
+    template.setDefaultUnitId(RSUnitDef.MILLI_LITRE.getId());
+
+    return template;
+  }
+
 
   @Override
   public Instrument createInstrument(String name, User createdBy,
@@ -445,9 +464,9 @@ public class RecordFactory implements IRecordFactory {
 
 
   @Override
-  public Sample createSample(String name, User createdBy, Sample sampleTemplate) {
+  public Sample createSample(String name, User createdBy, SampleTemplate sampleTemplate) {
     checkArgs(name, createdBy);
-    Validate.isTrue(sampleTemplate.isTemplate(), "requires sample to be a template");
+    Validate.notNull(sampleTemplate, "sampleTemplate must not be null");
     Sample sample = sampleTemplate.copyFromTemplate(createdBy);
     sample.setName(name);
     sample.setModifiedBy(createdBy.getUsername(), modifiedByStrategy);
@@ -464,7 +483,7 @@ public class RecordFactory implements IRecordFactory {
   }
 
   @Override
-  public SubSample createSubSample(String name, User createdBy, Sample sample) {
+  public SubSample createSubSample(String name, User createdBy, SampleEntity sample) {
     checkArgs(name, createdBy);
 
     SubSample subSample = new SubSample(sample);
@@ -475,14 +494,17 @@ public class RecordFactory implements IRecordFactory {
     return subSample;
   }
 
-  private QuantityInfo getDefaultQuantityForNewSubSample(Sample sample) {
+  private QuantityInfo getDefaultQuantityForNewSubSample(SampleEntity sample) {
     RSUnitDef subSampleUnit;
-    if (sample.getSTemplate() != null && sample.getSTemplate().getDefaultUnitId() != null) {
-      subSampleUnit = RSUnitDef.getUnitById(sample.getSTemplate().getDefaultUnitId());
+    // getLinkedSampleTemplate() dispatches polymorphically through any Hibernate proxy, so no
+    // unproxy/cast is needed (returns null for a template or a sample with no template).
+    SampleTemplate template = sample.getLinkedSampleTemplate();
+    if (template != null && template.getDefaultUnitId() != null) {
+      subSampleUnit = RSUnitDef.getUnitById(template.getDefaultUnitId());
     } else if (sample.getQuantityInfo() != null) {
       subSampleUnit = RSUnitDef.getUnitById(sample.getQuantityInfo().getUnitId());
     } else {
-      subSampleUnit = RSUnitDef.MILLI_LITRE; // default for basic sample
+      subSampleUnit = RSUnitDef.MILLI_LITRE; // fallback default when no template or quantity info is available
     }
     return QuantityInfo.of(BigDecimal.ONE, subSampleUnit);
   }

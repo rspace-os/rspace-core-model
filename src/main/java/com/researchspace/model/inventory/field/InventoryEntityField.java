@@ -8,7 +8,7 @@ import com.researchspace.model.field.ValidatingField;
 import com.researchspace.model.inventory.InstrumentEntity;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord;
-import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleEntity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -64,7 +64,7 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
   private boolean deleteOnInstrumentUpdate;
   private boolean mandatory;
 
-  private Sample sample;
+  private SampleEntity sample;
   private InstrumentEntity instrumentEntity;
 
 
@@ -118,7 +118,7 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
   }
   @ManyToOne
   @JoinColumn
-  public Sample getSample() {
+  public SampleEntity getSample() {
     return sample;
   }
 
@@ -409,8 +409,8 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
    * Sets parent.
    */
   public void setInventoryRecord(InventoryRecord invRec) {
-    if (invRec instanceof Sample) {
-      sample = (Sample) invRec;
+    if (invRec instanceof SampleEntity) {
+      sample = (SampleEntity) invRec;
     } else if (invRec instanceof InstrumentEntity) {
       instrumentEntity = (InstrumentEntity) invRec;
     }

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleTemplate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -381,7 +382,7 @@ class InventoryEntityFieldTest {
 		assertTrue(field.validate(value).hasErrorMessages());
 		
 		// but if field is a part of the sample template, then it accepts blank value fine
-		parentSample.setTemplate(true);
+		field.setInventoryRecord(new SampleTemplate());
 		assertFalse(field.validate(value).hasErrorMessages());
 	}
 

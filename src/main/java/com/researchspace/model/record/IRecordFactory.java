@@ -15,6 +15,8 @@ import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleEntity;
+import com.researchspace.model.inventory.SampleTemplate;
 import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.field.ExtraField;
 import com.researchspace.model.units.QuantityInfo;
@@ -141,7 +143,7 @@ public interface IRecordFactory {
    * @param createdBy      creator and owner of the sample
    * @param sampleTemplate template to create sample from.
    */
-  Sample createSample(String name, User createdBy, Sample sampleTemplate);
+  Sample createSample(String name, User createdBy, SampleTemplate sampleTemplate);
 
   /**
    * Creates new Inventory Sample, with no fields and a default empty SubSample.
@@ -151,9 +153,25 @@ public interface IRecordFactory {
    */
   Sample createSample(String name, User createdBy);
 
-  SubSample createSubSample(String name, User createdBy, Sample sample);
+  /**
+   * Creates a new SubSample attached to the given {@link SampleEntity}
+   * (a {@link Sample}, or a {@link SampleTemplate} when building a template's default subsample).
+   *
+   * @param name subsample name
+   * @param createdBy creator and owner
+   * @param sample owning sample or template
+   */
+  SubSample createSubSample(String name, User createdBy, SampleEntity sample);
 
-  Sample createComplexSampleTemplate(String templateName, String desc, User createdBy);
+  SampleTemplate createComplexSampleTemplate(String templateName, String desc, User createdBy);
+
+  /**
+   * Creates new Inventory Sample Template, with no fields and a default empty SubSample.
+   *
+   * @param name      template name
+   * @param createdBy creator and owner of the template
+   */
+  SampleTemplate createSampleTemplate(String name, User createdBy);
 
   /**
    * Creates new Inventory instrument, with no fields
