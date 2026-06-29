@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  * declaring whether the record will carry file attachments.
  *
  * <p>This is distinct from the richer {@code files} object returned on a record
- * (see {@code com.researchspace.b2inst.model.response.RecordFiles}), which also
+ * (see {@code com.researchspace.b2inst.model.response.B2instRecordFiles}), which also
  * lists entries and byte totals.</p>
  */
 @Data

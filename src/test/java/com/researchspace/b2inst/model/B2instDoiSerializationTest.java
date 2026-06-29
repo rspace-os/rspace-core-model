@@ -16,8 +16,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * Guards the two things easiest to break when porting/renaming the B2INST POJOs: the PIDINST
- * PascalCase JSON keys on the request side and the snake_case keys on the response side stay
+ * Guards the JSON key conventions easiest to break when porting/renaming the B2INST POJOs: the
+ * PIDINST keys on the request side (PascalCase at the top level, lowerCamelCase within nested
+ * objects such as {@code Owner[].ownerName}) and the snake_case keys on the response side stay
  * exactly as the B2INST API expects, regardless of the Java {@code B2inst*} class names.
  */
 class B2instDoiSerializationTest {

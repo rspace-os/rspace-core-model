@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
  * <p>This object is the {@code metadata} block sent when creating a draft (STEP 1
  * request) and echoed back, with a server-populated {@link #communityExtension},
  * inside the draft record (STEP 1 response). The JSON keys follow the PIDINST
- * PascalCase convention and are mapped to idiomatic Java field names via
+ * PascalCase convention (except the server-populated {@code community_extension},
+ * which is snake_case) and are mapped to idiomatic Java field names via
  * {@link JsonProperty}.</p>
  */
 @Data
