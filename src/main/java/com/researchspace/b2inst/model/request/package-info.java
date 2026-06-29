@@ -4,9 +4,9 @@
  * <ul>
  *   <li>{@link com.researchspace.b2inst.model.request.B2instDoi} - STEP 1,
  *       create the draft record.</li>
- *   <li>{@link com.researchspace.b2inst.model.request.FileEntryKey} - STEP 2,
+ *   <li>{@link com.researchspace.b2inst.model.request.B2instFileEntryKey} - STEP 2,
  *       declare file entries (sent as a JSON array).</li>
- *   <li>{@link com.researchspace.b2inst.model.request.ReviewRequest} - STEP 5,
+ *   <li>{@link com.researchspace.b2inst.model.request.B2instReviewRequest} - STEP 5,
  *       create the community-submission review request.</li>
  * </ul>
  *

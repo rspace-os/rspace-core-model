@@ -45,7 +45,7 @@ class B2instDoiSerializationTest {
     assertEquals("My Instrument", metadata.get("Name").asText());
     assertEquals("1.0", metadata.get("SchemaVersion").asText());
     assertEquals("Jane Doe", metadata.get("Owner").get(0).get("ownerName").asText());
-    assertEquals(false, json.get("files").get("enabled").asBoolean());
+    assertFalse(json.get("files").get("enabled").asBoolean());
     // NON_NULL: unset PIDINST fields must not be emitted into the request body.
     assertFalse(metadata.has("Manufacturer"), "null Manufacturer must be omitted");
     assertFalse(metadata.has("Model"), "null Model must be omitted");
@@ -77,6 +77,5 @@ class B2instDoiSerializationTest {
     B2instDoi doi = MAPPER.readValue(json, B2instDoi.class);
 
     assertEquals("X", doi.getMetadata().getName());
-    assertTrue(true);
   }
 }

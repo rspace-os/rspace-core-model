@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  * creates the community-submission review request.
  *
  * <p>Maps the {@code step5_create_review.request.json} payload. The response is
- * modelled by {@code com.researchspace.b2inst.model.response.RequestResponse}.</p>
+ * modelled by {@code com.researchspace.b2inst.model.response.B2instRequestResponse}.</p>
  */
 @Data
 @NoArgsConstructor
