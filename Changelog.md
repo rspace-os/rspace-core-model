@@ -2,6 +2,9 @@
 
 Summary of important or breaking changes.
 
+## 2.30.0 2026-06-25
+- Added `com.researchspace.b2inst.model` PIDINST/B2INST domain wrappers
+
 ## 2.29.0 2026-06-24
 - New `SampleTemplate` entity to support sample templates in the inventory module
 
