@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Links carried on a {@link B2instRequestResponse}, including the
- * {@link #actions} block whose {@code submit} link drives STEP 6.
+ * {@link #actions} block whose {@code submit} link submits the request to the community.
  */
 @Data
 @NoArgsConstructor

@@ -11,11 +11,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Response of STEP 1, {@code POST /api/records}: the freshly created draft record
- * (maps {@code step1_create_draft.response.json}).
+ * Response of {@code POST /api/records}: the freshly created draft record.
  *
- * <p>The script reads {@link #id} from this response and threads it through every
- * later step as the record id (RID). The commonly used fields are modelled
+ * <p>The connector reads {@link #id} from this response and threads it through the
+ * later calls as the record id (RID). The commonly used fields are modelled
  * explicitly; the heavier bookkeeping blocks ({@link #parent}, {@link #versions},
  * {@link #pids}, {@link #stats}, {@link #customFields}, {@link #deletionStatus})
  * are kept loosely typed so the wrapper stays faithful without a large number of

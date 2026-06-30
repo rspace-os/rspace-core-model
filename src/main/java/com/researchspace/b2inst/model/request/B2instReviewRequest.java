@@ -8,10 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Request body for STEP 5, {@code PUT /api/records/{id}/draft/review}, which
+ * Request body for {@code PUT /api/records/{id}/draft/review}, which
  * creates the community-submission review request.
  *
- * <p>Maps the {@code step5_create_review.request.json} payload. The response is
+ * <p>The response is
  * modelled by {@code com.researchspace.b2inst.model.response.B2instRequestResponse}.</p>
  */
 @Data

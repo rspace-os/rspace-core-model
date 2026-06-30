@@ -10,11 +10,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Response of STEP 2, {@code POST /api/records/{id}/draft/files}: the listing of
- * declared draft file entries (maps {@code step2_add_files.response.json}).
+ * Response of {@code POST /api/records/{id}/draft/files}: the listing of
+ * declared draft file entries.
  *
  * <p>Each entry starts in {@code pending} status until its bytes are uploaded
- * (STEP 3) and committed (STEP 4).</p>
+ * and committed.</p>
  */
 @Data
 @NoArgsConstructor

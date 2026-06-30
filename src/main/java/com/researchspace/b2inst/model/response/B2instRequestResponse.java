@@ -8,15 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The community-submission request object, shared by STEPS 5 and 6.
+ * The community-submission request object, returned by the review and submit calls.
  *
- * <p>STEP 5 ({@code PUT /api/records/{id}/draft/review}) returns it in
- * {@code "created"} status carrying the {@code submit} action link the script
- * extracts from {@code links.actions.submit}
- * (maps {@code step5_create_review.response.json}). STEP 6 ({@code POST} that
- * submit link) returns the same object in {@code "submitted"} status with the
- * curator actions ({@code accept}, {@code decline}, {@code cancel}) instead
- * (maps {@code step6_submit_record.response.json}).</p>
+ * <p>Creating the review ({@code PUT /api/records/{id}/draft/review}) returns it in
+ * {@code "created"} status carrying the {@code submit} action link the connector
+ * extracts from {@code links.actions.submit}. Posting that submit link
+ * returns the same object in {@code "submitted"} status with the
+ * curator actions ({@code accept}, {@code decline}, {@code cancel}) instead.</p>
  */
 @Data
 @NoArgsConstructor

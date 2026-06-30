@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class B2instFileLinks {
 
-  /** Endpoint to upload or download the file bytes (STEP 3). */
+  /** Endpoint to upload or download the file bytes. */
   @JsonProperty("content")
   private String content;
 
@@ -25,7 +25,7 @@ public class B2instFileLinks {
   @JsonProperty("self")
   private String self;
 
-  /** Endpoint to commit the upload (STEP 4). */
+  /** Endpoint to commit the upload. */
   @JsonProperty("commit")
   private String commit;
 }

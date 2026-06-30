@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 /**
  * Access settings of a record.
  *
- * <p>On the STEP 1 request only {@link #record} and {@link #files} are sent; the
- * STEP 1 response additionally carries {@link #embargo} and a derived
+ * <p>On a create-record request only {@link #record} and {@link #files} are sent; the
+ * response additionally carries {@link #embargo} and a derived
  * {@link #status}. Both directions share this single type, with the
  * response-only fields left {@code null} when building a request.</p>
  */

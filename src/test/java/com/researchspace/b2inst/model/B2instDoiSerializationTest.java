@@ -54,7 +54,7 @@ class B2instDoiSerializationTest {
 
   @Test
   void deserializesDraftRecordSnakeCaseResponseKeys() throws Exception {
-    // Mirrors the STEP 1 create-draft response: the RID and the snake_case links the connector reads.
+    // Mirrors the create-draft response: the RID and the snake_case links the connector reads.
     String json =
         "{\"id\":\"k2j9p-7yh21\",\"is_draft\":true,\"status\":\"draft\","
             + "\"links\":{\"self_html\":\"https://host/uploads/k2j9p-7yh21\","

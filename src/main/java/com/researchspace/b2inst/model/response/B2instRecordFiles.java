@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
  *
  * <p>Unlike the draft file-listing returned by the upload endpoints (see
  * {@link B2instDraftFileList}), the record-level container keys its {@link #entries} by
- * file name and reports aggregate counts. At STEP 1 it is enabled but empty.</p>
+ * file name and reports aggregate counts. On a freshly created draft it is enabled but empty.</p>
  */
 @Data
 @NoArgsConstructor

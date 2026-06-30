@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class B2instRequestActions {
 
-  /** Link to submit the request to the community (STEP 6). */
+  /** Link to submit the request to the community. */
   @JsonProperty("submit")
   private String submit;
 

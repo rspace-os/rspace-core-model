@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The {@code files} option block sent when creating a draft (STEP 1 request),
+ * The {@code files} option block sent when creating a draft record,
  * declaring whether the record will carry file attachments.
  *
  * <p>This is distinct from the richer {@code files} object returned on a record

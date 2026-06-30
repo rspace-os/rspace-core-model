@@ -9,10 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * A single draft file entry, shared across STEPS 2 to 4.
+ * A single draft file entry, shared across the draft file endpoints.
  *
- * <p>It appears in the STEP 2 listing and as the standalone STEP 3 response while
- * {@code pending}, then as the STEP 4 response once {@code completed}, at which
+ * <p>It appears in the declared-files listing and as the standalone upload response while
+ * {@code pending}, then once {@code completed}, at which
  * point the upload fields ({@link #checksum}, {@link #mimetype}, {@link #size},
  * {@link #fileId}, {@link #versionId}, {@link #bucketId}, {@link #storageClass})
  * are populated. The same type also represents the committed entries listed on a
