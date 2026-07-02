@@ -35,6 +35,8 @@ import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord.InventorySharingMode;
 import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleEntity;
+import com.researchspace.model.inventory.SampleTemplate;
 import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.SubSampleNote;
 import com.researchspace.model.inventory.field.ExtraField;
@@ -73,6 +75,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import jakarta.validation.ConstraintViolationException;
 import org.hibernate.LazyInitializationException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -275,6 +279,54 @@ class HibernateSandboxTest extends HibernateTest {
     assertInstanceOf(InstrumentTemplate.class, loaded);
 		assertTrue(loaded.isTemplate());
 		assertEquals(GlobalIdPrefix.NT, loaded.getOid().getPrefix());
+	}
+
+	@Test
+	@DisplayName("Persist and reload SampleTemplate discriminator")
+	void persistSampleTemplateDiscriminator() {
+		User user = createAndSaveAnyUser();
+		SampleTemplate template = rf.createSampleTemplate("test sample template", user);
+		template = dao.save(template, SampleTemplate.class);
+
+		SampleEntity loadedTemplate = dao.load(template.getId(), SampleEntity.class);
+		assertInstanceOf(SampleTemplate.class, loadedTemplate);
+		assertTrue(loadedTemplate.isTemplate());
+		assertEquals(GlobalIdPrefix.IT, loadedTemplate.getOid().getPrefix());
+
+		Sample sample = TestFactory.createBasicSampleInContainer(user);
+		sample = saveSampleInContainer(sample);
+		SampleEntity loadedSample = dao.load(sample.getId(), SampleEntity.class);
+		assertInstanceOf(Sample.class, loadedSample);
+		assertFalse(loadedSample.isTemplate());
+		assertEquals(GlobalIdPrefix.SA, loadedSample.getOid().getPrefix());
+
+		// inserts write the DTYPE discriminator: "SampleTemplate" for the template, "Sample" otherwise
+		assertEquals("SampleTemplate", readDiscriminatorValue(template.getId()));
+		assertEquals("Sample", readDiscriminatorValue(sample.getId()));
+	}
+
+	private String readDiscriminatorValue(Long id) {
+		Transaction transaction = null;
+		Session session = null;
+		try {
+			session = sf.openSession();
+			transaction = session.beginTransaction();
+			Object discriminatorValue = session
+					.createNativeQuery("select DTYPE from Sample where id = :id")
+					.setParameter("id", id)
+					.getSingleResult();
+			transaction.commit();
+			return (String) discriminatorValue;
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			throw e;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
 	}
 
 	@Test
@@ -900,7 +952,7 @@ class HibernateSandboxTest extends HibernateTest {
 		assertEquals(1, sample.getActiveIdentifiers().size());
 		DigitalObjectIdentifier savedIgsn = sample.getActiveIdentifiers().get(0);
 		assertNotNull(savedIgsn.getId());
-		assertEquals(DigitalObjectIdentifier.IdentifierType.DATACITE_IGSN, savedIgsn.getType());
+		assertEquals(DigitalObjectIdentifier.IdentifierType.IGSN_DATACITE, savedIgsn.getType());
 		assertNull(savedIgsn.getOtherData(DigitalObjectIdentifier.IdentifierOtherProperty.PUBLISHER));
 	}	
 	

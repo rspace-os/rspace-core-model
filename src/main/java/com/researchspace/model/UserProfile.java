@@ -1,26 +1,18 @@
 package com.researchspace.model;
 
-import static com.researchspace.core.util.LinkUtils.HTTPS_PREFIX;
-import static com.researchspace.core.util.LinkUtils.HTTP_PREFIX;
-import static com.researchspace.core.util.LinkUtils.modifyPrefix;
-
 import java.io.Serializable;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Transient;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlIDREF;
 import jakarta.xml.bind.annotation.XmlType;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -33,20 +25,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UserProfile implements Serializable, Comparable<UserProfile> {
 
 	private static final long serialVersionUID = 6039997143520226780L;
-
-	public static final int MAX_FIELD_LENG = 255;
-
-	protected static final int MAX_PROFILE_TEXT_LEN = 2000;
-
-	protected static final int SHORT_PROFILE_TEXT_LEN = 100;
-
-	protected static final String DEFAULT_PROFILE_TEXT = "Optionally, add any information about you or your research.";
-
-	private String profileText = DEFAULT_PROFILE_TEXT;
-
-	private String externalLinkURL;
-
-	private String externalLinkDisplay;
 
 	private Long id;
 
@@ -125,83 +103,7 @@ public class UserProfile implements Serializable, Comparable<UserProfile> {
 
 	@Override
 	public String toString() {
-		return "UserProfile for user [" + (owner == null ? owner : owner.getUsername()) + "] -  [profileText="
-				+ StringUtils.abbreviate(profileText, 100) + ", externalLinkURL=" + externalLinkURL
-				+ ", externalLinkDisplay=" + externalLinkDisplay + "]";
-	}
-
-	@Column(length = MAX_PROFILE_TEXT_LEN)
-	@XmlElement
-	public String getProfileText() {
-		return profileText;
-	}
-
-	/**
-	 * Sets profile text, abbreviating it to fit inside DB column size limit if
-	 * too big
-	 * 
-	 * @param profileText
-	 */
-	public void setProfileText(String profileText) {
-		this.profileText = StringUtils.abbreviate(profileText, MAX_PROFILE_TEXT_LEN);
-	}
-
-	/**
-	 * Gets abbreviated profile text to be displayed in a listing of users, for
-	 * example
-	 * 
-	 * @return abbreviated profile text, or null if profile text was not set by
-	 *         the user
-	 */
-	@Transient
-	public String getShortProfileText() {
-		if (hasNonDefaultProfileText()) {
-			return StringUtils.abbreviate(profileText, SHORT_PROFILE_TEXT_LEN);
-		}
-		return null;
-	}
-
-	private boolean hasNonDefaultProfileText() {
-		return !DEFAULT_PROFILE_TEXT.equals(profileText);
-	}
-
-	@XmlElement
-	public String getExternalLinkURL() {
-		return externalLinkURL;
-	}
-
-	/**
-	 * Sets the external link, prefixing with 'http://' if not already there.
-	 * 
-	 * @throws if
-	 *             length of string > MAX_FIELD_LENG
-	 * @param externalLinkURL
-	 */
-	public void setExternalLinkURL(String externalLinkURL) {
-		if (externalLinkURL != null && isTooLong(externalLinkURL)) {
-			throw new IllegalArgumentException(
-					"Link URL is too long! Must be < " + (MAX_FIELD_LENG - HTTPS_PREFIX.length()) + " chars");
-		}
-		if (!StringUtils.isBlank(externalLinkURL)) {
-			if (externalLinkURL.trim().startsWith(HTTP_PREFIX) || externalLinkURL.trim().startsWith(HTTPS_PREFIX)) {
-				this.externalLinkURL = externalLinkURL.trim();
-
-			} else {
-				this.externalLinkURL = modifyPrefix(externalLinkURL.trim());
-			}
-		} else {
-			this.externalLinkURL = externalLinkURL;
-		}
-
-	}
-
-	@XmlElement()
-	public String getExternalLinkDisplay() {
-		return externalLinkDisplay;
-	}
-
-	public void setExternalLinkDisplay(String externalLinkDisplay) {
-		this.externalLinkDisplay = StringUtils.abbreviate(externalLinkDisplay, MAX_FIELD_LENG);
+		return "UserProfile for user [" + (owner == null ? owner : owner.getUsername()) + "]";
 	}
 
 	/**
@@ -215,14 +117,6 @@ public class UserProfile implements Serializable, Comparable<UserProfile> {
 
 	public void setProfilePicture(ImageBlob profilePicture) {
 		this.profilePicture = profilePicture;
-	}
-
-	@Transient
-	public boolean isTooLong(String externalLinkInput) {
-		if (externalLinkInput == null) {
-			return false;
-		}
-		return externalLinkInput.length() >= MAX_FIELD_LENG - HTTPS_PREFIX.length();
 	}
 
 	@Override

@@ -5,6 +5,24 @@ Summary of important or breaking changes.
 ## 3.0.0 2026-04-29
 - Spring 6 / Hibernate 6 / Jakarta namespace migration
 - Switch to rspace-parent 3.0.0
+- Incorporates all changes up to 2.30.0 (merged from main)
+
+## 2.30.0 2026-06-25
+- Added `com.researchspace.b2inst.model` PIDINST/B2INST domain wrappers
+
+## 2.29.0 2026-06-24
+- New `SampleTemplate` entity to support sample templates in the inventory module
+
+## 2.28.0 2026-06-18
+- Amended the existing `IdentifierType.DATACITE_IGSN` to be `IdentifierType.IGSN_DATACITE`
+- Added new `IdentifierType.PIDINST_DATACITE` and `IdentifierType.PIDINST_B2INST`
+
+## 2.27.0 2026-06-11
+- Restructuring core model to allow inventory linking
+
+## 2.26.0 2026-06-11
+- Removed models related to calendar creation.
+- Removed the description and external link fields from UserProfile.
 
 ## 2.24.0 2026-05-15
 - Add new `Instrument Templates` end points

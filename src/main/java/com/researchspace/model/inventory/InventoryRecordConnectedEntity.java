@@ -31,7 +31,7 @@ public abstract class InventoryRecordConnectedEntity {
    * We want a foreign-key link to InventoryRecord, but as IR is abstract and not a db table
    * we need a field (column) for each concrete subclass i.e. Sample/SubSample/Container.
    */
-  private Sample sample;
+  private SampleEntity sample;
   private SubSample subSample;
   private Container container;
   private InstrumentEntity instrumentEntity;
@@ -60,8 +60,8 @@ public abstract class InventoryRecordConnectedEntity {
    * Sets parent
    */
   public void setInventoryRecord(InventoryRecord invRec) {
-    if (invRec instanceof Sample) {
-      sample = (Sample) invRec;
+    if (invRec instanceof SampleEntity) {
+      sample = (SampleEntity) invRec;
     } else if (invRec instanceof SubSample) {
       subSample = (SubSample) invRec;
     } else if (invRec instanceof Container) {
@@ -101,7 +101,7 @@ public abstract class InventoryRecordConnectedEntity {
   }
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  public Sample getSample() {
+  public SampleEntity getSample() {
     return sample;
   }
 

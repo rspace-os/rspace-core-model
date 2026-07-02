@@ -1,33 +1,34 @@
 package com.researchspace.model.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.researchspace.model.FileProperty;
 import com.researchspace.model.inventory.Barcode;
+import com.researchspace.model.inventory.Container;
+import com.researchspace.model.inventory.InventoryFile;
+import com.researchspace.model.inventory.InventoryRecord;
+import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleEntity;
+import com.researchspace.model.inventory.SampleTemplate;
+import com.researchspace.model.inventory.SubSample;
+import com.researchspace.model.inventory.field.ExtraTextField;
 import com.researchspace.model.permissions.ACLElement;
 import com.researchspace.model.permissions.ConstraintBasedPermission;
 import com.researchspace.model.permissions.PermissionDomain;
 import com.researchspace.model.permissions.PermissionType;
 import com.researchspace.model.permissions.RecordSharingACL;
+import com.researchspace.model.record.TestFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.junit.jupiter.api.Test;
-
-import com.researchspace.model.FileProperty;
-import com.researchspace.model.inventory.Container;
-import com.researchspace.model.inventory.InventoryFile;
-import com.researchspace.model.inventory.InventoryRecord;
-import com.researchspace.model.inventory.Sample;
-import com.researchspace.model.inventory.SubSample;
-import com.researchspace.model.inventory.field.ExtraTextField;
-import com.researchspace.model.record.TestFactory;
 
 /**
  * Tests lucene indexing and search.
@@ -176,7 +177,7 @@ class HibernateSearchTest extends HibernateTest {
 	private Sample saveComplexSample(Sample sample3) {
 		HibernateSandboxTest t = new HibernateSandboxTest();
 		t.saveRadioAndChoiceDefinitions(dao, sample3.getSTemplate());
-		dao.save(sample3.getSTemplate(), Sample.class);
+		dao.save(sample3.getSTemplate(), SampleTemplate.class);
 		t.saveRadioAndChoiceDefinitions(dao, sample3);
 		return saveSampleInContainer(sample3);
 	}
@@ -187,6 +188,72 @@ class HibernateSearchTest extends HibernateTest {
 		return dao.save(sample, Sample.class);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void searchSamplesAndSampleTemplates() throws InterruptedException {
+
+		// save a sample and a sample template, both with searchable names
+		Sample sample = TestFactory.createBasicSampleInContainer(testUser);
+		sample.setName("polysearch sample");
+		sample = saveSampleInContainer(sample);
+
+		SampleTemplate template = rf.createSampleTemplate("polysearch template", testUser);
+		template = dao.save(template, SampleTemplate.class);
+
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = sf.getCurrentSession();
+			transaction = session.getTransaction();
+			transaction.begin();
+
+			// build lucene index and query
+			FullTextSession fullTextSession = Search.getFullTextSession(sf.getCurrentSession());
+			fullTextSession.createIndexer().startAndWait();
+			QueryBuilder qb = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(Sample.class).get();
+
+			org.apache.lucene.search.Query lucenceQuery = qb.keyword().onFields("name").matching("polysearch")
+					.createQuery();
+
+			// query targeting SampleEntity finds both the sample and the template
+			Query<SampleEntity> entityQuery = fullTextSession.createFullTextQuery(lucenceQuery, SampleEntity.class);
+			List<SampleEntity> sampleEntities = entityQuery.getResultList();
+			assertNotNull(sampleEntities);
+			assertEquals(2, sampleEntities.size());
+			Collections.sort(sampleEntities, (se1, se2) -> se1.getName().compareTo(se2.getName()));
+			assertEquals("polysearch sample", sampleEntities.get(0).getName());
+			assertInstanceOf(Sample.class, sampleEntities.get(0));
+			assertEquals("polysearch template", sampleEntities.get(1).getName());
+			assertInstanceOf(SampleTemplate.class, sampleEntities.get(1));
+
+			// the same query targeting Sample finds only the sample
+			Query<Sample> sampleQuery = fullTextSession.createFullTextQuery(lucenceQuery, Sample.class);
+			List<Sample> samples = sampleQuery.getResultList();
+			assertNotNull(samples);
+			assertEquals(1, samples.size());
+			assertEquals("polysearch sample", samples.get(0).getName());
+
+			// and targeting SampleTemplate finds only the template
+			Query<SampleTemplate> templateQuery = fullTextSession.createFullTextQuery(lucenceQuery, SampleTemplate.class);
+			List<SampleTemplate> templates = templateQuery.getResultList();
+			assertNotNull(templates);
+			assertEquals(1, templates.size());
+			assertEquals("polysearch template", templates.get(0).getName());
+
+			transaction.commit();
+
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			throw e;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void searchSubSamples() throws InterruptedException {

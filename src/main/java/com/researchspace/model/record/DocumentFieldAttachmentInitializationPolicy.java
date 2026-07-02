@@ -6,7 +6,8 @@ import com.researchspace.model.elninventory.MaterialUsage;
 import com.researchspace.model.field.Field;
 import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.MovableInventoryRecord;
-import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleEntity;
+import com.researchspace.model.inventory.SampleTemplate;
 import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.field.InventoryEntityField;
 
@@ -61,12 +62,9 @@ public class DocumentFieldAttachmentInitializationPolicy extends DocumentInitial
 	}
 
 	private void initializeParentSampleTemplate(InventoryRecord invRec) {
-		Sample templateToInitialize = null;
-		if (invRec.isSample()) {
-			templateToInitialize = ((Sample) invRec).getSTemplate();
-		} else if (invRec.isSubSample()) {
-			templateToInitialize = ((SubSample) invRec).getSample().getSTemplate();
-		}
+		// getLinkedSampleTemplate() dispatches polymorphically through Hibernate proxies (Sample
+		// returns its template, SubSample delegates to its parent), so no unproxy/cast is needed.
+		SampleTemplate templateToInitialize = invRec.getLinkedSampleTemplate();
 		if (templateToInitialize != null) {
 			templateToInitialize.getImageFileProperty();
 		}
@@ -74,7 +72,7 @@ public class DocumentFieldAttachmentInitializationPolicy extends DocumentInitial
 
 	private void initializeParentSample(InventoryRecord invRec) {
 		if (invRec.isSubSample()) {
-			Sample parentSample = ((SubSample) invRec).getSample();
+			SampleEntity parentSample = ((SubSample) invRec).getSample();
 			for (InventoryEntityField sf : parentSample.getActiveFields()) {
 				sf.getAttachedFile();
 			}

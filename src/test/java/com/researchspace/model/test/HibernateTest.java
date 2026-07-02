@@ -47,6 +47,8 @@ import com.researchspace.model.inventory.InstrumentTemplate;
 import com.researchspace.model.inventory.InventoryFile;
 import com.researchspace.model.inventory.InventoryRecord;
 import com.researchspace.model.inventory.Sample;
+import com.researchspace.model.inventory.SampleEntity;
+import com.researchspace.model.inventory.SampleTemplate;
 import com.researchspace.model.inventory.SubSample;
 import com.researchspace.model.inventory.SubSampleNote;
 import com.researchspace.model.inventory.field.ExtraNumberField;
@@ -168,11 +170,11 @@ public abstract class HibernateTest {
 
   protected void saveParentTemplateForSample(Sample sample) {
     saveRadioAndChoiceDefinitions(dao, sample.getSTemplate());
-    dao.save(sample.getSTemplate(), Sample.class);
+    dao.save(sample.getSTemplate(), SampleTemplate.class);
   }
 
   //util method to save radio/choice definitions
-  protected void saveRadioAndChoiceDefinitions(TestDao dao2, Sample complexSample) {
+  protected void saveRadioAndChoiceDefinitions(TestDao dao2, SampleEntity complexSample) {
     complexSample.getActiveFields().stream().filter(f -> FieldType.CHOICE.equals(f.getType()))
         .map(field -> (InventoryChoiceField) field)
         .forEach(cf -> dao2.save(cf.getChoiceDef(), InventoryChoiceFieldDef.class));
@@ -199,7 +201,8 @@ public abstract class HibernateTest {
         InventoryDateField.class, InventoryTimeField.class, InventoryReferenceField.class,
         InventoryTextField.class, InventoryChoiceField.class, InventoryRadioField.class,
         InventoryAttachmentField.class, AttachmentFieldForm.class, URIFieldForm.class,
-        UriField.class, InventoryUriField.class, Sample.class, SubSample.class, AbstractForm.class,
+        UriField.class, InventoryUriField.class, SampleEntity.class, SampleTemplate.class,
+        Sample.class, SubSample.class, AbstractForm.class,
         Barcode.class, DigitalObjectIdentifier.class, ExtraNumberField.class, ExtraTextField.class,
         SubSampleNote.class, Container.class, ContainerLocation.class, InventoryFile.class,
         InventoryRadioFieldDef.class, InventoryChoiceFieldDef.class, ListOfMaterials.class,

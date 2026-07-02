@@ -84,7 +84,7 @@ public abstract class InventoryRecord {
 	private RecordSharingACL sharingACL;
 	
 	public enum InventoryRecordType {
-		SAMPLE, SUBSAMPLE, CONTAINER, INSTRUMENT, INSTRUMENT_TEMPLATE
+		SAMPLE, SAMPLE_TEMPLATE, SUBSAMPLE, CONTAINER, INSTRUMENT, INSTRUMENT_TEMPLATE
 	}
 
 	@Transient
@@ -265,14 +265,29 @@ public abstract class InventoryRecord {
 	@Transient
 	public abstract InventoryRecordType getType();
 
-	@Transient 
+	@Transient
 	public boolean isSample() {
 		return InventoryRecordType.SAMPLE.equals(getType());
 	}
 
-	@Transient 
+	@Transient
+	public boolean isSampleTemplate() {
+		return InventoryRecordType.SAMPLE_TEMPLATE.equals(getType());
+	}
+
+	@Transient
 	public boolean isSubSample() {
 		return InventoryRecordType.SUBSAMPLE.equals(getType());
+	}
+
+	/**
+	 * The {@link SampleTemplate} this record is based on, or {@code null} if none. Overridden
+	 * polymorphically (Sample returns its own template, SubSample delegates to its parent sample)
+	 * so callers need no unproxy/downcast when the record is a Hibernate proxy.
+	 */
+	@Transient
+	public SampleTemplate getLinkedSampleTemplate() {
+		return null;
 	}
 	
 	@Transient 
@@ -339,7 +354,14 @@ public abstract class InventoryRecord {
 
 	public void addAttachedFile(InventoryFile toAdd) {
 		assertCanStoreAttachments();
-		
+		doAddAttachedFile(toAdd);
+	}
+
+	/*
+	 * Skips assertCanStoreAttachments(), for use by the shallowCopyBasicFields() copy paths only:
+	 * a copy carries the origin's attachments even where direct attachment is rejected (e.g. SampleTemplate).
+	 */
+	private void doAddAttachedFile(InventoryFile toAdd) {
 		List<InventoryFile> files = getFiles();
 		if (!files.contains(toAdd)) {
 			toAdd.setInventoryRecord(this);
@@ -510,7 +532,7 @@ public abstract class InventoryRecord {
 			copy.addBarcode(barcode.shallowCopy());
 		}
 		for (InventoryFile invFile: getAttachedFiles()) {
-			copy.addAttachedFile(invFile.shallowCopy());
+			copy.doAddAttachedFile(invFile.shallowCopy());
 		}
 	}
 
@@ -531,7 +553,7 @@ public abstract class InventoryRecord {
 			destination.addBarcode(barcode.shallowCopy());
 		}
 		for (InventoryFile invFile: origin.getAttachedFiles()) {
-			destination.addAttachedFile(invFile.shallowCopy());
+			destination.doAddAttachedFile(invFile.shallowCopy());
 		}
 	}
 

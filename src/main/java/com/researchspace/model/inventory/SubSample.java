@@ -72,14 +72,14 @@ public class SubSample extends MovableInventoryRecord implements Serializable, Q
 	@IndexedEmbedded(name = "notes")
 	private List<SubSampleNote> notes = new ArrayList<>();
 
-	private Sample sample;
-	
+	private SampleEntity sample;
+
 	/* whether subsample was deleted implicitly as a part of sample deletion */
 	private boolean deletedOnSampleDeletion;
 
 	private QuantityInfo quantityInfo;
 
-	public SubSample(Sample sample) {
+	public SubSample(SampleEntity sample) {
 		setIconId(sample.getIconId());
 		setSample(sample);
 	}
@@ -241,8 +241,15 @@ public class SubSample extends MovableInventoryRecord implements Serializable, Q
 
 	@ManyToOne(cascade = { CascadeType.MERGE })
 	@JoinColumn(nullable = false)
-	public Sample getSample() {
+	public SampleEntity getSample() {
 		return sample;
+	}
+
+	@Override
+	@Transient
+	public SampleTemplate getLinkedSampleTemplate() {
+		SampleEntity parent = getSample();
+		return parent == null ? null : parent.getLinkedSampleTemplate();
 	}
 
 	@Transient

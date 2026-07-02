@@ -14,5 +14,4 @@ shell.nix
 .envrc
 .nix-mvn-settings.xml
 .nix-mvn-toolchains.xml
-
 .claude/
