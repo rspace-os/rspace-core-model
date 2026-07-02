@@ -207,19 +207,18 @@ class HibernateSearchTest extends HibernateTest {
 			transaction = session.getTransaction();
 			transaction.begin();
 
-			// build lucene index and query
-			FullTextSession fullTextSession = Search.getFullTextSession(sf.getCurrentSession());
-			fullTextSession.createIndexer().startAndWait();
-			QueryBuilder qb = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(Sample.class).get();
-
-			org.apache.lucene.search.Query lucenceQuery = qb.keyword().onFields("name").matching("polysearch")
-					.createQuery();
+			// build lucene index
+			SearchSession searchSession = Search.session(sf.getCurrentSession());
+			searchSession.massIndexer().startAndWait();
 
 			// query targeting SampleEntity finds both the sample and the template
-			Query<SampleEntity> entityQuery = fullTextSession.createFullTextQuery(lucenceQuery, SampleEntity.class);
-			List<SampleEntity> sampleEntities = entityQuery.getResultList();
+			List<SampleEntity> sampleEntities = searchSession.search(SampleEntity.class)
+					.where(f -> f.match().field("name").matching("polysearch"))
+					.fetchHits(20);
 			assertNotNull(sampleEntities);
 			assertEquals(2, sampleEntities.size());
+			// fetchHits() returns an immutable list, so copy before sorting in place
+			sampleEntities = new ArrayList<>(sampleEntities);
 			Collections.sort(sampleEntities, (se1, se2) -> se1.getName().compareTo(se2.getName()));
 			assertEquals("polysearch sample", sampleEntities.get(0).getName());
 			assertInstanceOf(Sample.class, sampleEntities.get(0));
@@ -227,15 +226,17 @@ class HibernateSearchTest extends HibernateTest {
 			assertInstanceOf(SampleTemplate.class, sampleEntities.get(1));
 
 			// the same query targeting Sample finds only the sample
-			Query<Sample> sampleQuery = fullTextSession.createFullTextQuery(lucenceQuery, Sample.class);
-			List<Sample> samples = sampleQuery.getResultList();
+			List<Sample> samples = searchSession.search(Sample.class)
+					.where(f -> f.match().field("name").matching("polysearch"))
+					.fetchHits(20);
 			assertNotNull(samples);
 			assertEquals(1, samples.size());
 			assertEquals("polysearch sample", samples.get(0).getName());
 
 			// and targeting SampleTemplate finds only the template
-			Query<SampleTemplate> templateQuery = fullTextSession.createFullTextQuery(lucenceQuery, SampleTemplate.class);
-			List<SampleTemplate> templates = templateQuery.getResultList();
+			List<SampleTemplate> templates = searchSession.search(SampleTemplate.class)
+					.where(f -> f.match().field("name").matching("polysearch"))
+					.fetchHits(20);
 			assertNotNull(templates);
 			assertEquals(1, templates.size());
 			assertEquals("polysearch template", templates.get(0).getName());
