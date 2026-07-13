@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class SymmetricTextEncryptorTest {
 
-	// this is to ensure backwards compatibility with existing encyrpted secrets, that we encode/decode
+	// this is to ensure backwards compatibility with existing encrypted secrets, that we encode/decode
 	// in the same way over time.
 	final String secretMessage_Shiro1_5_0 = "aaaaaaaaaaaaaaaabbbbb";
 

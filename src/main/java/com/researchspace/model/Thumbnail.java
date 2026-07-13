@@ -119,7 +119,7 @@ public class Thumbnail implements Serializable, IFieldLinkableElement {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@Deprecated // should be null now, use file propertty instead
+	@Deprecated // should be null now, use file property instead
 	private ImageBlob imageBlob;
 	
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

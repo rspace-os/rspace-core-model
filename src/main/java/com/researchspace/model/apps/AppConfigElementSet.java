@@ -42,6 +42,7 @@ public class AppConfigElementSet implements Serializable {
 	private Long id;
 
 	/** Stable natural key for equals/hashCode; avoids HashSet corruption when id is assigned after insertion. */
+	@Setter(value = AccessLevel.NONE)
 	@Column(unique = true, nullable = false, updatable = false, length = 36)
 	private String naturalId = UUID.randomUUID().toString();
 
