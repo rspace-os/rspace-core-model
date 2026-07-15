@@ -27,6 +27,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.researchspace.model.core.GlobalIdPrefix;
 import com.researchspace.model.core.GlobalIdentifier;
 import com.researchspace.model.core.UniquelyIdentifiable;
@@ -120,6 +121,7 @@ public abstract class FieldForm implements Comparable<FieldForm>, IFieldForm, Va
 		this.temporary = temporary;
 	}
 
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY, targetEntity = FieldForm.class, cascade = CascadeType.ALL, optional = true)
 	public IFieldForm getTempFieldForm() {
 		return tempFieldForm;
@@ -135,9 +137,13 @@ public abstract class FieldForm implements Comparable<FieldForm>, IFieldForm, Va
 
 	/**
 	 * Getter for the {@link RSForm} to which this {@link FieldForm} belongs.
-	 * 
+	 * <p>
+	 * Never serialised to JSON: the back-reference would recurse into the form's
+	 * own fieldForms, and no JSON consumer wants the owning form graph.
+	 *
 	 * @return
 	 */
+	@JsonIgnore
 	@ManyToOne()
 	@JoinColumn(nullable = false)
 	public AbstractForm getForm() {
