@@ -62,7 +62,9 @@ public class GroupMembershipEvent implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "group_membership_event_gen")
+	@jakarta.persistence.TableGenerator(name = "group_membership_event_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Getter
 	@Setter(AccessLevel.PACKAGE)
 	private Long id;

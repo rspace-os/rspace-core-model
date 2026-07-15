@@ -33,7 +33,9 @@ public class InventoryRadioFieldDef extends InventoryFieldDef implements Seriali
 	private String radioOptions;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "inventory_radio_field_def_gen")
+	@jakarta.persistence.TableGenerator(name = "inventory_radio_field_def_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

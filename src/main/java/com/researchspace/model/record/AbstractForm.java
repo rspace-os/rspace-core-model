@@ -95,7 +95,9 @@ public abstract class AbstractForm implements Serializable, UniquelyIdentifiable
 	private List<FieldForm> fieldForms = new ArrayList<>();
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "abstract_form_gen")
+	@jakarta.persistence.TableGenerator(name = "abstract_form_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

@@ -35,7 +35,9 @@ import lombok.Setter;
 public class FieldAttachment implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "field_attachment_gen")
+	@jakarta.persistence.TableGenerator(name = "field_attachment_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Setter(AccessLevel.PACKAGE)
 	private Long id;
 

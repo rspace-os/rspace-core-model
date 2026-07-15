@@ -70,7 +70,9 @@ public class EcatImageAnnotation implements Serializable, IFieldLinkableElement 
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ecat_image_annotation_gen")
+	@jakarta.persistence.TableGenerator(name = "ecat_image_annotation_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

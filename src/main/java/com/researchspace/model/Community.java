@@ -133,7 +133,9 @@ public class Community implements Serializable, PermissionsAdaptable {
 	 * @return a long
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "community_gen")
+	@jakarta.persistence.TableGenerator(name = "community_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@AuditTrailIdentifier
 	public Long getId() {
 		return id;

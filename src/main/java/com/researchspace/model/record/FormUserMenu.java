@@ -120,7 +120,9 @@ public class FormUserMenu implements Serializable {
 	 * @return the id
 	 */
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "form_user_menu_gen")
+	@jakarta.persistence.TableGenerator(name = "form_user_menu_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

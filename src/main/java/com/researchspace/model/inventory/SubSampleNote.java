@@ -49,7 +49,9 @@ public class SubSampleNote implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "sub_sample_note_gen")
+	@jakarta.persistence.TableGenerator(name = "sub_sample_note_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

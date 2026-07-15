@@ -29,7 +29,9 @@ public class RecordUserFavorites implements Serializable {
 	private BaseRecord record;
 
 	@Id()
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "record_user_favorites_gen")
+	@jakarta.persistence.TableGenerator(name = "record_user_favorites_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

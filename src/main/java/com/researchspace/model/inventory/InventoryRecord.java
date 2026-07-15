@@ -148,7 +148,12 @@ public abstract class InventoryRecord {
 	}
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "inventory_record_gen")
+	// no pkColumnValue: each concrete subclass keys its own hibernate_sequences row, named
+	// after its table (annotation-defined table generators default to
+	// prefer_entity_table_as_segment_value=true)
+	@jakarta.persistence.TableGenerator(name = "inventory_record_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	// id_sort is used as a tie-breaker in HS7 search queries (score DESC, id_sort ASC)
 	// to ensure deterministic ordering when BM25 scores are equal.
 	@GenericField(name = "id_sort", sortable = Sortable.YES, projectable = Projectable.NO)

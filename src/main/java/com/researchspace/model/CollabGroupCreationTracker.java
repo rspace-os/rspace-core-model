@@ -58,7 +58,9 @@ public class CollabGroupCreationTracker {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "collab_group_creation_tracker_gen")
+	@jakarta.persistence.TableGenerator(name = "collab_group_creation_tracker_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

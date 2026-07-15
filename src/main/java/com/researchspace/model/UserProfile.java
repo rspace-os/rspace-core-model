@@ -29,7 +29,9 @@ public class UserProfile implements Serializable, Comparable<UserProfile> {
 	private Long id;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_profile_gen")
+	@jakarta.persistence.TableGenerator(name = "user_profile_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

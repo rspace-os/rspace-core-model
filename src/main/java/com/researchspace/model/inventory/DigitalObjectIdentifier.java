@@ -84,7 +84,9 @@ public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity impl
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "digital_object_identifier_gen")
+	@jakarta.persistence.TableGenerator(name = "digital_object_identifier_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

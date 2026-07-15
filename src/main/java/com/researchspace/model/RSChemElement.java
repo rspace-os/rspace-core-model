@@ -57,7 +57,9 @@ public class RSChemElement implements Serializable, IFieldLinkableElement {
 	/** */
 	private static final long serialVersionUID = -8764723602823933240L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rs_chem_element_gen")
+	@jakarta.persistence.TableGenerator(name = "rs_chem_element_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	private Long id;
 
 	private Long parentId;

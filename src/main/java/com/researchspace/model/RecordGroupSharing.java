@@ -95,7 +95,9 @@ public class RecordGroupSharing implements Serializable {
 	}
 
 	@Id()
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "record_group_sharing_gen")
+	@jakarta.persistence.TableGenerator(name = "record_group_sharing_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@AuditTrailIdentifier()
 	public Long getId() {
 		return id;

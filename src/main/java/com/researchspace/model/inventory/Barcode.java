@@ -56,7 +56,9 @@ public class Barcode extends InventoryRecordConnectedEntity implements Serializa
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "barcode_gen")
+	@jakarta.persistence.TableGenerator(name = "barcode_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

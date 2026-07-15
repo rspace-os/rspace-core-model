@@ -59,7 +59,9 @@ public class TokenBasedVerification implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "token_based_verification_gen")
+	@jakarta.persistence.TableGenerator(name = "token_based_verification_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

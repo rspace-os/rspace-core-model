@@ -23,7 +23,9 @@ import lombok.NoArgsConstructor;
 public class DMPUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "dmp_user_gen")
+    @jakarta.persistence.TableGenerator(name = "dmp_user_gen", table = "hibernate_sequences",
+        pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
     private Long id;
 
     void setId(Long id) {

@@ -29,7 +29,9 @@ public class InternalLink implements Serializable {
 	private static final long serialVersionUID = 1234321L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "internal_link_gen")
+	@jakarta.persistence.TableGenerator(name = "internal_link_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Setter(AccessLevel.PACKAGE)
 	private Long id;
 

@@ -50,7 +50,9 @@ public class ListOfMaterials implements Serializable {
 	public ListOfMaterials() { }
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "list_of_materials_gen")
+	@jakarta.persistence.TableGenerator(name = "list_of_materials_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

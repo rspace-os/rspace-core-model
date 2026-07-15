@@ -88,7 +88,9 @@ public class InventoryFile extends InventoryRecordConnectedEntity implements Ser
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "inventory_file_gen")
+	@jakarta.persistence.TableGenerator(name = "inventory_file_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

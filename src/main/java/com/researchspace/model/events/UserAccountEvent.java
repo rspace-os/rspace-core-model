@@ -64,7 +64,9 @@ public class UserAccountEvent implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_account_event_gen")
+	@jakarta.persistence.TableGenerator(name = "user_account_event_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Getter
 	@Setter(AccessLevel.PACKAGE)
 	private Long id;

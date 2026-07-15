@@ -110,7 +110,9 @@ public class UserGroup implements Permissable, Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_group_gen")
+	@jakarta.persistence.TableGenerator(name = "user_group_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	// or get an exception if using auto
 	public Long getId() {
 		return id;

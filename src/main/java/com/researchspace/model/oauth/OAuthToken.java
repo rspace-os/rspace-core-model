@@ -40,7 +40,9 @@ public class OAuthToken implements Serializable, AuthenticationToken {
 	private static final int TOKEN_LENGTH = 64; // SHA-256 hash in hex
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "o_auth_token_gen")
+	@jakarta.persistence.TableGenerator(name = "o_auth_token_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Setter(AccessLevel.PRIVATE)
 	private Long id;
 

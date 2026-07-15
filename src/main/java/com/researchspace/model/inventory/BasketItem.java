@@ -32,7 +32,9 @@ public class BasketItem extends InventoryRecordConnectedEntity implements Serial
 	}
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "basket_item_gen")
+	@jakarta.persistence.TableGenerator(name = "basket_item_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}

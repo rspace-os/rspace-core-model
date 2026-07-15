@@ -204,7 +204,12 @@ public abstract class AbstractField implements Comparable<AbstractField> {
 	public abstract void setData(String fieldData);
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "abstract_field_gen")
+	// no pkColumnValue: each concrete subclass keys its own hibernate_sequences row, named
+	// after its table (annotation-defined table generators default to
+	// prefer_entity_table_as_segment_value=true)
+	@jakarta.persistence.TableGenerator(name = "abstract_field_gen", table = "hibernate_sequences",
+			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
 	}
