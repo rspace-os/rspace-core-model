@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -58,7 +59,7 @@ public class RSChemElement implements Serializable, IFieldLinkableElement {
 	private static final long serialVersionUID = -8764723602823933240L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rs_chem_element_gen")
-	@jakarta.persistence.TableGenerator(name = "rs_chem_element_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "rs_chem_element_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	private Long id;
 

@@ -19,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class ListOfMaterials implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "list_of_materials_gen")
-	@jakarta.persistence.TableGenerator(name = "list_of_materials_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "list_of_materials_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

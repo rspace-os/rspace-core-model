@@ -36,10 +36,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.shiro.SecurityUtils;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Filter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -62,7 +65,7 @@ import com.researchspace.model.permissions.PermissionType;
  */
 @Entity
 @Audited
-@org.hibernate.annotations.Cache(usage=org.hibernate.annotations.CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name="RSForm", indexes = { @Index(columnList = "systemForm", name = "isSystem"),
 		@Index(columnList = "stableID", name = "stableid") 
@@ -96,7 +99,7 @@ public abstract class AbstractForm implements Serializable, UniquelyIdentifiable
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "abstract_form_gen")
-	@jakarta.persistence.TableGenerator(name = "abstract_form_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "abstract_form_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

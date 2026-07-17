@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 
 import lombok.AccessLevel;
@@ -53,7 +54,7 @@ public class MaterialUsage extends InventoryRecordConnectedEntity implements Ser
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "material_usage_gen")
-	@jakarta.persistence.TableGenerator(name = "material_usage_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "material_usage_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

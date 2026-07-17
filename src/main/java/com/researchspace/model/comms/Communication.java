@@ -19,6 +19,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -153,7 +154,7 @@ public abstract class Communication implements Serializable, UniquelyIdentifiabl
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "comm_gen")
-	@jakarta.persistence.TableGenerator(name = "comm_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "comm_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val",
 			pkColumnValue = "Communication", allocationSize = 1)
 	@XmlAttribute(required = true)

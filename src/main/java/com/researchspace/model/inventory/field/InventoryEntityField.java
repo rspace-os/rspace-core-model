@@ -25,6 +25,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import jakarta.validation.ConstraintViolationException;
 import lombok.AccessLevel;
@@ -144,7 +145,7 @@ public abstract class InventoryEntityField implements Serializable, ValidatingFi
 
   @Id
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "inventory_entity_field_gen")
-  @jakarta.persistence.TableGenerator(name = "inventory_entity_field_gen", table = "hibernate_sequences",
+  @TableGenerator(name = "inventory_entity_field_gen", table = "hibernate_sequences",
       pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
   public Long getId() {
     return id;

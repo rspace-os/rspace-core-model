@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -65,7 +66,7 @@ public class UserAccountEvent implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_account_event_gen")
-	@jakarta.persistence.TableGenerator(name = "user_account_event_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "user_account_event_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Getter
 	@Setter(AccessLevel.PACKAGE)

@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -38,7 +39,7 @@ public class InventoryChoiceFieldDef extends InventoryFieldDef implements Serial
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "inventory_choice_field_def_gen")
-	@jakarta.persistence.TableGenerator(name = "inventory_choice_field_def_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "inventory_choice_field_def_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

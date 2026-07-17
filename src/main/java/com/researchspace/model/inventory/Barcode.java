@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AccessLevel;
@@ -57,7 +58,7 @@ public class Barcode extends InventoryRecordConnectedEntity implements Serializa
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "barcode_gen")
-	@jakarta.persistence.TableGenerator(name = "barcode_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "barcode_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

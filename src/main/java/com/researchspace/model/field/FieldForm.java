@@ -18,6 +18,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Size;
 
@@ -200,7 +201,7 @@ public abstract class FieldForm implements Comparable<FieldForm>, IFieldForm, Va
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "field_form_gen")
-	@jakarta.persistence.TableGenerator(name = "field_form_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "field_form_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

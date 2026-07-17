@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -85,7 +86,7 @@ public class DigitalObjectIdentifier extends InventoryRecordConnectedEntity impl
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "digital_object_identifier_gen")
-	@jakarta.persistence.TableGenerator(name = "digital_object_identifier_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "digital_object_identifier_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

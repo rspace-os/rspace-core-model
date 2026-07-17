@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 
 import com.researchspace.model.record.BaseRecord;
 import com.researchspace.model.record.Record;
@@ -30,7 +31,7 @@ public class InternalLink implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "internal_link_gen")
-	@jakarta.persistence.TableGenerator(name = "internal_link_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "internal_link_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Setter(AccessLevel.PACKAGE)
 	private Long id;

@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.FilterDef;
@@ -36,7 +37,7 @@ public class FieldAttachment implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "field_attachment_gen")
-	@jakarta.persistence.TableGenerator(name = "field_attachment_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "field_attachment_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Setter(AccessLevel.PACKAGE)
 	private Long id;

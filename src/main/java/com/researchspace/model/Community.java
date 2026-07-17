@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -134,7 +135,7 @@ public class Community implements Serializable, PermissionsAdaptable {
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "community_gen")
-	@jakarta.persistence.TableGenerator(name = "community_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "community_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@AuditTrailIdentifier
 	public Long getId() {

@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -48,7 +49,7 @@ public class Basket implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "basket_gen")
-	@jakarta.persistence.TableGenerator(name = "basket_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "basket_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

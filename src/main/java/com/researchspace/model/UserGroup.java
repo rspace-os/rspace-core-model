@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -111,7 +112,7 @@ public class UserGroup implements Permissable, Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_group_gen")
-	@jakarta.persistence.TableGenerator(name = "user_group_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "user_group_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	// or get an exception if using auto
 	public Long getId() {

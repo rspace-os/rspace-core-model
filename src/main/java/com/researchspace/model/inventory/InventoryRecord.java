@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -149,13 +150,10 @@ public abstract class InventoryRecord {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "inventory_record_gen")
-	// no pkColumnValue: each concrete subclass keys its own hibernate_sequences row, named
-	// after its table (annotation-defined table generators default to
-	// prefer_entity_table_as_segment_value=true)
-	@jakarta.persistence.TableGenerator(name = "inventory_record_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "inventory_record_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
-	// id_sort is used as a tie-breaker in HS7 search queries (score DESC, id_sort ASC)
-	// to ensure deterministic ordering when BM25 scores are equal.
+	// id_sort is a tie-breaker for search queries (score DESC, id_sort ASC) so results with equal
+	// relevance scores are ordered deterministically. The sort clause itself lives in rspace-web.
 	@GenericField(name = "id_sort", sortable = Sortable.YES, projectable = Projectable.NO)
 	public Long getId() {
 		return id;

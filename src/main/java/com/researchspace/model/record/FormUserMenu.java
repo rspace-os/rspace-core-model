@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 
 import com.researchspace.model.User;
 import lombok.AccessLevel;
@@ -121,7 +122,7 @@ public class FormUserMenu implements Serializable {
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "form_user_menu_gen")
-	@jakarta.persistence.TableGenerator(name = "form_user_menu_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "form_user_menu_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

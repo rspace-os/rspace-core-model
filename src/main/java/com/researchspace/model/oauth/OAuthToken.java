@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Size;
 
@@ -41,7 +42,7 @@ public class OAuthToken implements Serializable, AuthenticationToken {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "o_auth_token_gen")
-	@jakarta.persistence.TableGenerator(name = "o_auth_token_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "o_auth_token_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	@Setter(AccessLevel.PRIVATE)
 	private Long id;

@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
@@ -48,10 +49,10 @@ public abstract class AbstractField implements Comparable<AbstractField> {
 		return name;
 	}
 	
-	// H6: MERGE cascade needed for strict H6 merge behaviour.
-	// PERSIST cascade removed: shallowCopy()-based temp fields carry an already-persisted
-	// (detached) FieldForm, and cascading persist() to a detached entity throws
-	// PersistentObjectException. FieldForms are always explicitly saved before field creation.
+	// MERGE cascade is required for Hibernate 6's strict merge behaviour. PERSIST is deliberately
+	// not cascaded: shallowCopy()-based temp fields carry an already-persisted (detached) FieldForm,
+	// and cascading persist() to a detached entity throws PersistentObjectException. FieldForms are
+	// always explicitly saved before field creation.
 	@ManyToOne(optional = false, targetEntity = FieldForm.class,
 			cascade = {CascadeType.MERGE})
 	public IFieldForm getFieldForm() {
@@ -205,10 +206,7 @@ public abstract class AbstractField implements Comparable<AbstractField> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "abstract_field_gen")
-	// no pkColumnValue: each concrete subclass keys its own hibernate_sequences row, named
-	// after its table (annotation-defined table generators default to
-	// prefer_entity_table_as_segment_value=true)
-	@jakarta.persistence.TableGenerator(name = "abstract_field_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "abstract_field_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

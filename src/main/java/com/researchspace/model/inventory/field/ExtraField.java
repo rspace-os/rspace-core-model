@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 
 import org.hibernate.envers.Audited;
@@ -56,7 +57,7 @@ public abstract class ExtraField extends InventoryRecordConnectedEntity implemen
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "extra_field_gen")
-	@jakarta.persistence.TableGenerator(name = "extra_field_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "extra_field_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

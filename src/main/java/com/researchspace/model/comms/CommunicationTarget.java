@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -75,7 +76,7 @@ public class CommunicationTarget implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "communication_target_gen")
-	@jakarta.persistence.TableGenerator(name = "communication_target_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "communication_target_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

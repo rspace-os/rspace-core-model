@@ -172,7 +172,7 @@ public class EcatImage extends EcatMediaFile implements Serializable {
 	/**
 	 * @return image that was used as a source for creating current image, or null 
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@NotAudited
 	public EcatImage getOriginalImage() {
 		return originalImage;

@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -71,7 +72,7 @@ public class EcatImageAnnotation implements Serializable, IFieldLinkableElement 
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "ecat_image_annotation_gen")
-	@jakarta.persistence.TableGenerator(name = "ecat_image_annotation_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "ecat_image_annotation_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

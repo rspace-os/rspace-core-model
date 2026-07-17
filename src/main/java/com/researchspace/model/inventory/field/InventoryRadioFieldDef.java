@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +35,7 @@ public class InventoryRadioFieldDef extends InventoryFieldDef implements Seriali
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "inventory_radio_field_def_gen")
-	@jakarta.persistence.TableGenerator(name = "inventory_radio_field_def_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "inventory_radio_field_def_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

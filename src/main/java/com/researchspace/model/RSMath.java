@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Size;
 
@@ -49,7 +50,7 @@ public class RSMath implements Serializable, IFieldLinkableElement {
 	private static final long serialVersionUID = -8764723602823933240L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "rs_math_gen")
-	@jakarta.persistence.TableGenerator(name = "rs_math_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "rs_math_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	private Long id;
 	

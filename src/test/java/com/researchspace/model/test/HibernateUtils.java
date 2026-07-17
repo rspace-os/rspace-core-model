@@ -42,7 +42,7 @@ public class HibernateUtils {
 		settings.put("hibernate.search.backend.type", "lucene");
 		settings.put("hibernate.search.backend.directory.type", "local-filesystem");
 		settings.put("hibernate.search.backend.directory.root", dbName);
-		// HS7 bootstraps strictly: every analyzer/normalizer referenced by an indexed entity
+		// Hibernate Search 7 bootstraps strictly: every analyzer/normalizer referenced by an indexed entity
 		// must be defined or the SessionFactory build fails.
 		settings.put("hibernate.search.backend.analysis.configurer",
 				TestLuceneAnalysisConfigurer.class.getName());

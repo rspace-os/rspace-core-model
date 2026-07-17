@@ -461,14 +461,12 @@ public abstract class BaseRecord
      * @return a possibly empty but non-null Set of RecordToFolder
      */
     @NotAudited
-    // CascadeType.PERSIST added for Hibernate 6 compatibility: H5's saveOrUpdate() would
-    // cascade via the Hibernate-specific SAVE_UPDATE type, persisting new RecordToFolder entries
-    // reachable via this collection even without explicit PERSIST cascade. H6 is strict JPA and
-    // requires PERSIST to be declared. Without it, code paths that add a new RecordToFolder only
-    // to record.parents (via skipAddingToChildren=true) and then call save(record) would silently
-    // drop the relationship (DocumentCopyManagerImpl, RecordSharingManagerImpl).
-    // H6 note: reverted to EAGER (was changed to LAZY during H6 migration to avoid join issues,
-    // but H6 loads EAGER @OneToMany via a separate SELECT rather than a JOIN, so no join issue).
+    // CascadeType.PERSIST is required under Hibernate 6: Hibernate 5's saveOrUpdate() cascaded via
+    // the Hibernate-specific SAVE_UPDATE type, persisting new RecordToFolder entries reachable via
+    // this collection even without an explicit PERSIST cascade. Hibernate 6 is strict JPA and
+    // requires PERSIST to be declared. Without it, code paths that add a new RecordToFolder only to
+    // record.parents (via skipAddingToChildren=true) and then call save(record) would silently drop
+    // the relationship (DocumentCopyManagerImpl, RecordSharingManagerImpl).
     @OneToMany(mappedBy = "record", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.REMOVE,
             CascadeType.MERGE, CascadeType.PERSIST})
     public Set<RecordToFolder> getParents() {
@@ -1418,6 +1416,9 @@ public abstract class BaseRecord
 
     @Override
     public int compareTo(BaseRecord o){
+        // Null-safe against transient (unsaved) records whose id has not yet been assigned:
+        // comparing by id directly would NPE. Two transient records fall back to name ordering.
+        // Note this ordering is not consistent with equals, so do not rely on it for set identity.
         if (this.id == null && o.getId() == null) {
             return this.getName() == null ? 0 : this.getName().compareTo(
                     o.getName() == null ? "" : o.getName());

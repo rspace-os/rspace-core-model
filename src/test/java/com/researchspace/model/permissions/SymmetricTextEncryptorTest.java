@@ -37,9 +37,9 @@ public class SymmetricTextEncryptorTest {
 		assertEquals(secretMessage_Shiro1_5_0, encryptor.decrypt(encrypted2));
 	}
 
-	// G1 (Spring 6 migration review): a genuine backward-compatibility check that an AES/ECB/PKCS5 ciphertext
-	// produced outside this class, with a fixed key, still decrypts. Replaces the previous self-comparing
-	// no-op assertion (assertEquals(expected, expected)) that never exercised a fixed key.
+	// Backward-compatibility check that an AES/ECB/PKCS5 ciphertext produced outside this class, with
+	// a fixed key, still decrypts. Replaces the previous self-comparing no-op assertion
+	// (assertEquals(expected, expected)) that never exercised a fixed key.
 	@Test
 	public void decryptsFixedCiphertextFromEarlierShiroVersion() {
 		TextEncryptor encryptor = new SymmetricTextEncryptor(fixedKey_Base64);

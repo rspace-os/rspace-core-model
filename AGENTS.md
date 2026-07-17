@@ -78,6 +78,12 @@ GRANT ALL ON hibtest.* TO 'rspacedbuser'@'localhost';
 - Entities use Lombok — be careful with `equals`/`hashCode` on JPA entities (exclude lazy collections).
 - Enums often implement `com.researchspace.core.util.IDescribable` for display names.
 - Use JUnit 5 for new test classes unless the file already uses JUnit 4.
+- **TABLE id generation:** every `@GeneratedValue(strategy = TABLE)` entity carries an explicit named
+  `@TableGenerator` keyed to its own row in `hibernate_sequences`. This preserves the one-counter-per-table
+  layout Hibernate 5 used, which Hibernate 6's enhanced generator would otherwise collapse into a single
+  shared `default` segment. Never add a bare `@GeneratedValue(strategy = TABLE)` without a named generator.
+  The full rationale, the upgrade-time DB reseed, and the guard test live in rspace-web
+  (`sqlUpdates/changeLog-rsdev-444.xml`, `TableIdGeneratorConfigTest`, `DevDocs/DeveloperNotes/UpgradingToSpring6.md`).
 
 ## Common Pitfalls
 
@@ -88,5 +94,4 @@ GRANT ALL ON hibtest.* TO 'rspacedbuser'@'localhost';
 ## Agent-Specific Config Files
 
 - **AGENTS.md** (this file): Primary instructions for all AI agents
-- **CLAUDE.md**: Points to AGENTS.md — for Claude Code / Anthropic agents
-- **.github/copilot-instructions.md**: Points to AGENTS.md — for GitHub Copilot
+- **CLAUDE.md**: Imports AGENTS.md via `@AGENTS.md` for Claude Code / Anthropic agents

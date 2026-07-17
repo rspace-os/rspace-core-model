@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.TableGenerator;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -50,7 +51,7 @@ public class SubSampleNote implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "sub_sample_note_gen")
-	@jakarta.persistence.TableGenerator(name = "sub_sample_note_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "sub_sample_note_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;
@@ -87,7 +88,8 @@ public class SubSampleNote implements Serializable {
 	/**
 	 * Content length for subsample note.
 	 * @FullTextField is on the getter (not the field) because this entity uses property access
-	 * (@Id on getter). In HS7, field-level annotations are ignored for property-access entities.
+	 * (@Id on getter). In Hibernate Search 7, field-level annotations are ignored for property-access
+	 * entities.
 	 */
 	@Column(length = 2000)
 	@FullTextField(name = "fieldData")

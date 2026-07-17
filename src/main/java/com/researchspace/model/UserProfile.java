@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -30,7 +31,7 @@ public class UserProfile implements Serializable, Comparable<UserProfile> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_profile_gen")
-	@jakarta.persistence.TableGenerator(name = "user_profile_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "user_profile_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

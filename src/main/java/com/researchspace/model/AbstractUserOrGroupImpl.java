@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
@@ -109,7 +110,7 @@ public abstract class AbstractUserOrGroupImpl implements UserOrGroup, UniquelyId
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "uog_gen")
-	@jakarta.persistence.TableGenerator(name = "uog_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "uog_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val",
 			pkColumnValue = "AbstractUserOrGroupImpl", allocationSize = 1)
 	public Long getId() {

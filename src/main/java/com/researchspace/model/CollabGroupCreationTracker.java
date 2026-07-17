@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.TableGenerator;
 import jakarta.persistence.Transient;
 
 import com.researchspace.model.comms.MessageOrRequest;
@@ -59,7 +60,7 @@ public class CollabGroupCreationTracker {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "collab_group_creation_tracker_gen")
-	@jakarta.persistence.TableGenerator(name = "collab_group_creation_tracker_gen", table = "hibernate_sequences",
+	@TableGenerator(name = "collab_group_creation_tracker_gen", table = "hibernate_sequences",
 			pkColumnName = "sequence_name", valueColumnName = "next_val", allocationSize = 50)
 	public Long getId() {
 		return id;

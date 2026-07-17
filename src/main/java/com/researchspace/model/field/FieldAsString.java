@@ -26,6 +26,10 @@ public abstract class FieldAsString extends Field {
 		return data;
 	}
 
+	// Overridden solely to attach the @IndexingDependency: the parent Field.getFieldData() is a
+	// transient getter derived from the abstract getData(), so Hibernate Search cannot infer what to
+	// reindex on. The backing 'data' property only exists here, so the dependency must be declared at
+	// this level, otherwise the field silently stops reindexing when data changes.
 	@Override
 	@Transient
 	@FullTextField(analyzer = "structureAnalyzer", name = "fieldData")
