@@ -170,9 +170,12 @@ public class EcatImage extends EcatMediaFile implements Serializable {
 	}
 
 	/**
-	 * @return image that was used as a source for creating current image, or null 
+	 * @return image that was used as a source for creating current image, or null
 	 */
-	@ManyToOne
+	// Lazy is load-bearing: Hibernate 6 join-fetches eager to-one associations in one SQL, and
+	// this self-reference re-inlines the whole record graph per level, exceeding MariaDB's
+	// 61-table join limit (error 1116) on a plain load.
+	@ManyToOne(fetch = FetchType.LAZY)
 	@NotAudited
 	public EcatImage getOriginalImage() {
 		return originalImage;
