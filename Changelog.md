@@ -5,7 +5,10 @@ Summary of important or breaking changes.
 ## 3.0.0 2026-04-29
 - Spring 6 / Hibernate 6 / Jakarta namespace migration
 - Switch to rspace-parent 3.0.0
-- Incorporates all changes up to 2.30.0 (merged from main)
+- Incorporates all changes up to 2.31.0 (merged from main)
+
+## 2.31.0 2026-07-24
+- Added `isEditable` flag to the Instrument Template 
 
 ## 2.30.0 2026-06-25
 - Added `com.researchspace.b2inst.model` PIDINST/B2INST domain wrappers
