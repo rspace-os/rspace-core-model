@@ -42,6 +42,7 @@ import jakarta.xml.bind.annotation.XmlIDREF;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.shiro.authz.Permission;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Formula;
 
 /**
@@ -205,7 +206,8 @@ public class Group extends AbstractUserOrGroupImpl implements Comparable<Group>,
 	 * Users can belong to > 1 group
 	 *
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "group", orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "group", orphanRemoval = true, fetch = FetchType.LAZY)
+	@BatchSize(size = 50)
 	public Set<UserGroup> getUserGroups() {
 		return userGroups;
 	}
