@@ -53,6 +53,19 @@ public class DigitalObjectIdentifierTest {
 		assertEquals("abc123XYZ_-456789", doi.getPublicLink());
 	}
 
+	/*
+	 * The suffix becomes a path segment of the public landing page's URL, so surrounding
+	 * whitespace from a caller must not survive into the persisted value: it would yield an
+	 * address that only resolves once percent-encoded, and differs from the one registered
+	 * with the external provider.
+	 */
+	@Test
+	public void constructorTrimsSurroundingWhitespaceFromSuppliedSuffix() {
+		DigitalObjectIdentifier doi =
+				new DigitalObjectIdentifier("10.12345/test", "test title", "  abc123XYZ_-456789\t\n");
+		assertEquals("abc123XYZ_-456789", doi.getPublicLink());
+	}
+
 	@Test
 	public void constructorGeneratesPublicLinkWhenGivenNoSuffix() {
 		DigitalObjectIdentifier withNull = new DigitalObjectIdentifier("10.12345/test", "t", null);
